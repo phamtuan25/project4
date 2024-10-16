@@ -7,7 +7,7 @@ import com.example.projectbackend.entity.Booking;
 public class BookingMapper {
     public static BookingResponse convertToResponse(Booking booking){
         BookingResponse bookingResponse = new BookingResponse();
-        bookingResponse.setUser(booking.getUser());
+        bookingResponse.setUserResponse(UserMapper.convertToResponse(booking.getUser()));
         bookingResponse.setCreatedAt(booking.getCreatedAt());
         bookingResponse.setUpdatedAt(booking.getUpdatedAt());
         bookingResponse.setBookingDetails(booking.getBookingDetails());

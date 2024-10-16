@@ -1,15 +1,11 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.UserRequest;
-import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.UserResponse;
-import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.User;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
-import com.example.projectbackend.mapper.BookingMapper;
 import com.example.projectbackend.mapper.UserMapper;
-import com.example.projectbackend.repository.BookingRepository;
 import com.example.projectbackend.repository.UserRepository;
 import com.example.projectbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse getDetailUser(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         if(Objects.isNull(user)){
-            throw new NotFoundException("BookNotFound","Not found Booking with " + userId);
+            throw new NotFoundException("UserNotFound","Not found User with " + userId);
         }
         return UserMapper.convertToResponse(userRepository.findById(userId).orElse(null));
     }

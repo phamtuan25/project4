@@ -1,8 +1,6 @@
 package com.example.projectbackend.bean.request;
 
-import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
