@@ -3,8 +3,6 @@ package com.example.projectbackend.service;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -3,11 +3,9 @@ package com.example.projectbackend.service.impl;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
-import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingMapper;
-import com.example.projectbackend.repository.BookingDetailRepository;
 import com.example.projectbackend.repository.BookingRepository;
 import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service

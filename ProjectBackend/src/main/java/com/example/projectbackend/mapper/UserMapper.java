@@ -1,10 +1,7 @@
 package com.example.projectbackend.mapper;
 
-import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.request.UserRequest;
-import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.UserResponse;
-import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.User;
 
 public class UserMapper {

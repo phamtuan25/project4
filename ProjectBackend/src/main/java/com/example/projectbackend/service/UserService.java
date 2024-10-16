@@ -1,10 +1,7 @@
 package com.example.projectbackend.service;
 
-import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.request.UserRequest;
-import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.UserResponse;
-import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.User;
 import org.springframework.stereotype.Service;
 

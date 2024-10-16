@@ -1,12 +1,8 @@
 package com.example.projectbackend.controller;
 
-import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.request.UserRequest;
-import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.UserResponse;
-import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.User;
-import com.example.projectbackend.service.BookingService;
 import com.example.projectbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
