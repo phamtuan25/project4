@@ -3,9 +3,11 @@ package com.example.projectbackend.service.impl;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
+import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingMapper;
+import com.example.projectbackend.repository.BookingDetailRepository;
 import com.example.projectbackend.repository.BookingRepository;
 import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +23,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-
+    private final BookingDetailRepository bookingDetailRepository;
 
     @Override
     public List<BookingResponse> getAllBookings() {
         if(bookingRepository.findAll().isEmpty()) {
-            throw new EmptyListException("This list Booking is empty");
+            throw new EmptyListException("EmptyBook","This list Booking is empty");
         }
         return bookingRepository.findAll().stream().map(BookingMapper::convertToResponseInfo).collect(Collectors.toList());
     }
@@ -35,9 +37,11 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse getDetailBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         if(Objects.isNull(booking)){
-            throw new NotFoundException("Not found Booking with " + bookingId);
+            throw new NotFoundException("BookNotFound","Not found Booking with " + bookingId);
         }
-        return BookingMapper.convertToResponseInfo(booking);
+        BookingResponse bookResponse = BookingMapper.convertToResponseInfo(booking);
+        bookResponse.setUser(booking.getUser());
+        return bookResponse;
     }
 
     @Override
@@ -60,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
         Optional<Booking> booking = bookingRepository.findById(bookingId);
 
         if (booking.isEmpty()) {
-            throw new NotFoundException("Booking with ID " + bookingId + " not found.");
+            throw new NotFoundException("BookNotFound","Booking with ID " + bookingId + " not found.");
         }
         bookingRepository.deleteById(bookingId);
     }

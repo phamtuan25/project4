@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NotFoundException extends RuntimeException {
+    private final String key;
     private final String message;
 }

@@ -16,22 +16,19 @@ public class Service {
     @Column(name = "service_id")
     private Long serviceId;
 
-    @Column(name = "service_name", nullable = false)
+    @Column(name = "service_name")
     private String serviceName;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @CreatedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructor, getters, setters
 }

@@ -1,6 +1,7 @@
 package com.example.projectbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import java.math.BigDecimal;
@@ -21,30 +22,28 @@ public class Room {
     @Column(name = "room_id")
     private Long roomId;
 
-    @Column(name = "room_number", unique = true, nullable = false)
+    @NotBlank(message = "Room name is required")
+    @Column(name = "room_number", unique = true)
     private String roomNumber;
 
-    @Column(name = "room_type", nullable = false)
+    @Column(name = "room_type")
     private String roomType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private RoomStatus status;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt;
 
-    @CreatedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookingDetail> bookingDetails;
 
-    // Constructor, getters, setters
 }
 
