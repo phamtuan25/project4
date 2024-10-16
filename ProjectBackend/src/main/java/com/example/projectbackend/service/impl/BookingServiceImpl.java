@@ -21,26 +21,24 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService {
+    public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-    private final BookingDetailRepository bookingDetailRepository;
 
     @Override
     public List<BookingResponse> getAllBookings() {
         if(bookingRepository.findAll().isEmpty()) {
-            throw new EmptyListException("EmptyBook","This list Booking is empty");
+            throw new EmptyListException("EmptyBooking","This list Booking is empty");
         }
-        return bookingRepository.findAll().stream().map(BookingMapper::convertToResponseInfo).collect(Collectors.toList());
+        return bookingRepository.findAll().stream().map(BookingMapper::convertToResponse).collect(Collectors.toList());
     }
 
     @Override
     public BookingResponse getDetailBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         if(Objects.isNull(booking)){
-            throw new NotFoundException("BookNotFound","Not found Booking with " + bookingId);
+            throw new NotFoundException("BookingNotFound","Not found Booking with " + bookingId);
         }
-        BookingResponse bookResponse = BookingMapper.convertToResponseInfo(booking);
-        bookResponse.setUser(booking.getUser());
+        BookingResponse bookResponse = BookingMapper.convertToResponse(booking);
         return bookResponse;
     }
 
@@ -64,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
         Optional<Booking> booking = bookingRepository.findById(bookingId);
 
         if (booking.isEmpty()) {
-            throw new NotFoundException("BookNotFound","Booking with ID " + bookingId + " not found.");
+            throw new NotFoundException("BookingNotFound","Booking with ID " + bookingId + " not found.");
         }
         bookingRepository.deleteById(bookingId);
     }

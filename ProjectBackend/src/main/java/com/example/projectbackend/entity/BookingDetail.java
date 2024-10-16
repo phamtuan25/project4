@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -34,10 +35,10 @@ public class BookingDetail {
     private Service service;
 
     @Column(name = "check_in")
-    private LocalDateTime checkIn;
+    private LocalDate checkIn;
 
     @Column(name = "check_out")
-    private LocalDateTime checkOut;
+    private LocalDate checkOut;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
@@ -48,12 +49,11 @@ public class BookingDetail {
 
 
     @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "special_requests")
     private String specialRequests;
 
     @Column(name = "price")
     private BigDecimal price;
-    // Constructor, getters, setters
 }

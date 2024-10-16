@@ -3,7 +3,9 @@ package com.example.projectbackend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,10 +50,23 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "updated_at",updatable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at",updatable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDate updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        updateFullName();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        updateFullName();
+    }
+
+    private void updateFullName() {
+        this.fullName = this.firstName + " " + this.lastName;
+    }
 }
