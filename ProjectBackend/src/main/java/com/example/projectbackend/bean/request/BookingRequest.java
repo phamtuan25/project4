@@ -14,12 +14,4 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingRequest {
     private User user;
-
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDateTime createdAt;
-
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDateTime updatedAt;
-
-    private List<BookingDetail> bookingDetails;
 }

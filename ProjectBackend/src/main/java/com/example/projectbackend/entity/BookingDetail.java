@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "booking_betails")
+@Table(name = "booking_details")
 public class BookingDetail {
     public enum BookingStatus {
         PENDING,
@@ -21,39 +21,39 @@ public class BookingDetail {
     @Column(name = "booking_detail_id")
     private Long bookingDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
 
-    @Column(name = "check_in", nullable = false)
+    @Column(name = "check_in")
     private LocalDateTime checkIn;
 
-    @Column(name = "check_out", nullable = false)
+    @Column(name = "check_out")
     private LocalDateTime checkOut;
 
-    @Column(name = "total_amount", nullable = false)
+    @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private BookingStatus status;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+
+    @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "special_requests")
     private String specialRequests;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
     // Constructor, getters, setters
 }

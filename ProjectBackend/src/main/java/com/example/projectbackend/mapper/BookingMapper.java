@@ -18,9 +18,6 @@ public class BookingMapper {
     public static Booking convertFromRequest(BookingRequest bookingRequest){
         Booking booking = new Booking();
         booking.setUser(bookingRequest.getUser());
-        booking.setCreatedAt(bookingRequest.getCreatedAt());
-        booking.setUpdatedAt(bookingRequest.getUpdatedAt());
-        booking.setBookingDetails(bookingRequest.getBookingDetails());
         return booking;
     }
 }

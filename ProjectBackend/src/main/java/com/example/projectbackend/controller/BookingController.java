@@ -19,7 +19,7 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
-    @GetMapping("{bookingId}")
+    @GetMapping("/{bookingId}")
     public BookingResponse getDetailBooking(@PathVariable Long bookingId) {
         return bookingService.getDetailBooking(bookingId);
     }
@@ -29,12 +29,12 @@ public class BookingController {
         return bookingService.createBooking(bookingRequest);
     }
 
-    @PutMapping("{bookingId}")
+    @PutMapping("/{bookingId}")
     public Booking updateBooking(@PathVariable Long bookingId, @RequestBody Booking booking) {
         return bookingService.updateBooking(bookingId, booking);
     }
 
-    @DeleteMapping("{bookingId}")
+    @DeleteMapping("/{bookingId}")
     public void deleteBooking(@PathVariable Long bookingId) {
         bookingService.deleteBooking(bookingId);
     }
