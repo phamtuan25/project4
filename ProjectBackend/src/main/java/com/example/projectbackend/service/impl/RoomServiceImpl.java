@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
+
     @Override
     public List<RoomResponse> getAllRooms() {
         if(roomRepository.findAll().isEmpty()) {
