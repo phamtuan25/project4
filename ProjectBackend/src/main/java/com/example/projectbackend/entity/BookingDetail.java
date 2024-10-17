@@ -29,8 +29,8 @@ public class BookingDetail {
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Service service;
+    @JoinColumn(name = "provision_id")
+    private Provision provision;
 
     @Column(name = "check_in")
     private LocalDate checkIn;
