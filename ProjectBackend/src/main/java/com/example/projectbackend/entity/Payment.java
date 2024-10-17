@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -34,7 +35,7 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "payment_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDate paymentDate;
+    private LocalDateTime paymentDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
@@ -45,6 +46,6 @@ public class Payment {
     private PaymentStatus status;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
 }

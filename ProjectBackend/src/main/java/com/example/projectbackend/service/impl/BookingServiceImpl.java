@@ -11,6 +11,7 @@ import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
     @Override
     public Booking createBooking(BookingRequest bookingRequest) {
         Booking booking = BookingMapper.convertFromRequest(bookingRequest);
+        booking.setCreatedAt(LocalDateTime.now());
         return bookingRepository.save(booking);
     }
 
@@ -66,8 +68,6 @@ import java.util.stream.Collectors;
 
     public void setBooking(Booking bookingUpdate, Booking bookingInput){
         bookingUpdate.setUser(bookingInput.getUser());
-        bookingUpdate.setCreatedAt(bookingInput.getCreatedAt());
-        bookingUpdate.setUpdatedAt(bookingInput.getUpdatedAt());
-        bookingUpdate.setBookingDetails(bookingInput.getBookingDetails());
+        bookingUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }

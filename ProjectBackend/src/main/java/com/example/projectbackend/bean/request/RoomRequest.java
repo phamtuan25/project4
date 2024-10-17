@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomRequest {
     private String roomNumber;
-    private String roomType;
+    private Room.RoomType roomType;
     private Room.RoomStatus status;
     private BigDecimal price;
 }

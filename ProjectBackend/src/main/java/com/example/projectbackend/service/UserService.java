@@ -1,5 +1,6 @@
 package com.example.projectbackend.service;
 
+import com.example.projectbackend.bean.request.LoginRequest;
 import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
@@ -12,5 +13,5 @@ public interface UserService {
     public UserResponse getDetailUser(Long userId);
     public User createUser(UserRequest userRequest);
     public User updateUser(Long userId, User user);
-    public void deleteUser(Long userId);
+    public UserResponse Login(LoginRequest loginRequest);
 }

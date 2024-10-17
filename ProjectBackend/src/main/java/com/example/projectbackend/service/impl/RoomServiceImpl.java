@@ -11,6 +11,7 @@ import com.example.projectbackend.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room createRoom(RoomRequest roomRequest) {
         Room room = RoomMapper.convertFromRequest(roomRequest);
+        room.setCreatedAt(LocalDateTime.now());
         return roomRepository.save(room);
     }
 
@@ -67,5 +69,6 @@ public class RoomServiceImpl implements RoomService {
         roomUpdate.setRoomType(roomInput.getRoomType());
         roomUpdate.setStatus(roomInput.getStatus());
         roomUpdate.setPrice(roomInput.getPrice());
+        roomUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }

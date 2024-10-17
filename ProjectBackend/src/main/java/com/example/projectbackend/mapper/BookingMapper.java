@@ -10,7 +10,6 @@ public class BookingMapper {
         bookingResponse.setUserResponse(UserMapper.convertToResponse(booking.getUser()));
         bookingResponse.setCreatedAt(booking.getCreatedAt());
         bookingResponse.setUpdatedAt(booking.getUpdatedAt());
-        bookingResponse.setBookingDetails(booking.getBookingDetails());
         return bookingResponse;
     }
 

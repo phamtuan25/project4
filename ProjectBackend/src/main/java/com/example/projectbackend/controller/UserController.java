@@ -1,9 +1,11 @@
 package com.example.projectbackend.controller;
 
+import com.example.projectbackend.bean.request.LoginRequest;
 import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
 import com.example.projectbackend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody UserRequest userRequest) {
+    public User createUser(@Valid @RequestBody UserRequest userRequest) {
         return userService.createUser(userRequest);
     }
 
@@ -34,8 +36,9 @@ public class UserController {
         return userService.updateUser(userId, user);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    @PostMapping("/login")
+    public UserResponse login(@Valid @RequestBody LoginRequest loginRequest){
+        return userService.Login(loginRequest);
     }
+    
 }

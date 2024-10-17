@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -33,10 +34,10 @@ public class BookingDetail {
     private Service service;
 
     @Column(name = "check_in")
-    private LocalDate checkIn;
+    private LocalDateTime checkIn;
 
     @Column(name = "check_out")
-    private LocalDate checkOut;
+    private LocalDateTime checkOut;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
@@ -47,7 +48,7 @@ public class BookingDetail {
 
 
     @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "special_requests")
     private String specialRequests;

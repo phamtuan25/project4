@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DuplicateException extends RuntimeException {
-  private final String key;
-  private final String message;
+public class InvalidException extends RuntimeException {
+    private final String key;
+    private final String message;
 }
