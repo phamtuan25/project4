@@ -13,9 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserRequest {
     @NotBlank(message = "First name must not be blank")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only letters")
     private String firstName;
 
     @NotBlank(message = "Last name must not be blank")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Last name must contain only letters")
     private String lastName;
 
     @NotBlank(message = "Email must not be blank")

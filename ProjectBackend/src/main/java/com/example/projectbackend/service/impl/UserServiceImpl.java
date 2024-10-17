@@ -1,6 +1,7 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.LoginRequest;
+import com.example.projectbackend.bean.request.PasswordRequest;
 import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
@@ -67,20 +68,37 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             throw new NotFoundException("UserNotFound","Not found User with email " + loginRequest.getEmail());
         }
-        if(!argon2.verify(loginRequest.getPassword(),user.getPassword())){
+        if(!argon2.verify(user.getPassword(), loginRequest.getPassword())){
             throw new InvalidException("IncorrectPassword", "Password is incorrect");
         }else{
             return UserMapper.convertToResponse(user);
         }
     }
 
+    @Override
+    public UserResponse changePassword(Long userId, PasswordRequest passwordRequest) {
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null){
+            throw new NotFoundException("UserNotFound","Not found User");
+        }
+        if(!argon2.verify(user.getPassword(),passwordRequest.getCurrentPassword())){
+            throw new InvalidException("Current Password invalid","Current Password is incorrect");
+        }
+        if(argon2.verify(user.getPassword(),passwordRequest.getNewPassword())){
+            throw new InvalidException("New Password invalid","New Password is incorrect");
+        }
+        if(!passwordRequest.getConfirmPassword().equals(passwordRequest.getNewPassword())){
+            throw new InvalidException("Confirm Password invalid","Confirm Password is incorrect");
+        }
+        user.setPassword(argon2.hash(10, 65536, 1, passwordRequest.getNewPassword()));
+        userRepository.save(user);
+        return UserMapper.convertToResponse(user);
+    }
+
+
     public void setUser(User userUpdate, User userInput) {
-        userUpdate.setFirstName(userInput.getFirstName());
-        userUpdate.setLastName(userInput.getLastName());
-        userUpdate.setEmail(userInput.getEmail());
         userUpdate.setPhoneNumber(userInput.getPhoneNumber());
         userUpdate.setAddress(userInput.getAddress());
-        userUpdate.setPassword(userInput.getPassword());
         userUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }
