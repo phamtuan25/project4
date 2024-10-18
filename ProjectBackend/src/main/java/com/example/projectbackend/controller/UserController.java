@@ -1,6 +1,8 @@
 package com.example.projectbackend.controller;
 
+
 import com.example.projectbackend.bean.request.LoginRequest;
+import com.example.projectbackend.bean.request.PasswordRequest;
 import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
@@ -40,5 +42,8 @@ public class UserController {
     public UserResponse login(@Valid @RequestBody LoginRequest loginRequest){
         return userService.Login(loginRequest);
     }
-    
+    @PutMapping("/changePassword/{userId}")
+    public UserResponse changePassword(@PathVariable Long userId,@Valid @RequestBody PasswordRequest passwordRequest){
+        return userService.changePassword(userId,passwordRequest);
+    }
 }
