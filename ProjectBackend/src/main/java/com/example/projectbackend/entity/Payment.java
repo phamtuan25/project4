@@ -18,9 +18,8 @@ public class Payment {
     }
 
     public enum PaymentStatus {
-        PENDING,
-        COMPLETED,
-        FAILED
+        ACTIVE,
+        INACTIVE
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +30,6 @@ public class Payment {
     @JoinColumn(name = "booking_id", unique = true)
     private Booking booking;
 
-    @Column(name = "amount")
-    private BigDecimal amount;
-
-    @Column(name = "payment_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime paymentDate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
@@ -44,8 +37,5 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PaymentStatus status;
-
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
 
 }

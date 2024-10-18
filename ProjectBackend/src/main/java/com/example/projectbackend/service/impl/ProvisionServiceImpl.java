@@ -44,7 +44,6 @@ public class ProvisionServiceImpl implements ProvisionService {
     @Override
     public Provision createProvision(ProvisionRequest provisionRequest) {
         Provision provision = ProvisionMapper.convertFromRequest(provisionRequest);
-        provision.setCreatedAt(LocalDateTime.now());
         return provisionRepository.save(provision);
     }
 
@@ -71,6 +70,5 @@ public class ProvisionServiceImpl implements ProvisionService {
         provisionUpdate.setProvisionName(provisionInput.getProvisionName());
         provisionUpdate.setDescription(provisionInput.getDescription());
         provisionUpdate.setPrice(provisionInput.getPrice());
-        provisionUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }

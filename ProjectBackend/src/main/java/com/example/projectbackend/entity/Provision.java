@@ -7,11 +7,16 @@ import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "provisions")
 public class Provision  {
+    public enum ProvisionStatus {
+        ACTIVE,
+        INACTIVE
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "provision_id")
@@ -26,10 +31,12 @@ public class Provision  {
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    @Column(name = "status")
+    private ProvisionStatus status;
 
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "provision")
+    private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
 
+    @OneToMany(mappedBy = "provision")
+    private List<Image> images;
 }

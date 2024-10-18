@@ -39,17 +39,16 @@ public class Room {
     @Column(name = "status")
     private RoomStatus status;
 
-    @Column(name = "price")
-    private BigDecimal price;
+    @Column(name = "day_price")
+    private BigDecimal dayPrice;
 
-    @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    @Column(name = "hour_price")
+    private BigDecimal hourPrice;
 
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room")
     private List<BookingDetail> bookingDetails;
 
+    @OneToMany(mappedBy = "room")
+    private List<Image> images;
 }
 

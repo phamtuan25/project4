@@ -11,6 +11,11 @@ import java.util.List;
 @Entity
 @Table(name = "bookings")
 public class Booking {
+    public enum BookingStatus {
+        PENDING,
+        COMPLETED,
+        FAILED
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
@@ -29,4 +34,14 @@ public class Booking {
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingDetail> bookingDetails;
+
+    @Column (name = "status")
+    private BookingStatus status;
+
+    @Column(name = "deposit")
+    private Double deposit;
+
+    @OneToOne(mappedBy = "booking")
+    private Bill bill;
+
 }

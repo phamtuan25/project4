@@ -6,12 +6,13 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "booking_details")
 public class BookingDetail {
-    public enum BookingStatus {
+    public enum BookingDetailStatus {
         PENDING,
         CONFIRMED,
         CANCELED
@@ -29,9 +30,8 @@ public class BookingDetail {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne
-    @JoinColumn(name = "provision_id")
-    private Provision provision;
+    @OneToMany(mappedBy = "bookingDetail")
+    private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
 
     @Column(name = "check_in")
     private LocalDateTime checkIn;
@@ -44,8 +44,7 @@ public class BookingDetail {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private BookingStatus status;
-
+    private BookingDetailStatus status;
 
     @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;

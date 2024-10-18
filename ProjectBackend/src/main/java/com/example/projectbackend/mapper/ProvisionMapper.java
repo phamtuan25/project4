@@ -11,12 +11,11 @@ public class ProvisionMapper {
 
         public static ProvisionResponse convertToResponse(Provision provision) {
             ProvisionResponse provisionResponse = new ProvisionResponse();
-            provisionResponse.setProvisionId(provision.getProvisionId());
             provisionResponse.setProvisionName(provision.getProvisionName());
             provisionResponse.setDescription(provision.getDescription());
             provisionResponse.setPrice(provision.getPrice());
-            provisionResponse.setCreatedAt(provision.getCreatedAt());
-            provisionResponse.setUpdatedAt(provision.getUpdatedAt());
+            provisionResponse.setStatus(provision.getStatus());
+            provisionResponse.setImages(provision.getImages());
             return provisionResponse;
         }
 
@@ -25,6 +24,8 @@ public class ProvisionMapper {
             provision.setProvisionName(provisionRequest.getProvisionName());
             provision.setDescription(provisionRequest.getDescription());
             provision.setPrice(provisionRequest.getPrice());
+            provision.setStatus(provisionRequest.getStatus());
+            provision.setImages(provisionRequest.getImages());
             return provision;
         }
 

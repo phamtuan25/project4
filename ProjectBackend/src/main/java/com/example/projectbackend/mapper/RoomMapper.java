@@ -10,10 +10,9 @@ public class RoomMapper {
         roomResponse.setRoomNumber(room.getRoomNumber());
         roomResponse.setRoomType(room.getRoomType());
         roomResponse.setStatus(room.getStatus());
-        roomResponse.setPrice(room.getPrice());
-        roomResponse.setCreatedAt(room.getCreatedAt());
-        roomResponse.setUpdatedAt(room.getUpdatedAt());
-        roomResponse.setBookingDetails(room.getBookingDetails());
+        roomResponse.setDayPrice(room.getDayPrice());
+        roomResponse.setHourPrice(room.getHourPrice());
+        roomResponse.setImages(room.getImages());
         return roomResponse;
     }
 
@@ -22,7 +21,9 @@ public class RoomMapper {
         room.setRoomNumber(roomRequest.getRoomNumber());
         room.setRoomType(roomRequest.getRoomType());
         room.setStatus(roomRequest.getStatus());
-        room.setPrice(roomRequest.getPrice());
+        room.setDayPrice(roomRequest.getDayPrice());
+        room.setHourPrice(roomRequest.getHourPrice());
+        room.setImages(roomRequest.getImages());
         return room;
     }
 }

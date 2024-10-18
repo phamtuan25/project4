@@ -1,5 +1,7 @@
 package com.example.projectbackend.bean.response;
 
+import com.example.projectbackend.entity.Bill;
+import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,8 +21,9 @@ public class BookingResponse {
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime createdAt;
-
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDateTime updatedAt;
 
+    private Booking.BookingStatus status;
+    private Double deposit;
 }

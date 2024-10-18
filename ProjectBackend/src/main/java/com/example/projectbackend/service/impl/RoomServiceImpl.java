@@ -42,7 +42,6 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room createRoom(RoomRequest roomRequest) {
         Room room = RoomMapper.convertFromRequest(roomRequest);
-        room.setCreatedAt(LocalDateTime.now());
         return roomRepository.save(room);
     }
 
@@ -69,7 +68,7 @@ public class RoomServiceImpl implements RoomService {
         roomUpdate.setRoomNumber(roomInput.getRoomNumber());
         roomUpdate.setRoomType(roomInput.getRoomType());
         roomUpdate.setStatus(roomInput.getStatus());
-        roomUpdate.setPrice(roomInput.getPrice());
-        roomUpdate.setUpdatedAt(LocalDateTime.now());
+        roomUpdate.setHourPrice(roomInput.getHourPrice());
+        roomUpdate.setDayPrice(roomInput.getDayPrice());
     }
 }
