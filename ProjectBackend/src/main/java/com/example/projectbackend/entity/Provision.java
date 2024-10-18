@@ -36,7 +36,4 @@ public class Provision  {
 
     @OneToMany(mappedBy = "provision")
     private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
-
-    @OneToMany(mappedBy = "provision")
-    private List<Image> images;
 }

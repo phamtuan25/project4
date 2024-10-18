@@ -12,7 +12,6 @@ public class RoomMapper {
         roomResponse.setStatus(room.getStatus());
         roomResponse.setDayPrice(room.getDayPrice());
         roomResponse.setHourPrice(room.getHourPrice());
-        roomResponse.setImages(room.getImages());
         return roomResponse;
     }
 
@@ -23,7 +22,6 @@ public class RoomMapper {
         room.setStatus(roomRequest.getStatus());
         room.setDayPrice(roomRequest.getDayPrice());
         room.setHourPrice(roomRequest.getHourPrice());
-        room.setImages(roomRequest.getImages());
         return room;
     }
 }

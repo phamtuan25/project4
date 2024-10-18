@@ -7,6 +7,7 @@ import com.example.projectbackend.entity.User;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.ProvisionMapper;
+import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
 import com.example.projectbackend.service.ProvisionService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProvisionServiceImpl implements ProvisionService {
     private final ProvisionRepository provisionRepository;
+    private final ImageRepository imageRepository;
 
 
     @Override
@@ -29,7 +31,9 @@ public class ProvisionServiceImpl implements ProvisionService {
         if(provisionRepository.findAll().isEmpty()) {
             throw new EmptyListException("Provision","This list Provision is empty");
         }
-        return provisionRepository.findAll().stream().map(ProvisionMapper::convertToResponse).collect(Collectors.toList());
+        return provisionRepository.findAll().stream().map(ProvisionMapper::convertToResponse)
+                .peek(provisionResponse -> provisionResponse.setImages(imageRepository.findAllByNameAndReferenceId("provision", provisionResponse.getProvisionId())))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProvisionResponse {
+    private Long provisionId;
     private String provisionName;
     private String description;
     private BigDecimal price;

@@ -48,7 +48,5 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<BookingDetail> bookingDetails;
 
-    @OneToMany(mappedBy = "room")
-    private List<Image> images;
 }
 
