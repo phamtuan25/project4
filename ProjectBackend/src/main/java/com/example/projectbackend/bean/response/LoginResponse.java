@@ -2,12 +2,12 @@ package com.example.projectbackend.bean.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class ErrorResponse {
-    private HttpStatus statusCode;
-    private String key;
+@RequiredArgsConstructor
+public class LoginResponse {
+    private String token;
     private String message;
 }

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -15,6 +17,11 @@ public class User {
         ADMIN,
         MANAGER,
         EMPLOYEE
+    }
+    public static List<String> getRolesAsList() {
+        return Arrays.stream(RoleType.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
     }
 
     @Id

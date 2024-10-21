@@ -20,19 +20,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmptyListException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEmptyListException(EmptyListException emptyListException){
-        return new ErrorResponse(HttpStatus.NO_CONTENT.value(), emptyListException.getKey(), emptyListException.getMessage());
+        return new ErrorResponse(HttpStatus.NO_CONTENT, emptyListException.getKey(), emptyListException.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException notFoundException){
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), notFoundException.getKey(), notFoundException.getMessage());
+        return new ErrorResponse(HttpStatus.NOT_FOUND, notFoundException.getKey(), notFoundException.getMessage());
     }
 
     @ExceptionHandler(DuplicateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleDuplicateException(DuplicateException duplicateException){
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(),duplicateException.getKey(), duplicateException.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST,duplicateException.getKey(), duplicateException.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,15 +42,15 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getAllErrors()
                 .forEach(error -> {
                     errors.add(new ErrorResponse(
-                            HttpStatus.BAD_REQUEST.value(),
+                            HttpStatus.BAD_REQUEST,
                             ((FieldError) error).getField(),
                             error.getDefaultMessage()));
                 });
-        return errors;  
+        return errors;
     }
     @ExceptionHandler(InvalidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidException(InvalidException e){
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getKey(), e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST,e.getKey(), e.getMessage());
     }
 }

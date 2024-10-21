@@ -11,22 +11,19 @@ import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.UserMapper;
 import com.example.projectbackend.repository.UserRepository;
 import com.example.projectbackend.service.UserService;
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final Argon2 argon2 = Argon2Factory.create();
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -49,7 +46,8 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserRequest userRequest) {
         User user = UserMapper.convertFromRequest(userRequest);
         user.setUpdatedAt(LocalDateTime.now());
-        user.setPassword(argon2.hash(10, 65536, 1, userRequest.getPassword()));
+        String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
+        user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
 
@@ -64,11 +62,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse Login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail());
-        if(user == null) {
-            throw new NotFoundException("UserNotFound","Not found User with email " + loginRequest.getEmail());
-        }
-        if(!argon2.verify(user.getPassword(), loginRequest.getPassword())){
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElse(null);
+        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
             throw new InvalidException("IncorrectPassword", "Password is incorrect");
         }else{
             return UserMapper.convertToResponse(user);
@@ -78,23 +74,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse changePassword(Long userId, PasswordRequest passwordRequest) {
         User user = userRepository.findById(userId).orElse(null);
-        if(user == null){
-            throw new NotFoundException("UserNotFound","Not found User");
+        if (user == null) {
+            throw new NotFoundException("UserNotFound", "User not found");
         }
-        if(!argon2.verify(user.getPassword(),passwordRequest.getCurrentPassword())){
-            throw new InvalidException("Current Password invalid","Current Password is incorrect");
+        if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidException("CurrentPasswordInvalid", "Current password is incorrect");
         }
-        if(argon2.verify(user.getPassword(),passwordRequest.getNewPassword())){
-            throw new InvalidException("New Password invalid","New Password is incorrect");
+        if (passwordEncoder.matches(passwordRequest.getNewPassword(), user.getPassword())) {
+            throw new InvalidException("NewPasswordSameAsCurrent", "The new password must not be the same as the current password");
         }
-        if(!passwordRequest.getConfirmPassword().equals(passwordRequest.getNewPassword())){
-            throw new InvalidException("Confirm Password invalid","Confirm Password is incorrect");
+        if (!passwordRequest.getConfirmPassword().equals(passwordRequest.getNewPassword())) {
+            throw new InvalidException("ConfirmPasswordInvalid", "Confirmation password is incorrect");
         }
-        user.setPassword(argon2.hash(10, 65536, 1, passwordRequest.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         userRepository.save(user);
+
         return UserMapper.convertToResponse(user);
     }
-
 
     public void setUser(User userUpdate, User userInput) {
         userUpdate.setPhoneNumber(userInput.getPhoneNumber());
