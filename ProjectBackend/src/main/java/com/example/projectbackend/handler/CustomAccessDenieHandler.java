@@ -23,7 +23,8 @@ public class CustomAccessDenieHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("UTF-8");
         ResponseEntity responseEntity = ResponseEntity.ofNullable(errorResponse);
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), responseEntity);
+        //response.sendError(HttpServletResponse.SC_FORBIDDEN, errorResponse.getMessage());
+        mapper.writeValue(response.getWriter(), responseEntity);
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
     }
 }

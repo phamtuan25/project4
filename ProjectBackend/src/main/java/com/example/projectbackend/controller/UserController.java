@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @Validated
-//@PreAuthorize("hasAnyRole('ADMIN')")
+@PreAuthorize("permitAll")
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;

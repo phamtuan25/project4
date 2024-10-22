@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -60,16 +60,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(userUpdate);
     }
 
-    @Override
-    public UserResponse Login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElse(null);
-        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new InvalidException("IncorrectPassword", "Password is incorrect");
-        }else{
-            return UserMapper.convertToResponse(user);
-        }
-    }
 
     @Override
     public UserResponse changePassword(Long userId, PasswordRequest passwordRequest) {

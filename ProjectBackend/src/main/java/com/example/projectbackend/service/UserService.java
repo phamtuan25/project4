@@ -14,6 +14,5 @@ public interface UserService {
     public UserResponse getDetailUser(Long userId);
     public User createUser(UserRequest userRequest);
     public User updateUser(Long userId, User user);
-    public UserResponse Login(LoginRequest loginRequest);
     UserResponse changePassword(Long userId, PasswordRequest passwordRequest);
 }

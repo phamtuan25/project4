@@ -35,6 +35,10 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers("/api/users/**").permitAll()
+                .requestMatchers("/api/rooms/**").permitAll()
+                .requestMatchers("/api/provisions/**").permitAll()
+                .requestMatchers("/api/images/**").permitAll()
+                .requestMatchers("/api/bookings/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

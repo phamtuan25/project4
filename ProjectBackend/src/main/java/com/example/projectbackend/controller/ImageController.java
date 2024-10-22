@@ -8,6 +8,7 @@ import com.example.projectbackend.service.ImageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,7 @@ public class ImageController {
     public List<Image> getImages(@PathVariable("refId") Long refId, @PathVariable("name") String name) {
         return imageService.getImages(name, refId);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE, APPLICATION_JSON_VALUE})
     public List<ImageResponse> addImages(
             @RequestParam("files") MultipartFile[] files,

@@ -5,6 +5,7 @@ import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,16 +25,19 @@ public class BookingController {
         return bookingService.getDetailBooking(bookingId);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")
     @PostMapping
     public Booking createBooking(@RequestBody BookingRequest bookingRequest) {
         return bookingService.createBooking(bookingRequest);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")
     @PutMapping("/{bookingId}")
     public Booking updateBooking(@PathVariable Long bookingId, @RequestBody Booking booking) {
         return bookingService.updateBooking(bookingId, booking);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")
     @DeleteMapping("/{bookingId}")
     public void deleteBooking(@PathVariable Long bookingId) {
         bookingService.deleteBooking(bookingId);
