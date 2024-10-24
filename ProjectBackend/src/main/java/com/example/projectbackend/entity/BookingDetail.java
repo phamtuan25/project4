@@ -2,16 +2,17 @@ package com.example.projectbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "booking_betails")
+@Table(name = "booking_details")
 public class BookingDetail {
-    public enum BookingStatus {
+    public enum BookingDetailStatus {
         PENDING,
         CONFIRMED,
         CANCELED
@@ -21,39 +22,36 @@ public class BookingDetail {
     @Column(name = "booking_detail_id")
     private Long bookingDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id")
-    private Service service;
+    @OneToMany(mappedBy = "bookingDetail")
+    private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
 
-    @Column(name = "check_in", nullable = false)
+    @Column(name = "check_in")
     private LocalDateTime checkIn;
 
-    @Column(name = "check_out", nullable = false)
+    @Column(name = "check_out")
     private LocalDateTime checkOut;
 
-    @Column(name = "total_amount", nullable = false)
+    @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private BookingStatus status;
+    @Column(name = "status")
+    private BookingDetailStatus status;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "special_requests")
     private String specialRequests;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
-    // Constructor, getters, setters
 }

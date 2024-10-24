@@ -2,10 +2,11 @@ package com.example.projectbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -17,22 +18,27 @@ public class User {
         MANAGER,
         EMPLOYEE
     }
+    public static List<String> getRolesAsList() {
+        return Arrays.stream(RoleType.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "firstname", nullable = false)
+    @Column(name = "firstname")
     private String firstName;
 
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "lastname")
     private String lastName;
 
     @Column(name = "fullname", updatable = false)
-    private String fullName; // Có thể tự động tính toán
+    private String fullName;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "phone")
@@ -42,17 +48,29 @@ public class User {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     private RoleType role;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
-    @CreatedDate
-    @Column(name = "updated_at", nullable = false, updatable = false)
+    @Column(name = "updated_at",updatable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        updateFullName();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        updateFullName();
+    }
+
+    private void updateFullName() {
+        this.fullName = this.firstName + " " + this.lastName;
+    }
 }
