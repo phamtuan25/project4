@@ -1,0 +1,19 @@
+td{
+    white-space: nowrap; /* Giữ văn bản trên một dòng*/
+    overflow: hidden; /* Ẩn văn bản vượt quá giới hạn*/
+    text-overflow: ellipsis; /* Hiển thị dấu "..." khi văn bản vượt quá */
+    max-width: 200px; /* Đặt chiều rộng tối da cho ô văn bản*/
+}
+
+.table img {
+    max-width: 40%;  /* Giới hạn chiều rộng tối đa */
+    max-height: 40%; /* Giới hạn chiều cao tối đa */
+    object-fit: contain; /* Đảm bảo ảnh không bị biến dạng */
+    display: block; /* Đảm bảo không có khoảng cách phía dưới ảnh */
+    margin: auto 0; /* Căn giữa ảnh trong ô */
+}
+
+a.active {
+    background-color: #007bff; /* Màu nền khi active */
+    color: white; /* Màu chữ khi active */
+}
