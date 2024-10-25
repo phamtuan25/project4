@@ -107,11 +107,5 @@ function deleteUser(id: string): void {
   }
 }
 
-function signOut(): void {
-  if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-      alert("Đã đăng xuất!");
-      window.location.href = '/auth/login.html'; // Điều hướng đến trang đăng nhập
-  }
-}
 
 
