@@ -21,7 +21,7 @@ public class Booking {
     @Column(name = "booking_id")
     private Long bookingId;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -32,6 +32,7 @@ public class Booking {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingDetail> bookingDetails;
 
@@ -41,7 +42,6 @@ public class Booking {
     @Column(name = "deposit")
     private Double deposit;
 
-    @OneToOne(mappedBy = "booking")
-    private Bill bill;
+
 
 }
