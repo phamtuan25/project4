@@ -1,5 +1,6 @@
 package com.example.projectbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -45,6 +46,7 @@ public class Room {
     @Column(name = "hour_price")
     private BigDecimal hourPrice;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room")
     private List<BookingDetail> bookingDetails;
 

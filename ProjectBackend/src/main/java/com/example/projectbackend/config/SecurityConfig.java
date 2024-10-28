@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/provisions/**").permitAll()
                 .requestMatchers("/api/images/**").permitAll()
                 .requestMatchers("/api/bookings/**").permitAll()
+                .requestMatchers("/api/bookingdetails/**").permitAll()
+                .requestMatchers("/api/relProBook/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

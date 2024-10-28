@@ -1,5 +1,6 @@
 package com.example.projectbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,6 +35,7 @@ public class Provision  {
     @Column(name = "status")
     private ProvisionStatus status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "provision")
-    private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
+    private List<RelProvisionBookingDetail> relProvisionBookingDetails;
 }
