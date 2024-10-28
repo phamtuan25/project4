@@ -1,5 +1,4 @@
 <div class="main">
-
     <section class="signup">
         <!-- <img src="images/signup-bg.jpg" alt=""> -->
         <div class="container">
@@ -7,20 +6,25 @@
                 <form method="POST" id="signup-form" class="signup-form">
                     <h2 class="form-title">Create account</h2>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="first_name" id="first_name"
+                        <input type="text" [(ngModel)]="firstName" class="form-input" name="firstName" id="firstName"
                             placeholder="First name" />
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="last_name" id="last_name" placeholder="Last name" />
+                        <input type="text" [(ngModel)]="lastName" class="form-input" name="lastName" id="lastName"
+                            placeholder="Last name" />
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="address" id="address" placeholder="Address" />
+                        <input type="text" [(ngModel)]="address" class="form-input" name="address" id="address" placeholder="Address" />
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-input" name="email" id="email" placeholder="Email" />
+                        <input type="email" [(ngModel)]="email" class="form-input" name="email" id="email" placeholder="Email" />
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-input" name="password" id="password" placeholder="Password" />
+                        <input type="text" [(ngModel)]="phoneNumber" class="form-input" name="phoneNumber" id="phoneNumber"
+                            placeholder="Phone number" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="password" class="form-input" name="password" id="password" placeholder="Password" />
                         <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span>
                     </div>
                     <div class="form-group">
