@@ -2,7 +2,6 @@ package com.example.projectbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Reference;
 
 @Entity
 @Table(name = "images")
@@ -19,6 +18,10 @@ public class Image {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "referen_id")
+    @Column(name = "reference_id")
     private Long referenceId;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 }

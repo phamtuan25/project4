@@ -1,5 +1,6 @@
 package com.example.projectbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,16 +23,17 @@ public class BookingDetail {
     @Column(name = "booking_detail_id")
     private Long bookingDetailId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bookingDetail")
-    private List<Rel_Provision_BookingDetail> rel_provision_bookingDetails;
+    private List<RelProvisionBookingDetail> relProvisionBookingDetails;
 
     @Column(name = "check_in")
     private LocalDateTime checkIn;
@@ -48,6 +50,9 @@ public class BookingDetail {
 
     @Column(name = "created_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at",updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime updatedAt;
 
     @Column(name = "special_requests")
     private String specialRequests;
