@@ -24,7 +24,7 @@ public class UserMapper {
         user.setPhoneNumber(userRequest.getPhoneNumber());
         user.setAddress(userRequest.getAddress());
         user.setPassword(userRequest.getPassword());
-        user.setRole(userRequest.getRole());
+        user.setRole(User.RoleType.CUSTOMER);
         return user;
     }
 }

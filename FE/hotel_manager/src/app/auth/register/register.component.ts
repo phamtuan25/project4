@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService} from '../auth.service';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,18 +15,28 @@ export class RegisterComponent {
   phoneNumber: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) { }
+  errors:any= [];
+
+  constructor(private authService: AuthService, private router: Router) { }
 
   onSubmit() {
     this.authService.register(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
         console.log('Registration successful:', response);
-        // Xử lý phản hồi thành công (ví dụ: chuyển hướng, hiển thị thông báo)
+        this.router.navigate(['/login']);
       },
       error => {
+        this.errors = [];
+        error.error.forEach((element:any) => {
+          this.errors.push(element);
+        });
+        console.log(this.errors);
         console.error('Registration failed:', error);
-        // Xử lý lỗi
       }
     );
+  }
+
+  findErrors(key:string){
+    return this.errors.find((error:any)=>error.key==key).message;
   }
 }

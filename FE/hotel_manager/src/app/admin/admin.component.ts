@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -7,12 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AdminComponent {
   title = 'hotel_manager';
-  pageTitle = 'Quản Lý Người Dùng'
-}
-
-function signOut(): void {
-  if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-      alert("Đã đăng xuất!");
-      window.location.href = '/auth/login.html'; // Điều hướng đến trang đăng nhập
+  pageTitle = 'Quản Lý Người Dùng';
+  constructor(private router: Router){}
+  signOut(): void {
+    if (confirm("Are you sure you want to log out?")) {
+        alert("Signed out!");
+        this.router.navigate(['']) 
+    }
   }
 }
+
+

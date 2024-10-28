@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'hotel_manager';
+  private tokenKey = 'token';
+  getToken(){
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  setToken(token: string){
+    localStorage.setItem(this.tokenKey, token);
+  }
+
+  httpHeader: any;
 }
