@@ -17,6 +17,7 @@ public class Booking {
         COMPLETED,
         FAILED
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
@@ -26,7 +27,7 @@ public class Booking {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "created_at",  updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -36,7 +37,7 @@ public class Booking {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     private List<BookingDetail> bookingDetails;
 
-    @Column (name = "status")
+    @Column(name = "status")
     private BookingStatus status;
 
     @Column(name = "deposit")
@@ -44,6 +45,5 @@ public class Booking {
 
     @Column(name = "total_amount")
     private Double totalAmount;
-
-
 }
+
