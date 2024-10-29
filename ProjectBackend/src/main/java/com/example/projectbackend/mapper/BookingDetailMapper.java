@@ -10,6 +10,7 @@ import com.example.projectbackend.repository.RoomRepository;
 public class BookingDetailMapper {
     public  static BookingDetailResponse convertToResponse(BookingDetail bookingDetail){
         BookingDetailResponse bookingDetailResponse = new BookingDetailResponse();
+        bookingDetailResponse.setBookingDetailId(bookingDetail.getBookingDetailId());
         bookingDetailResponse.setBookingId(bookingDetail.getBooking().getBookingId());
         bookingDetailResponse.setRoomId(bookingDetail.getRoom().getRoomId());
         bookingDetailResponse.setCheckIn(bookingDetail.getCheckIn());

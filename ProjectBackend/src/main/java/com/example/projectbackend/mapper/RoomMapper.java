@@ -7,6 +7,7 @@ import com.example.projectbackend.entity.Room;
 public class RoomMapper {
     public static RoomResponse convertToResponse(Room room){
         RoomResponse roomResponse = new RoomResponse();
+        roomResponse.setRoomId(room.getRoomId());
         roomResponse.setRoomNumber(room.getRoomNumber());
         roomResponse.setRoomType(room.getRoomType());
         roomResponse.setStatus(room.getStatus());
