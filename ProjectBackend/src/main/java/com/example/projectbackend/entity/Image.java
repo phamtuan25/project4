@@ -22,6 +22,10 @@ public class Image {
     private Long referenceId;
 
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "room_id")
     private Room room;
+
+    @ManyToOne
+    @JoinColumn(name = "provision_id")
+    private Provision provision; // Add this line to link to Provision
 }

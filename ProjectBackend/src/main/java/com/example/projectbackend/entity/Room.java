@@ -50,5 +50,12 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<BookingDetail> bookingDetails;
 
+    @Column(name = "is_hourly")
+    private Boolean isHourly;
+
+
+    public Double getPrice() {
+        return isHourly != null && isHourly ? hourPrice : dayPrice;
+    }
 }
 

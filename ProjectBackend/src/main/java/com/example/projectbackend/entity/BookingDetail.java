@@ -57,6 +57,5 @@ public class BookingDetail {
     @Column(name = "price")
     private Double price;
 
-    @Column(name = "is_hourly")
-    private Boolean isHourly;
+
 }
