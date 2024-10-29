@@ -1,10 +1,7 @@
 package com.example.projectbackend.handler;
 
 import com.example.projectbackend.bean.response.ErrorResponse;
-import com.example.projectbackend.exception.DuplicateException;
-import com.example.projectbackend.exception.EmptyListException;
-import com.example.projectbackend.exception.InvalidException;
-import com.example.projectbackend.exception.NotFoundException;
+import com.example.projectbackend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,5 +49,10 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleInvalidException(InvalidException e){
         return new ErrorResponse(HttpStatus.BAD_REQUEST,e.getKey(), e.getMessage());
+    }
+    @ExceptionHandler(ExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleNotExistException(ExistException existException){
+        return new ErrorResponse(HttpStatus.BAD_REQUEST, existException.getKey(), existException.getMessage());
     }
 }

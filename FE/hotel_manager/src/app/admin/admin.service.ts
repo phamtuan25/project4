@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from './user-manager/user-manager.component';
 import { ConfigService } from '../../config/config.service';
+import { Room } from './room-manager/room-manager.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,14 @@ export class AdminService {
   public apiUrl = 'http://localhost:8080/api/';
 
   constructor(private http: HttpClient, private config: ConfigService) { }
+  //Call Api User
   getUser() {
     const headers = this.config.getHttpHeaders();
     return this.http.get<User[]>(this.apiUrl + 'users', { headers });
   }
 
-  addUser(firstName: string, lastName: string, address: string, email: string, phoneNumber:String, password: string): Observable<any> {
-    const body = {  
+  addUser(firstName: string, lastName: string, address: string, email: string, phoneNumber: String, password: string): Observable<any> {
+    const body = {
       firstName: firstName,
       lastName: lastName,
       address: address,
@@ -38,6 +40,39 @@ export class AdminService {
       role: role
     };
     const headers = this.config.getHttpHeaders();
-    return this.http.put(this.apiUrl + 'users/'+ userId, body, { headers });
+    return this.http.put(this.apiUrl + 'users/' + userId, body, { headers });
   }
+
+  //Call Api Room
+  getRoom() {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<Room[]>(this.apiUrl + 'rooms', { headers });
+  }
+
+  addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number): Observable<any> {
+    const body = {
+      roomNumber: roomNumber,
+      roomType: roomType,
+      status: status,
+      dayPrice: dayPrice,
+      hourPrice: hourPrice,
+      // images: images
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.post(this.apiUrl + 'rooms', body, { headers });
+  }
+
+  eidtRoom(roomId: number, roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number): Observable<any> {
+    const body = {
+      roomNumber: roomNumber,
+      roomType: roomType,
+      status: status,
+      dayPrice: dayPrice,
+      hourPrice: hourPrice,
+      // images: images
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.put(this.apiUrl + 'rooms/' + roomId, body, { headers });
+  }
+
 }

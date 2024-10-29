@@ -6,6 +6,7 @@ import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
 import com.example.projectbackend.exception.EmptyListException;
+import com.example.projectbackend.exception.ExistException;
 import com.example.projectbackend.exception.InvalidException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.UserMapper;
@@ -44,6 +45,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserRequest userRequest) {
+        if (userRepository.findByEmail(userRequest.getEmail()).isPresent()) {
+            throw new ExistException("email","Email is exist");
+        }
         User user = UserMapper.convertFromRequest(userRequest);
         user.setUpdatedAt(LocalDateTime.now());
         String encodedPassword = passwordEncoder.encode(userRequest.getPassword());

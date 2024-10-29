@@ -1,63 +1,174 @@
+<div class="form-group mt-3">
+    <div class="input-group">
+        <input type="text" class="form-control" id="searchRoomInput" placeholder="Search..."
+            (keyup)="handleKeyPress($event)">
+
+        <div class="input-group-append">
+            <button class="btn btn-primary" (click)="searchRooms()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoomModal">Thêm Phòng</button>
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoomModal">Add Room</button>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Tên Phòng</th>
-                <th>Ảnh</th>
-                <th>Mô Tả</th>
-                <th>Tình Trạng</th>
-                <th>Giá Tiền</th>
-                <th>Loại</th>
-                <th>Ngày Tạo</th>
-                <th>Ngày Cập Nhật</th>
-                <th>Hành Động</th>
+                <th>Room Number</th>
+                <th>Room Type</th>
+                <th>Status</th>
+                <th>Day Price</th>
+                <th>Hour Price</th>
+                <th>Image</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="roomTable">
-            <tr>
-                <td>1</td>
-                <td>Phòng Đơn</td>
-                <td><img src="image/room-01.jpg" alt="Phòng Đơn" class="img-fluid"></td>
-                <td>Văn bản là một loại hình phương tiện để ghi nhận, lưu giữ và truyền đạt các thông tin từ chủ thể này
-                    sang chủ thể khác bằng ký hiệu gọi là chữ viết. Nó gồm tập hợp các câu có tính trọn vẹn về nội dung,
-                    hoàn chỉnh về hình thức, có tính liên kết chặt chẽ và hướng tới một mục tiêu giao tiếp nhất
-                    định.[1][2][3][4] Hay nói khác đi, văn bản là một dạng sản phẩm của hoạt động giao tiếp bằng ngôn
-                    ngữ được thể hiện ở dạng viết trên một chất liệu nào đó (giấy, bia đá,...). Văn bản bao gồm các tài
-                    liệu, tư liệu, giấy tờ có giá trị pháp lý nhất định, được sử dụng trong hoạt động của các cơ quan
-                    Nhà nước, các tổ chức chính trị, chính trị - xã hội, các tổ chức kinh tế... như: các văn bản pháp
-                    luật, các công văn, tài liệu, giấy tờ.</td>
-                <td>Còn Trống</td>
-                <td>500000</td>
-                <td>Đơn</td>
-                <td>2023-10-01</td>
-                <td>2023-10-01</td>
+            <tr *ngFor="let room of filterRooms">
+                <td>{{room.roomNumber}}</td>
+                <td>{{room.roomType}}</td>
+                <td>{{room.status}}</td>
+                <td>{{room.dayPrice}}</td>
+                <td>{{room.hourPrice}}</td>
+                <td>{{room.images}}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm"
-                        onclick="openEditRoomModal(1, 'Phòng Đơn', 'https\://via.placeholder.com/60', 'Phòng cho 1 người', 'Còn Trống', 500000, 'Đơn', '2023-10-01', '2023-10-01')">Sửa</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteRoom(1)">Xóa</button>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal" [attr.data-target]="'#editRoomModal'+room.roomId" (click)="openEditRoom(room)">Edit</button>
+                    <!-- <button class="btn btn-danger btn-sm" ((click))="deleteRoom()">Delete</button> -->
                 </td>
+                <!-- Modal Sửa Phòng -->
+                <div class="modal fade" id="editRoomModal{{room.roomId}}" tabindex="-1" role="dialog"
+                    aria-labelledby="editRoomModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form id="editRoomForm" #editRoomForm="ngForm" (ngSubmit)="onSubmitEdit(editRoomForm)" method="PUT">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editRoomModalLabel">Edit Room</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="editRoomId">
+                                    <div class="form-group">
+                                        <label for="roomNumber">Room Number</label>
+                                        <input type="text" class="form-control" id="roomNumber" name="roomNumber"[value]="room.roomNumber" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roomType">Room Type</label>
+                                        <select class="form-control" id="roomType" name="roomType" [(ngModel)]="roomType" required>
+                                            <option value="SINGLE">SINGLE</option>
+                                            <option value="DOUBLE">DOUBLE</option>
+                                            <option value="DELUXE">DELUXE</option>
+                                            <option value="FAMILY">FAMILY</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <select class="form-control" id="status" name="status" [(ngModel)]="status" required>
+                                            <option value="AVAILABLE">AVAILABLE</option>
+                                            <option value="BOOKED">BOOKED</option>
+                                            <option value="MAINTENANCE">MAINTENANCE</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dayPrice">Day Price</label>
+                                        <input type="number" class="form-control" id="dayPrice" name="dayPrice" [(ngModel)]="dayPrice" required>
+                                    </div>
+                                    <div
+                                            *ngIf="editRoomForm.controls['dayPrice']?.invalid && (editRoomForm.controls['dayPrice']?.touched || editRoomForm.submitted)">
+                                            <small class="text-danger">Day Price is required.</small>
+                                        </div>
+                                    <div class="form-group">
+                                        <label for="hourPrice">Hour Price</label>
+                                        <input type="number" class="form-control" id="hourPrice" name="hourPrice" [(ngModel)]="hourPrice" required>
+                                    </div>
+                                    <div
+                                            *ngIf="editRoomForm.controls['hourPrice']?.invalid && (editRoomForm.controls['hourPrice']?.touched || editRoomForm.submitted)">
+                                            <small class="text-danger">Hour Price is required.</small>
+                                        </div>
+                                    <!-- <div class="form-group">
+                                        <label for="images">Image</label>
+                                        <input type="text" class="form-control" id="images" name="images" [(ngModel)]="status" required>
+                                    </div> -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>Phòng Đôi</td>
-                <td><img src="image/room-02.jpg" alt="Phòng Đôi" class="img-fluid"></td>
-                <td>Phòng cho 2 người</td>
-                <td>Còn Trống</td>
-                <td>800000</td>
-                <td>Đôi</td>
-                <td>2023-10-01</td>
-                <td>2023-10-01</td>
-                <td>
-                    <button class="btn btn-warning btn-sm"
-                        onclick="openEditRoomModal(2, 'Phòng Đôi', 'https\://via.placeholder.com/60', 'Phòng cho 2 người', 'Còn Trống', 800000, 'Đôi', '2023-10-01', '2023-10-01')">Sửa</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteRoom(2)">Xóa</button>
-                </td>
-            </tr>
-            <!-- Thêm các hàng khác nếu cần -->
         </tbody>
     </table>
+
+
+
+    <!-- Modal Thêm Phòng -->
+    <div class="modal fade" id="addRoomModal" tabindex="-1" role="dialog" aria-labelledby="addRoomModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="addRoomForm" method="POST" (ngSubmit)="onSubmitAdd()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="roomNumber">Room Number</label>
+                            <input type="text" class="form-control" id="roomNumber" [(ngModel)]="roomNumber"
+                                name="roomNumber">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("roomNumber")}}</span>
+                        <div class="form-group">
+                            <label for="roomType">Room Type</label>
+                            <select class="form-control" id="roomType" [(ngModel)]="roomType" name="roomType">
+                                <option value="SINGLE">SINGLE</option>
+                                <option value="DOUBLE">DOUBLE</option>
+                                <option value="DELUXE">DELUXE</option>
+                                <option value="FAMILY">FAMILY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" [(ngModel)]="status" name="status">
+                                <option value="AVAILABLE">AVAILABLE</option>
+                                <option value="BOOKED">BOOKED</option>
+                                <option value="MAINTENANCE">MAINTENANCE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dayPrice">Day Price</label>
+                            <input type="number" class="form-control" id="dayPrice" [(ngModel)]="dayPrice"
+                                name="dayPrice">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("dayPrice")}}</span>
+                        <div class="form-group">
+                            <label for="hourPrice">Hour Price</label>
+                            <input type="number" class="form-control" id="hourPrice" [(ngModel)]="hourPrice"
+                                name="hourPrice">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("hourPrice")}}</span>
+                        <!-- <div class="form-group">
+                        <label for="images">Image</label>
+                        <input type="text" class="form-control" id="images" [(ngModel)]="images" name="images">
+                    </div>
+                    <span *ngIf="errors">{{findErrors("images")}}</span> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Phân Trang -->
     <nav aria-label="Page navigation">
@@ -78,183 +189,3 @@
         </ul>
     </nav>
 </div>
-
-<!-- Modal Thêm Phòng -->
-<div class="modal fade" id="addRoomModal" tabindex="-1" role="dialog" aria-labelledby="addRoomModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addRoomModalLabel">Thêm Phòng Mới</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addRoomForm">
-                    <div class="form-group">
-                        <label for="roomName">Tên Phòng</label>
-                        <input type="text" class="form-control" id="roomName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="roomImage">Ảnh</label>
-                        <input type="url" class="form-control" id="roomImage" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="roomDescription">Mô Tả</label>
-                        <textarea class="form-control" id="roomDescription" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="roomStatus">Tình Trạng</label>
-                        <select class="form-control" id="roomStatus" required>
-                            <option value="Còn Trống">Còn Trống</option>
-                            <option value="Đã Đặt">Đã Đặt</option>
-                            <option value="Đã Hủy">Đã Hủy</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="roomPrice">Giá Tiền</label>
-                        <input type="number" class="form-control" id="roomPrice" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="roomType">Loại</label>
-                        <input type="text" class="form-control" id="roomType" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" onclick="submitRoom()">Lưu</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Sửa Phòng -->
-<div class="modal fade" id="editRoomModal" tabindex="-1" role="dialog" aria-labelledby="editRoomModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editRoomModalLabel">Sửa Phòng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editRoomForm">
-                    <input type="hidden" id="editRoomId">
-                    <div class="form-group">
-                        <label for="editRoomName">Tên Phòng</label>
-                        <input type="text" class="form-control" id="editRoomName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editRoomImage">Ảnh</label>
-                        <input type="url" class="form-control" id="editRoomImage" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editRoomDescription">Mô Tả</label>
-                        <textarea class="form-control" id="editRoomDescription" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editRoomStatus">Tình Trạng</label>
-                        <select class="form-control" id="editRoomStatus" required>
-                            <option value="Còn Trống">Còn Trống</option>
-                            <option value="Đã Đặt">Đã Đặt</option>
-                            <option value="Đã Hủy">Đã Hủy</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editRoomPrice">Giá Tiền</label>
-                        <input type="number" class="form-control" id="editRoomPrice" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editRoomType">Loại</label>
-                        <input type="text" class="form-control" id="editRoomType" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" onclick="submitEditRoom()">Lưu Thay Đổi</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- <script>
-    function searchRooms() {
-        const input = document.getElementById('searchInput').value.toLowerCase();
-        const filteredRooms = rooms.filter(room => {
-            return room.roomName.toLowerCase().includes(input) ||
-                   room.roomStatus.toLowerCase().includes(input);
-        });
-
-        renderRooms(filteredRooms);
-    }
-
-    function submitRoom() {
-        const roomName = document.getElementById('roomName').value.trim();
-        const roomImage = document.getElementById('roomImage').value.trim();
-        const roomDescription = document.getElementById('roomDescription').value.trim();
-        const roomStatus = document.getElementById('roomStatus').value;
-        const roomPrice = document.getElementById('roomPrice').value.trim();
-        const roomType = document.getElementById('roomType').value.trim();
-
-        if (!roomName || !roomImage || !roomDescription || !roomStatus || !roomPrice || !roomType) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        alert(`Đã thêm phòng: ${roomName}, Giá: ${roomPrice}, Trạng Thái: ${roomStatus}`);
-
-        $('#addRoomModal').modal('hide');
-        document.getElementById('addRoomForm').reset();
-    }
-
-    function openEditRoomModal(id, roomName, roomImage, roomDescription, roomStatus, roomPrice, roomType) {
-        document.getElementById('editRoomId').value = id;
-        document.getElementById('editRoomName').value = roomName;
-        document.getElementById('editRoomImage').value = roomImage;
-        document.getElementById('editRoomDescription').value = roomDescription;
-        document.getElementById('editRoomStatus').value = roomStatus;
-        document.getElementById('editRoomPrice').value = roomPrice;
-        document.getElementById('editRoomType').value = roomType;
-        $('#editRoomModal').modal('show');
-    }
-
-    function submitEditRoom() {
-        const id = document.getElementById('editRoomId').value;
-        const roomName = document.getElementById('editRoomName').value.trim();
-        const roomImage = document.getElementById('editRoomImage').value.trim();
-        const roomDescription = document.getElementById('editRoomDescription').value.trim();
-        const roomStatus = document.getElementById('editRoomStatus').value;
-        const roomPrice = document.getElementById('editRoomPrice').value.trim();
-        const roomType = document.getElementById('editRoomType').value.trim();
-
-        if (!roomName || !roomImage || !roomDescription || !roomStatus || !roomPrice || !roomType) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        alert(`Đã sửa phòng: ID: ${id}, Tên: ${roomName}, Giá: ${roomPrice}, Trạng Thái: ${roomStatus}`);
-
-        $('#editRoomModal').modal('hide');
-        document.getElementById('editRoomForm').reset();
-    }
-
-    function deleteRoom(id) {
-        if (confirm(`Bạn có chắc chắn muốn xóa phòng với ID: ${id}?`)) {
-            alert(`Phòng với ID ${id} đã bị xóa!`);
-            // Thêm logic để xóa phòng từ bảng
-        }
-    }
-
-    function signOut() {
-        if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-            // Logic để đăng xuất
-            alert("Đã đăng xuất!");
-            window.location.href = 'login.html'; // Điều hướng đến trang đăng nhập
-        }
-    }
-</script> -->
