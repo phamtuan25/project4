@@ -103,7 +103,17 @@ display-flex, .display-flex, .display-flex-center {
     -webkit-appearance: radio !important;
     -o-appearance: radio !important;
     -ms-appearance: radio !important; }
+
+  input.ng-invalid {
+      border: 2px solid red;
+  }
   
+  span {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+  }
   img {
     max-width: 100%;
     height: auto; }

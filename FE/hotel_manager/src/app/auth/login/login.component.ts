@@ -3,6 +3,7 @@ import { AuthService } from '../auth.service';
 import { AppComponent } from '../../app.component';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ConfigService } from '../../../config/config.service';
 
 interface User {
   email: string,
@@ -24,30 +25,30 @@ export class LoginComponent {
 
   errors:any= [];
 
-  constructor(private authService: AuthService, private app: AppComponent, private router: Router) { }
+  constructor(private authService: AuthService, private config: ConfigService, private router: Router) { }
   onSubmit() {
     this.authService.login(this.user).subscribe(
       response => {
-        this.app.setToken(response.token);
-        this.app.httpHeader = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + this.app.getToken()
-        });
+        const token = '"' + response.token + '"'
+        this.config.setToken(token);
         console.log('Login successful:', response);
         this.router.navigate(['/admin']);
       },
       error => {
         this.errors = [];
-        error.error.forEach((element:any) => {
-          this.errors.push(element);
-        });
-        console.log(this.errors);
+        if(error.error.length>1){
+          error.error.forEach((element:any) => {
+            this.errors.push(element);
+          });
+        } else{
+          this.errors.push({key: 'password', message: 'Invalid Password'});
+        }
         console.error('Login failed:', error);
       }
     );
   }
 
   findErrors(key:string){
-    return this.errors.find((error:any)=>error.key==key).message;
+    return this.errors.find((error:any)=>error.key==key)?.message;
   }
 }

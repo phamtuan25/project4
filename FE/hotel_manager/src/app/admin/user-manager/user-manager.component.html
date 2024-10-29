@@ -1,172 +1,165 @@
+<div class="form-group mt-3">
+    <div class="input-group">
+        <input type="text" class="form-control" id="searchUserInput" placeholder="Search..."
+            (keyup)="handleKeyPress($event)">
+
+        <div class="input-group-append">
+            <button class="btn btn-primary" (click)="searchUsers()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">Thêm Người
-        Dùng</button>
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoleModal">Thêm Vai trò người
-        Dùng</button>
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal">Add User</button>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Họ và Tên</th>
-                <th>Địa Chỉ</th>
-                <th>Số Điện Thoại</th>
-                <th>Vai Trò</th>
-                <th>Địa Chỉ Email</th>
-                <th>Hành Động</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Role</th>
+                <th>Booking</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="userTable">
-            <tr>
-                <td>1</td>
-                <td>Nguyễn Văn B</td>
-                <td>123 Đường ABC</td>
-                <td>0912345678</td>
-                <td>Quản Trị</td>
-                <td>nguyenvanbexample.com</td>
+            <tr *ngFor="let user of filterUser">
+                <td>{{user.fullName}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.phoneNumber}}</td>
+                <td>{{user.address}}</td>
+                <td>{{user.role}}</td>
+                <td>{{user.booking}}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm"
-                        onclick="openEditUserModal(1, 'Nguyễn Văn B', '123 Đường ABC', '0912345678', 'Quản Trị', 'nguyenvanb@example.com')">Sửa</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteUser(1)">Xóa</button>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                        [attr.data-target]="'#editUserModal'+user.userId" (click)="openEditUser(user)">Update</button>
                 </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Trần Thị C</td>
-                <td>456 Đường DEF</td>
-                <td>0987654321</td>
-                <td>Nhân Viên</td>
-                <td>tranthicexample.com</td>
-                <td>
-                    <button class="btn btn-warning btn-sm"
-                        onclick="openEditUserModal(2, 'Trần Thị C', '456 Đường DEF', '0987654321', 'Nhân Viên', 'tranthic@example.com')">Sửa</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteUser(2)">Xóa</button>
-                </td>
+                <!-- Modal Sửa Người Dùng -->
+                <div class="modal fade" id="editUserModal{{user.userId}}" tabindex="-1" role="dialog"
+                    aria-labelledby="editUserModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form id="editUserForm" #editUserForm="ngForm" (ngSubmit)="onSubmitEdit(editUserForm)"
+                            method="PUT">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="editUserId">
+                                    <div class="form-group">
+                                        <label for="editFullName">Full Name</label>
+                                        <input type="text" class="form-control" name="fullName" required
+                                            [value]="user.fullName" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editPhoneNumber">Phone Number</label>
+                                        <input type="text" class="form-control" [(ngModel)]="phoneNumber"
+                                            id="editPhoneNumber" name="phoneNumber" required>
+                                        <div
+                                            *ngIf="editUserForm.controls['phoneNumber']?.invalid && (editUserForm.controls['phoneNumber']?.touched || editUserForm.submitted)">
+                                            <small class="text-danger">Phone Number is required.</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserAddress">Address</label>
+                                        <input type="text" class="form-control" [(ngModel)]="address"
+                                            id="editUserAddress" name="address" required>
+                                        <div
+                                            *ngIf="editUserForm.controls['address']?.invalid && (editUserForm.controls['address']?.touched || editUserForm.submitted)">
+                                            <small class="text-danger">Address is required.</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserEmail">Email</label>
+                                        <input type="email" class="form-control" [(ngModel)]="email" name="email"
+                                            id="editUserEmail" required>
+                                        <div
+                                            *ngIf="editUserForm.controls['email']?.invalid && (editUserForm.controls['email']?.touched || editUserForm.submitted)">
+                                            <small class="text-danger">Email is required.</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editUserRole">Role</label>
+                                        <select class="form-control" id="editUserRole" [(ngModel)]="role" name="role"
+                                            required>
+                                            <option value="ADMIN">ADMIN</option>
+                                            <option value="EMPLOYEE">EMPLOYEE</option>
+                                            <option value="MANAGER">MANAGER</option>
+                                            <option value="CUSTOMER">CUSTOMER</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" id="onSubmit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </tr>
         </tbody>
     </table>
-
-    <!-- Modal Thêm Vai Trò -->
-    <div class="modal fade" id="addRoleModal" tabindex="-1" role="dialog" aria-labelledby="addRoleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addRoleModalLabel">Thêm Vai Trò Mới</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addRoleForm">
-                        <div class="form-group">
-                            <label for="roleName">Tên vai trò</label>
-                            <input type="text" class="form-control" id="roleName" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" onclick="submitRole()">Lưu</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Thêm Người Dùng -->
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addUserModalLabel">Thêm Người Dùng Mới</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <form id="addUserForm" method="POST" (ngSubmit)="onSubmitAdd()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="addFirstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" [(ngModel)]="firstName" name="firstName">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("firstName")}}</span>
+                        <div class="form-group">
+                            <label for="addLastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" [(ngModel)]="lastName" name="lastName">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("lastName")}}</span>
+                        <div class="form-group">
+                            <label for="addEmail">Email</label>
+                            <input type="text" class="form-control" id="email" [(ngModel)]="email" name="email">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("email")}}</span>
+                        <div class="form-group">
+                            <label for="addAddress">Address</label>
+                            <input type="text" class="form-control" id="address" [(ngModel)]="address" name="address">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("address")}}</span>
+                        <div class="form-group">
+                            <label for="addPhoneNumber">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="phoneNumber" name="phoneNumber">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("phoneNumber")}}</span>
+                        <div class="form-group">
+                            <label for="addPassword">Password</label>
+                            <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
+                        </div>
+                        <span *ngIf="errors">{{findErrors("password")}}</span>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="addUserForm">
-                        <div class="form-group">
-                            <label for="userName">Họ và Tên</label>
-                            <input type="text" class="form-control" id="userName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="userAddress">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="userAddress" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="userPhone">Số Điện Thoại</label>
-                            <input type="text" class="form-control" id="userPhone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="userRole">Vai Trò</label>
-                            <select class="form-control" id="userRole" required>
-                                <option value="Quản Trị">Quản Trị</option>
-                                <option value="Nhân Viên">Nhân Viên</option>
-                                <option value="Khách Hàng">Khách Hàng</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="userEmail">Địa Chỉ Email</label>
-                            <input type="email" class="form-control" id="userEmail" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" onclick="submitUser()">Lưu</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
-
-    <!-- Modal Sửa Người Dùng -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Sửa Người Dùng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editUserForm">
-                        <input type="hidden" id="editUserId">
-                        <div class="form-group">
-                            <label for="editUserName">Họ và Tên</label>
-                            <input type="text" class="form-control" id="editUserName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editUserAddress">Địa Chỉ</label>
-                            <input type="text" class="form-control" id="editUserAddress" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editUserPhone">Số Điện Thoại</label>
-                            <input type="text" class="form-control" id="editUserPhone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editUserRole">Vai Trò</label>
-                            <select class="form-control" id="editUserRole" required>
-                                <option value="Quản Trị">Quản Trị</option>
-                                <option value="Nhân Viên">Nhân Viên</option>
-                                <option value="Khách Hàng">Khách Hàng</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="editUserEmail">Địa Chỉ Email</label>
-                            <input type="email" class="form-control" id="editUserEmail" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" onclick="submitEditUser()">Lưu</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item disabled">

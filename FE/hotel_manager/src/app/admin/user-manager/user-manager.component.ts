@@ -2,58 +2,118 @@ import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
 import $ from 'jquery';
 import 'bootstrap';
+import { AdminService } from '../admin.service';
+import { Booking } from '../booking-manager/booking-manager.component';
+import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-user-manager',
   templateUrl: './user-manager.component.html',
   styleUrl: './user-manager.component.css'
 })
+
+
 export class UserManagerComponent implements OnInit {
-  constructor(public admin: AdminComponent){}
+  users: User[] = [];
+  filterUser: User[] = [];
+  userId: number = 0;
+  firstName: string = "";
+  lastName: string = "";
+  email: string = "";
+  address: string = "";
+  phoneNumber: string = ""; 
+  role: string = "";
+  password: string = "";
+  constructor(public admin: AdminComponent,private adminService: AdminService){}
+  
   ngOnInit(): void {
-    this.admin.pageTitle = 'Quản lý Người dùng';
+    this.admin.pageTitle = 'User Management';
+    this.getUsers();
+  }
+  getUsers(){
+    this.adminService.getUser().subscribe(
+      (response: User[]) =>{
+        this.users = response;
+        this.filterUser = response
+      }
+    )
+    
+  }
+  searchUsers(): void {
+    const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.toLowerCase();
+    this.filterUser = this.users.filter(user => {
+        return user.fullName?.toLowerCase().includes(input) ||
+            user.address?.toLowerCase().includes(input) ||
+            user.phoneNumber?.toLowerCase().includes(input) ||
+            user.role?.toLowerCase().includes(input) ||
+            user.email?.toLowerCase().includes(input);
+    });
+  }
+  handleKeyPress(event:any) {
+    if (event.key === 'Enter') {
+      this.searchUsers();
+    }
+  }
+  openEditUser(user: User) {
+    this.userId = user.userId
+    this.email = user.email
+    this.address = user.address
+    this.phoneNumber = user.phoneNumber
+    this.role = user.role
+  }
+  onSubmitEdit(form: NgForm) {
+    if(form.valid) {
+      this.adminService.eidtUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
+        response => {
+          alert("Edit Success!");
+          const modalElement = document.getElementById(`editUserModal${this.userId}`);
+          if (modalElement) {
+            modalElement.style.display = 'none'; 
+            modalElement.classList.remove('show');
+          }
+          const backdrop = document.querySelector('.modal-backdrop.fade.show');
+          if (backdrop) {
+            document.body.removeChild(backdrop);
+          }
+          this.getUsers();
+        },
+        error => {
+          console.error('Edit failed:', error);
+        }
+      );
+    }
+    
+  }
+  errors:any=[];
+  onSubmitAdd() {
+    this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
+      response => {
+        this.errors = [];
+      },
+      error => {
+        this.errors = [];
+        console.log(this.errors);
+        error.error.forEach((element:any) => {
+          this.errors.push(element);
+        });
+        console.log(this.errors);
+        console.error('Add User failed:', error);
+      }
+    );
+  }
+  findErrors(key:string){
+    return this.errors.find((error:any)=>error.key==key)?.message;
   }
 }
-
-interface User {
-  id: string; // ID của người dùng
-  name: string; // Tên người dùng
-  address: string; // Địa chỉ người dùng
-  phone: string; // Số điện thoại người dùng
-  role: string; // Vai trò của người dùng
-  email: string; // Email của người dùng
+export interface User {
+  userId: number;
+  fullName: string; 
+  email: string;
+  address: string;
+  phoneNumber: string; 
+  role: string;
+  booking: Booking[];
 }
 
-const users: User[] = []; // Giả sử danh sách người dùng đã được định nghĩa
-
-function renderUsers(filteredUsers: User[]): void {
-  // Triển khai logic hiển thị danh sách người dùng ở đây
-}
-
-function searchUsers(): void {
-  const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.toLowerCase();
-  const filteredUsers: User[] = users.filter(user => {
-      return user.name.toLowerCase().includes(input) ||
-          user.address.toLowerCase().includes(input) ||
-          user.phone.toLowerCase().includes(input) ||
-          user.role.toLowerCase().includes(input) ||
-          user.email.toLowerCase().includes(input);
-  });
-
-  renderUsers(filteredUsers);
-}
-
-function submitRole(): void {
-  const roleName: string = (document.getElementById('roleName') as HTMLInputElement).value.trim();
-
-  if (!roleName) {
-      alert("Vui lòng điền đầy đủ thông tin!");
-      return;
-  }
-
-  alert(`Đã thêm vai trò: ${roleName}`);
-  $('#addRoleModal').modal('hide');
-  (document.getElementById('addRoleForm') as HTMLFormElement).reset();
-}
 
 function submitUser(): void {
   const userName: string = (document.getElementById('userName') as HTMLInputElement).value.trim();

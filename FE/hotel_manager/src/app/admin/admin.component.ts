@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent {
   title = 'hotel_manager';
-  pageTitle = 'Quản Lý Người Dùng';
+  pageTitle = 'Management Page';
   constructor(private router: Router){}
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {

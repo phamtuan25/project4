@@ -15,18 +15,20 @@ export class RegisterComponent {
   phoneNumber: string = '';
   password: string = '';
 
-  errors:any= [];
+  errors:any=[];
 
   constructor(private authService: AuthService, private router: Router) { }
 
   onSubmit() {
     this.authService.register(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
+        this.errors = [];
         console.log('Registration successful:', response);
         this.router.navigate(['/login']);
       },
       error => {
         this.errors = [];
+        console.log(this.errors);
         error.error.forEach((element:any) => {
           this.errors.push(element);
         });
@@ -37,6 +39,6 @@ export class RegisterComponent {
   }
 
   findErrors(key:string){
-    return this.errors.find((error:any)=>error.key==key).message;
+    return this.errors.find((error:any)=>error.key==key)?.message;
   }
 }

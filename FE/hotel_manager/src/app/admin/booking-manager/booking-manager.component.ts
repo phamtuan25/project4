@@ -14,7 +14,7 @@ export class BookingManagerComponent implements OnInit {
   }
 }
 
-interface Booking {
+export interface Booking {
   id: string; // ID của đặt phòng
   customerName: string; // Tên khách hàng
   roomBooked: string; // Phòng đã đặt

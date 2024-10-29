@@ -32,7 +32,7 @@
                     <span *ngIf="errors">{{findErrors("phoneNumber")}}</span>
                     <div class="form-group">
                         <input type="password" [(ngModel)]="password" class="form-input" name="password" id="password" placeholder="Password" />
-                        <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span>
+                        <!-- <span toggle="#password" class="zmdi zmdi-eye field-icon toggle-password"></span> -->
                     </div>
                     <span *ngIf="errors">{{findErrors("password")}}</span>
                     <div class="form-group">
@@ -40,8 +40,7 @@
                     </div>
                 </form>
                 <p class="loginhere">
-                    Have already an account ? <a [routerLink]="''" class="loginhere-link">Login
-                        here</a>
+                    Have already an account ? <a [routerLink]="''" class="loginhere-link">Login here</a>
                 </p>
             </div>
         </div>

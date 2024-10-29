@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
+    private Long userId;
     private String fullName;
     private String email;
     private String phoneNumber;

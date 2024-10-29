@@ -85,6 +85,8 @@ public class UserServiceImpl implements UserService {
     public void setUser(User userUpdate, User userInput) {
         userUpdate.setPhoneNumber(userInput.getPhoneNumber());
         userUpdate.setAddress(userInput.getAddress());
+        userUpdate.setEmail(userInput.getEmail());
+        userUpdate.setRole(userInput.getRole());
         userUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }

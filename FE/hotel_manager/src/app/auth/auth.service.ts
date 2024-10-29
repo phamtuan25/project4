@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(firstName: string, lastName: string, address: string, email: string, phoneNumber:String, password: string): Observable<any> {
-    const body = { 
+    const body = {  
       firstName: firstName,
       lastName: lastName,
       address: address,

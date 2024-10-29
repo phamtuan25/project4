@@ -7,6 +7,7 @@ import com.example.projectbackend.entity.User;
 public class UserMapper {
     public static UserResponse convertToResponse(User user){
         UserResponse userResponse = new UserResponse();
+        userResponse.setUserId(user.getUserId());
         userResponse.setFullName(user.getFullName());
         userResponse.setEmail(user.getEmail());
         userResponse.setPhoneNumber(user.getPhoneNumber());
