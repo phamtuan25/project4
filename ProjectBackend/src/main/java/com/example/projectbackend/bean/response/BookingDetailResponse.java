@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingDetailResponse {
+    private Long bookingDetailId;
     private Long bookingId;
     private Long roomId;
     private LocalDateTime checkIn;
@@ -20,5 +21,6 @@ public class BookingDetailResponse {
     private LocalDateTime updatedAt;
     private BookingDetail.BookingDetailStatus status;
     private String specialRequests;
-    private BigDecimal price;
+    private Boolean isHourly;
+    private Double price;
 }

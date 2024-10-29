@@ -41,9 +41,6 @@ public class BookingDetail {
     @Column(name = "check_out")
     private LocalDateTime checkOut;
 
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private BookingDetailStatus status;
@@ -58,5 +55,8 @@ public class BookingDetail {
     private String specialRequests;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
+
+    @Column(name = "is_hourly")
+    private Boolean isHourly;
 }

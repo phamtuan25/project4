@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDetailRequest {
-    //private Long bookingId;
+    private Long bookingId;
     private Long roomId;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private String specialRequests;
-    private BigDecimal price;
+    private Double price;
 }

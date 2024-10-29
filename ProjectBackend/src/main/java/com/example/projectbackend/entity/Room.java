@@ -41,10 +41,10 @@ public class Room {
     private RoomStatus status;
 
     @Column(name = "day_price")
-    private BigDecimal dayPrice;
+    private Double dayPrice;
 
     @Column(name = "hour_price")
-    private BigDecimal hourPrice;
+    private Double hourPrice;
 
     @JsonIgnore
     @OneToMany(mappedBy = "room")
