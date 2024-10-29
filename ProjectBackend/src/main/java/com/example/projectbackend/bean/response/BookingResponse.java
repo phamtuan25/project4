@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingResponse {
+    private Long bookingId;
     private UserResponse userResponse;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
@@ -22,5 +23,5 @@ public class BookingResponse {
 
     private Booking.BookingStatus status;
     private Double deposit;
-    private BigDecimal totalAmount;
+    private Double totalAmount;
 }

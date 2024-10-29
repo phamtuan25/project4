@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Long bookingId;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -42,6 +42,8 @@ public class Booking {
     @Column(name = "deposit")
     private Double deposit;
 
+    @Column(name = "total_amount")
+    private Double totalAmount;
 
 
 }

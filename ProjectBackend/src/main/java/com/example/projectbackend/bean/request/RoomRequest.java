@@ -17,7 +17,7 @@ public class RoomRequest {
     private String roomNumber;
     private Room.RoomType roomType;
     private Room.RoomStatus status;
-    private BigDecimal dayPrice;
-    private BigDecimal hourPrice;
+    private Double dayPrice;
+    private Double hourPrice;
     private List<Image> images;
 }

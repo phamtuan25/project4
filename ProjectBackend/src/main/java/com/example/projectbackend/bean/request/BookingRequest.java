@@ -16,5 +16,5 @@ public class BookingRequest {
     private User user;
     private Booking.BookingStatus status;
     private Double deposit;
-    private BigDecimal totalAmount;
+    private Double totalAmount;
 }

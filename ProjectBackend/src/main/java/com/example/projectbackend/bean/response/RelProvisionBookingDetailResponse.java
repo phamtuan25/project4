@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RelProvisionBookingDetailResponse {
+    private Long relId;
     private Long provisionId;
     private Long bookingDetailId;
     private Long bookingId;
