@@ -9,10 +9,11 @@ import com.example.projectbackend.entity.RelProvisionBookingDetail;
 public class RelProvisionBookingDetailMapper {
     public static RelProvisionBookingDetailResponse convertToResponse(RelProvisionBookingDetail relProvisionBookingDetail){
         RelProvisionBookingDetailResponse relProvisionBookingDetailResponse = new RelProvisionBookingDetailResponse();
+        relProvisionBookingDetailResponse.setRelId(relProvisionBookingDetail.getRelId());
         relProvisionBookingDetailResponse.setProvisionId(relProvisionBookingDetailResponse.getProvisionId());
         relProvisionBookingDetailResponse.setBookingDetailId(relProvisionBookingDetailResponse.getBookingDetailId());
-        relProvisionBookingDetailResponse.setStatus(relProvisionBookingDetailResponse.getStatus());
-        relProvisionBookingDetailResponse.setPrice(relProvisionBookingDetailResponse.getPrice());
+        relProvisionBookingDetailResponse.setStatus(relProvisionBookingDetail.getStatus());
+        relProvisionBookingDetailResponse.setPrice(relProvisionBookingDetail.getPrice());
         return relProvisionBookingDetailResponse;
     }
 
