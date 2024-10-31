@@ -33,5 +33,4 @@ public class RoomRequest {
     @Positive(message = "Hour price must be positive")
     private Double hourPrice;
 
-    private List<ImageRequest> images;
 }

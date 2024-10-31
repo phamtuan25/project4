@@ -49,13 +49,16 @@ public class RoomController {
             Room room = roomService.createRoom(roomRequest);
 
             // Lưu hình ảnh
-            if (roomRequest.getImages() != null && !roomRequest.getImages().isEmpty()) {
-                for (ImageRequest imageRequest : roomRequest.getImages()) {
+            ImageRequest imageRequest = new ImageRequest();
+            if (files != null && files.length > 0) {
+                for (MultipartFile file : files) {
+                    // Thiết lập thông tin hình ảnh
                     imageRequest.setReferenceId(room.getRoomId()); // Đặt ID tham chiếu
-                    // Lưu từng hình ảnh
-                    for (MultipartFile file : files) {
-                        imageService.saveImages(file, imageRequest);
-                    }
+                    imageRequest.setName("ROOM"); // Đặt Type ảnh
+                    imageRequest.setImageFileName(file.getOriginalFilename()); // Lấy tên tệp từ MultipartFile
+
+                    // Lưu hình ảnh với tên tương ứng
+                    imageService.saveImages(file, imageRequest);
                 }
             }
 

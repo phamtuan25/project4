@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoomModal">Add Room</button>
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoomModal" (click)="resetFormData()">Add Room</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -86,10 +86,10 @@
                                             *ngIf="editRoomForm.controls['hourPrice']?.invalid && (editRoomForm.controls['hourPrice']?.touched || editRoomForm.submitted)">
                                             <small class="text-danger">Hour Price is required.</small>
                                         </div>
-                                    <!-- <div class="form-group">
-                                        <label for="images">Image</label>
-                                        <input type="text" class="form-control" id="images" name="images" [(images)]="status" required>
-                                    </div> -->
+                                        <div class="form-group">
+                                            <label for="images">Image</label>
+                                            <input type="file" multiple class="form-control" id="images" [(ngModel)]="files" (change)="onFileChange($event)" accept="image/*">
+                                        </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -153,11 +153,11 @@
                                 name="hourPrice">
                         </div>
                         <span *ngIf="errors">{{findErrors("hourPrice")}}</span>
-                        <!-- <div class="form-group">
-                        <label for="images">Image</label>
-                        <input type="text" class="form-control" id="images" [(ngModel)]="images" name="images">
-                    </div>
-                    <span *ngIf="errors">{{findErrors("images")}}</span> -->
+                        <div class="form-group">
+                            <label for="images">Image</label>
+                            <input type="file" multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*">
+                        </div>
+                        <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

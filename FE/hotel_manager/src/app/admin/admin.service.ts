@@ -52,17 +52,27 @@ export class AdminService {
     return this.http.get<Room[]>(this.apiUrl + 'rooms', { headers });
   }
 
-  addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number): Observable<any> {
-    const body = {
+  addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null): Observable<any> {
+    const params = {
       roomNumber: roomNumber,
       roomType: roomType,
       status: status,
       dayPrice: dayPrice,
-      hourPrice: hourPrice,
-      // images: images
+      hourPrice: hourPrice
     };
-    const headers = this.config.getHttpHeaders();
-    return this.http.post(this.apiUrl + 'rooms', body, { headers });
+    const formData = new FormData();
+    formData.append('roomRequest', new Blob([JSON.stringify(params)], { type: 'application/json' }));
+
+    if(files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    let headers = this.config.getHttpHeaders();
+    if (headers.has('Content-Type')) {
+      headers = headers.delete('Content-Type');
+    }
+    return this.http.post(this.apiUrl + 'rooms', formData, { headers });
   }
 
   eidtRoom(roomId: number, roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number): Observable<any> {
@@ -113,4 +123,10 @@ export class AdminService {
     const headers = this.config.getHttpHeaders();
     return this.http.get<Booking[]>(this.apiUrl + 'bookings', { headers });
   }
+}
+
+export interface Images {
+  imageFileName: String;
+  name: String;
+  referenceId: Number;
 }
