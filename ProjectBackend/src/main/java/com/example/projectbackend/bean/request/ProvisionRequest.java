@@ -2,6 +2,7 @@ package com.example.projectbackend.bean.request;
 
 import com.example.projectbackend.entity.Image;
 import com.example.projectbackend.entity.Provision;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -30,6 +31,6 @@ public class ProvisionRequest {
     @NotNull(message = "Status is required")
     private Provision.ProvisionStatus status;
 
-    @NotEmpty(message = "At least one image is required")
-    private List<Image> images;
+    private List<ImageRequest> images;
+
 }

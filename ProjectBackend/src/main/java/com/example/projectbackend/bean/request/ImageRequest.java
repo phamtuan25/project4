@@ -1,5 +1,6 @@
 package com.example.projectbackend.bean.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,14 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ImageRequest {
+public class ImageRequest {
 
-    @NotEmpty(message = "Name is required")
+    @NotBlank(message = "Image file name is required.")
+    private String imageFileName;
+
+    @NotBlank(message = "Name is required.")
     private String name;
 
-    @NotNull(message = "Reference ID is required")
-    private Long referenceId;
+    @NotNull(message = "Reference ID is required.")
+    private Long referenceId; // Could be a Room ID or Provision ID
 
-    @NotEmpty(message = "Image is required")
-    private String image; // Assuming this is the image file name or base64 string
 }

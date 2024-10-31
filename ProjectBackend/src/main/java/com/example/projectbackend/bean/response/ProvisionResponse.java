@@ -20,5 +20,5 @@ public class ProvisionResponse {
     private String description;
     private BigDecimal price;
     private Provision.ProvisionStatus status;
-    private List<Image> images;
+    private List<ImageResponse> images;
 }
