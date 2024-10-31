@@ -29,6 +29,7 @@ export class UserManagerComponent implements OnInit {
     this.admin.pageTitle = 'User Management';
     this.getUsers();
   }
+  //Get User list
   getUsers(){
     this.adminService.getUser().subscribe(
       (response: User[]) =>{
@@ -38,6 +39,7 @@ export class UserManagerComponent implements OnInit {
     )
     
   }
+  //Tìm kiếm User 
   searchUsers(): void {
     const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.toLowerCase();
     this.filterUser = this.users.filter(user => {
@@ -53,6 +55,7 @@ export class UserManagerComponent implements OnInit {
       this.searchUsers();
     }
   }
+  // gán giá trị user edit
   openEditUser(user: User) {
     this.userId = user.userId
     this.email = user.email
@@ -60,6 +63,7 @@ export class UserManagerComponent implements OnInit {
     this.phoneNumber = user.phoneNumber
     this.role = user.role
   }
+  // submit user đã edit
   onSubmitEdit(form: NgForm) {
     if(form.valid) {
       this.adminService.eidtUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
@@ -75,35 +79,60 @@ export class UserManagerComponent implements OnInit {
             document.body.removeChild(backdrop);
           }
           this.getUsers();
+          this.resetFormData();
         },
-        error => {
-          console.error('Edit failed:', error);
-        }
       );
     }
     
   }
+
+  // submit user đã add
   errors:any=[];
   onSubmitAdd() {
     this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
-        this.errors = [];
+        alert("Add Success!");
+        const modalElement = document.getElementById(`addUserModal`);
+          if (modalElement) {
+            modalElement.style.display = 'none'; 
+            modalElement.classList.remove('show');
+          }
+          const backdrop = document.querySelector('.modal-backdrop.fade.show');
+          if (backdrop) {
+            document.body.removeChild(backdrop);
+          }
+        this.getUsers();
+        this.resetFormData();
       },
       error => {
         this.errors = [];
-        console.log(this.errors);
+        if(this.isObject(error.error)){
+          this.errors.push(error.error)
+        }
         error.error.forEach((element:any) => {
           this.errors.push(element);
         });
-        console.log(this.errors);
-        console.error('Add User failed:', error);
+        console.log("error",error.error)
       }
     );
   }
   findErrors(key:string){
     return this.errors.find((error:any)=>error.key==key)?.message;
   }
+  // reset lại biến
+  resetFormData() {
+    this.firstName = "";
+    this.lastName = "";
+    this.email = "";
+    this.address = "";
+    this.phoneNumber = "";
+    this.password = "";
+  }
+  isObject(value: any) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
 }
+
 export interface User {
   userId: number;
   fullName: string; 
@@ -115,57 +144,7 @@ export interface User {
 }
 
 
-function submitUser(): void {
-  const userName: string = (document.getElementById('userName') as HTMLInputElement).value.trim();
-  const userAddress: string = (document.getElementById('userAddress') as HTMLInputElement).value.trim();
-  const userPhone: string = (document.getElementById('userPhone') as HTMLInputElement).value.trim();
-  const userRole: string = (document.getElementById('userRole') as HTMLInputElement).value.trim();
-  const userEmail: string = (document.getElementById('userEmail') as HTMLInputElement).value.trim();
 
-  if (!userName || !userAddress || !userPhone || !userRole || !userEmail) {
-      alert("Vui lòng điền đầy đủ thông tin!");
-      return;
-  }
-
-  alert(`Đã thêm người dùng: ${userName}, Vai trò: ${userRole}`);
-  $('#addUserModal').modal('hide');
-  (document.getElementById('addUserForm') as HTMLFormElement).reset();
-}
-
-function openEditUserModal(id: string, name: string, address: string, phone: string, role: string, email: string): void {
-  (document.getElementById('editUserId') as HTMLInputElement).value = id;
-  (document.getElementById('editUserName') as HTMLInputElement).value = name;
-  (document.getElementById('editUserAddress') as HTMLInputElement).value = address;
-  (document.getElementById('editUserPhone') as HTMLInputElement).value = phone;
-  (document.getElementById('editUserRole') as HTMLInputElement).value = role;
-  (document.getElementById('editUserEmail') as HTMLInputElement).value = email;
-  $('#editUserModal').modal('show');
-}
-
-function submitEditUser(): void {
-  const id: string = (document.getElementById('editUserId') as HTMLInputElement).value;
-  const userName: string = (document.getElementById('editUserName') as HTMLInputElement).value.trim();
-  const userAddress: string = (document.getElementById('editUserAddress') as HTMLInputElement).value.trim();
-  const userPhone: string = (document.getElementById('editUserPhone') as HTMLInputElement).value.trim();
-  const userRole: string = (document.getElementById('editUserRole') as HTMLInputElement).value.trim();
-  const userEmail: string = (document.getElementById('editUserEmail') as HTMLInputElement).value.trim();
-
-  if (!userName || !userAddress || !userPhone || !userRole || !userEmail) {
-      alert("Vui lòng điền đầy đủ thông tin!");
-      return;
-  }
-
-  alert(`Đã sửa người dùng: ID: ${id}, Tên: ${userName}, Vai trò: ${userRole}`);
-  $('#editUserModal').modal('hide');
-  (document.getElementById('editUserForm') as HTMLFormElement).reset();
-}
-
-function deleteUser(id: string): void {
-  if (confirm(`Bạn có chắc chắn muốn xóa người dùng với ID: ${id}?`)) {
-      alert(`Người dùng với ID ${id} đã bị xóa!`);
-      // Thêm logic để xóa người dùng từ bảng
-  }
-}
 
 
 

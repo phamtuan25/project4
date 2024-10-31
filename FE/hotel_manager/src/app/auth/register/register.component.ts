@@ -23,21 +23,24 @@ export class RegisterComponent {
     this.authService.register(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
         this.errors = [];
-        console.log('Registration successful:', response);
-        this.router.navigate(['/login']);
+        alert("Register Success!");
+        this.router.navigate(['/']);
       },
       error => {
         this.errors = [];
-        console.log(this.errors);
+        if(this.isObject(error.error)){
+          this.errors.push(error.error)
+        }
         error.error.forEach((element:any) => {
           this.errors.push(element);
         });
-        console.log(this.errors);
-        console.error('Registration failed:', error);
+        console.log("error",error.error)
       }
     );
   }
-
+  isObject(value: any) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
   findErrors(key:string){
     return this.errors.find((error:any)=>error.key==key)?.message;
   }
