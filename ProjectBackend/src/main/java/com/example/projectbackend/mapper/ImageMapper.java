@@ -5,18 +5,21 @@ import com.example.projectbackend.bean.response.ImageResponse;
 import com.example.projectbackend.entity.Image;
 
 public class ImageMapper {
-    public static ImageResponse convertToResponse(Image image){
+    public static ImageResponse convertToResponse(Image image) {
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setImageId(image.getImageId());
         imageResponse.setImageFileName(image.getImageFileName());
         imageResponse.setName(image.getName());
+        imageResponse.setReferenceId(image.getReferenceId());
         return imageResponse;
     }
 
-    public static Image convertFromRequest(ImageRequest imageRequest){
+    public static Image convertFromRequest(ImageRequest imageRequest) {
         Image image = new Image();
         image.setName(imageRequest.getName());
-        image.setImageFileName(imageRequest.getImage());
+        image.setReferenceId(imageRequest.getReferenceId());
+        // Thiết lập imageFileName từ ImageRequest nếu cần
+        image.setImageFileName(imageRequest.getImageFileName());
         return image;
     }
 }

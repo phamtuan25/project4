@@ -1,16 +1,13 @@
 package com.example.projectbackend.service;
 
 import com.example.projectbackend.bean.request.ImageRequest;
-import com.example.projectbackend.bean.response.ImageResponse;
-import com.example.projectbackend.entity.Image;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
+
 
 @Service
 public interface ImageService {
-    public List<Image> getImages(String name, Long referenceId);
-    public Image createImage(Image image);
-    public void deleteImage(Long imageId);
-    ImageResponse saveImage(ImageRequest imageRequest);
+    String saveImages(MultipartFile file, ImageRequest imageRequest) throws IOException;
 }
