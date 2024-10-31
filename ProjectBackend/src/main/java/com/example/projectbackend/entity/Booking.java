@@ -1,5 +1,6 @@
 package com.example.projectbackend.entity;
 
+import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;

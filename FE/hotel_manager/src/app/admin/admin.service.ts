@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { User } from './user-manager/user-manager.component';
 import { ConfigService } from '../../config/config.service';
 import { Room } from './room-manager/room-manager.component';
+import { Provision } from './provision-manager/provision-manager.component';
+import { SrvRecord } from 'dns';
+import { Booking } from './booking-manager/booking-manager.component';
 
 @Injectable({
   providedIn: 'root'
@@ -75,4 +78,39 @@ export class AdminService {
     return this.http.put(this.apiUrl + 'rooms/' + roomId, body, { headers });
   }
 
+   //Call Api Provision
+   getProvisions() {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<Provision[]>(this.apiUrl + 'provisions', { headers });
+  }
+
+  addProvision(provisionName: string, description: string, price: number, status: string): Observable<any> {
+    const body = {
+      provisionName: provisionName,
+      description: description,
+      price: price,
+      status: status,
+      // images: images
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.post(this.apiUrl + 'provisions', body, { headers });
+  }
+
+  eidtProvision(provisionId: number, provisionName: string, description: string, price: number, status: string): Observable<any> {
+    const body = {
+      provisionName: provisionName,
+      description: description,
+      price: price,
+      status: status,
+      // images: images
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.put(this.apiUrl + 'provisions/' + provisionId, body, { headers });
+  }
+
+  //Call Api Booking
+  getBooking() {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<Booking[]>(this.apiUrl + 'bookings', { headers });
+  }
 }

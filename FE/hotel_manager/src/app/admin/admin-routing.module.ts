@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { RoomManagerComponent } from './room-manager/room-manager.component';
 import { BookingManagerComponent } from './booking-manager/booking-manager.component';
-import { ServiceManagerComponent } from './service-manager/service-manager.component';
+import { ProvisionManagerComponent } from './provision-manager/provision-manager.component';
 import { UserManagerComponent } from './user-manager/user-manager.component';
 
 const routes: Routes = [
@@ -13,7 +13,7 @@ const routes: Routes = [
         children: [
             { path: 'room-manager', component: RoomManagerComponent },
             { path: 'booking-manager', component: BookingManagerComponent },
-            { path: 'service-manager', component: ServiceManagerComponent },
+            { path: 'provision-manager', component: ProvisionManagerComponent },
             { path: 'user-manager', component: UserManagerComponent },
         ]
     }

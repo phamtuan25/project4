@@ -2,45 +2,80 @@ import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
 import $ from 'jquery';
 import 'bootstrap';
+import { BookingDetail } from '../booking-detail-manager/booking-detail-manager.component';
+import { AdminService } from '../admin.service';
 @Component({
   selector: 'app-booking-manager',
   templateUrl: './booking-manager.component.html',
   styleUrl: './booking-manager.component.css'
 })
 export class BookingManagerComponent implements OnInit {
-  constructor(public admin: AdminComponent) { }
+  bookings: Booking[] = [];
+  filterBookings: Booking[] = [];
+  constructor(public admin: AdminComponent, private adminService: AdminService) { }
   ngOnInit(): void {
-    this.admin.pageTitle = 'Quản lý Đặt phòng';
+    this.admin.pageTitle = 'Booking Management';
   }
+
+    //get list Bookings
+    getProvisions() {
+      this.adminService.getBooking().subscribe(
+        (response: Booking[]) => {
+          this.bookings = response;
+          this.filterBookings = response
+        }
+      )
+    }
+    //tìm kiếm Bookings
+    searchBookings(): void {
+      const input: string = (document.getElementById('searchBookingInput') as HTMLInputElement).value.toLowerCase();
+      this.filterBookings = this.bookings.filter(booking => {
+        return booking?.createdAt.toISOString().includes(input) ||
+        booking?.updatedAt.toISOString().includes(input) ||
+          String(booking.deposit).toLowerCase().includes(input) ||
+          booking.status?.toLowerCase().includes(input) ||
+          String(booking.totalAmount).toLowerCase().includes(input)
+      });
+    }
+    handleKeyPress(event: any) {
+      if (event.key === 'Enter') {
+        this.searchBookings();
+      }
+    }
 }
 
 export interface Booking {
-  id: string; // ID của đặt phòng
-  customerName: string; // Tên khách hàng
-  roomBooked: string; // Phòng đã đặt
-  checkIn: string; // Ngày nhận phòng
-  checkOut: string; // Ngày trả phòng
-  numberOfPeople: string; // Số người
-  additionalServices: string; // Dịch vụ bổ sung
-  totalAmount: string; // Tổng tiền
-  bookingStatus: string; // Trạng thái đặt phòng
+  bookingId: number;
+  userBookingResponse: UserBookingResponse;
+  bookingDetailResponses: BookingDetail[];
+  createdAt: Date; 
+  updatedAt: Date; 
+  status: string; 
+  deposit: number;
+  totalAmount: number;
+}
+export interface UserBookingResponse {
+  userId: number;
+  fullName: string;
+  email: string; 
+  phoneNumber: string; 
+  address: string; 
 }
 
-const bookings: Booking[] = []; // Danh sách đặt phòng (giả sử đã định nghĩa)
 
 function renderBookings(filteredBookings: Booking[]): void {
   // Logic để hiển thị danh sách đặt phòng
 }
 
 function searchBookings(): void {
-  const input: string = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
-  const filteredBookings: Booking[] = bookings.filter(booking => {
-      return booking.customerName.toLowerCase().includes(input) ||
-          booking.roomBooked.toLowerCase().includes(input) ||
-          booking.bookingStatus.toLowerCase().includes(input);
-  });
+  // const input: string = (document.getElementById('searchInput') as HTMLInputElement).value.toLowerCase();
+  // const filteredBookings: Booking[] = bookings.filter(booking => {
+  //     return booking.customerName.toLowerCase().includes(input) ||
+  //         booking.roomBooked.toLowerCase().includes(input) ||
+  //         booking.bookingStatus.toLowerCase().includes(input);
+  // });
 
-  renderBookings(filteredBookings);
+  // renderBookings(filteredBookings);
 }
 
 function handleKeyPress(event: KeyboardEvent): void {

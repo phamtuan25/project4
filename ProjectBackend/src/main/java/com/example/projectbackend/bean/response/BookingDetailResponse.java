@@ -21,6 +21,5 @@ public class BookingDetailResponse {
     private LocalDateTime updatedAt;
     private BookingDetail.BookingDetailStatus status;
     private String specialRequests;
-    private Boolean isHourly;
     private Double price;
 }

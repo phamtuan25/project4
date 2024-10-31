@@ -1,6 +1,7 @@
 package com.example.projectbackend.bean.request;
 
 import com.example.projectbackend.entity.Booking;
+import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingRequest {
     @NotEmpty(message = "Room numbers are required")
-    private List<String> roomNumbers;
+    private List<BookingDetailRequest> bookingDetailRequests;
 
     @NotNull(message = "User is required")
     private User user;
@@ -29,11 +30,6 @@ public class BookingRequest {
     private Double deposit;
 
     @NotNull(message = "Total amount is required")
-    private BigDecimal totalAmount;
+    private Double totalAmount;
 
-    @NotNull(message = "Check-in time is required")
-    private LocalDateTime checkIn;
-
-    @NotNull(message = "Check-out time is required")
-    private LocalDateTime checkOut;
 }

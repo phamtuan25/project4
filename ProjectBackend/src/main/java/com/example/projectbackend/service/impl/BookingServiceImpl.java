@@ -1,5 +1,6 @@
 package com.example.projectbackend.service.impl;
 
+import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
@@ -18,9 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,50 +49,54 @@ import java.util.stream.Collectors;
 
     @Override
     public Booking createBooking(BookingRequest bookingRequest) {
-        // Kiểm tra xem danh sách roomNumbers có rỗng không
-        if (bookingRequest.getRoomNumbers() == null || bookingRequest.getRoomNumbers().isEmpty()) {
-            throw new NotFoundException("RoomNumberMissing", "Room number list cannot be empty.");
-        }
+        // Kiểm tra xem booking detail có rỗng không
+        List<BookingDetailRequest> bookingDetailRequests = bookingRequest.getBookingDetailRequests();
 
         // Tìm kiếm người dùng từ cơ sở dữ liệu
         User user = userRepository.findById(bookingRequest.getUser().getUserId())
                 .orElseThrow(() -> new NotFoundException("UserNotFound", "User not found with ID: " + bookingRequest.getUser().getUserId()));
 
-        // Tìm các phòng theo roomNumber
-        List<Room> rooms = roomRepository.findAllByRoomNumberIn(bookingRequest.getRoomNumbers());
+        if (bookingDetailRequests == null || bookingDetailRequests.isEmpty()) {
+            throw new NotFoundException("BookingDetailEmpty", "Booking Detail cannot be empty.");
+        }
 
+        // Lấy danh sách roomId từ bookingDetailRequests
+        List<Long> roomIds = bookingDetailRequests.stream()
+                .map(BookingDetailRequest::getRoomId)
+                .collect(Collectors.toList());
+
+        // Lấy danh sách phòng từ cơ sở dữ liệu bằng roomId
+        List<Room> rooms = roomRepository.findAllById(roomIds);
         if (rooms.isEmpty()) {
             throw new NotFoundException("RoomNotFound", "One or more rooms not found.");
         }
 
         // Tạo booking từ request
-        Booking booking = new Booking();
+        Booking booking = BookingMapper.convertFromRequest(bookingRequest, roomRepository);
         booking.setUser(user); // Gán người dùng đã tìm thấy
         booking.setCreatedAt(LocalDateTime.now());
-        booking.setDeposit(bookingRequest.getDeposit());
         booking.setStatus(Booking.BookingStatus.PENDING);
 
         // Lưu booking để có bookingId
         Booking savedBooking = bookingRepository.save(booking);
 
-        // Tạo BookingDetails cho từng phòng
-        List<BookingDetail> bookingDetails = rooms.stream().map(room -> {
-            BookingDetail bookingDetail = new BookingDetail();
+        // Cập nhật BookingDetails với booking đã lưu và room đã tìm thấy
+        List<BookingDetail> bookingDetails = new ArrayList<>(booking.getBookingDetails()); // Sao chép danh sách để tránh ConcurrentModificationException
+        for (BookingDetail bookingDetail : bookingDetails) {
+            Room room = rooms.stream()
+                    .filter(r -> r.getRoomId().equals(bookingDetail.getRoom().getRoomId()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetail.getRoom().getRoomId()));
             bookingDetail.setRoom(room);
-            bookingDetail.setCheckIn(bookingRequest.getCheckIn());
-            bookingDetail.setCheckOut(bookingRequest.getCheckOut());
-            bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING);
-            bookingDetail.setPrice(room.getPrice());
-            bookingDetail.setBooking(savedBooking);
-            return bookingDetail;
-        }).collect(Collectors.toList());
+            bookingDetail.setBooking(savedBooking); // Gán booking cho chi tiết đặt phòng
+        }
 
         // Lưu BookingDetails
         bookingDetailRepository.saveAll(bookingDetails);
 
         // Cập nhật tổng số tiền
         double totalAmount = bookingRequest.getDeposit() + bookingDetails.stream().mapToDouble(BookingDetail::getPrice).sum();
-        savedBooking.setTotalAmount(totalAmount);
+        savedBooking.setTotalAmount(Double.valueOf(totalAmount)); // Đảm bảo tổng số tiền là BigDecimal
 
         // Cập nhật booking với tổng số tiền
         return bookingRepository.save(savedBooking);
@@ -101,15 +104,16 @@ import java.util.stream.Collectors;
 
 
 
-
-
-
     @Override
     public Booking updateBooking(Long bookingId, Booking booking) {
-        Booking bookingUpdate = bookingRepository.findById(bookingId).orElse(null);
-        if(bookingUpdate != null){
-            setBooking(bookingUpdate, booking);
-        }
+        // Tìm kiếm booking theo bookingId
+        Booking bookingUpdate = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
+
+        // Cập nhật thông tin booking
+        setBooking(bookingUpdate, booking);
+
+        // Lưu booking đã cập nhật vào cơ sở dữ liệu
         return bookingRepository.save(bookingUpdate);
     }
 
@@ -123,8 +127,11 @@ import java.util.stream.Collectors;
         bookingRepository.deleteById(bookingId);
     }
 
-    public void setBooking(Booking bookingUpdate, Booking bookingInput){
-        bookingUpdate.setUser(bookingInput.getUser());
-        bookingUpdate.setUpdatedAt(LocalDateTime.now());
+    private void setBooking(Booking bookingUpdate, Booking booking) {
+        bookingUpdate.setUser(booking.getUser());
+        bookingUpdate.setStatus(booking.getStatus());
+        bookingUpdate.setDeposit(booking.getDeposit());
+        bookingUpdate.setTotalAmount(booking.getTotalAmount());
+         bookingUpdate.setUpdatedAt(LocalDateTime.now());
     }
 }

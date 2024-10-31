@@ -2,10 +2,11 @@
     <img src="../../../../images/avatar.jpg" alt="Avatar">
     <h5>Nguyễn Văn A</h5>
     <hr>
-    <a [routerLink]="'/admin/service-manager'" class="active"><i class="fas fa-cogs"></i>Service Management</a>
-    <a [routerLink]="'/admin/room-manager'" class="active"><i class="fas fa-door-open"></i>Room Management</a>
-    <a [routerLink]="'/admin/booking-manager'" class="active"><i class="fas fa-calendar-check"></i>Booking Management</a>
-    <a [routerLink]="'/admin/user-manager'" class="active"><i class="fas fa-user"></i>User Management</a>
+    <a [routerLink]="'/admin/booking-manager'" class="active"><i class="fas fa-calendar-alt"></i> Booking</a>
+    <a [routerLink]="'/admin/booking-detail-manager'" class="active"><i class="fas fa-list-alt"></i> Booking Detail</a>
+    <a [routerLink]="'/admin/user-manager'" class="active"><i class="fas fa-user"></i> User</a>
+    <a [routerLink]="'/admin/provision-manager'" class="active"><i class="fas fa-box"></i> Provision</a>
+    <a [routerLink]="'/admin/room-manager'" class="active"><i class="fas fa-bed"></i> Room</a>
 </div>
 <div class="content">
     <div class="header">
@@ -17,91 +18,3 @@
     <router-outlet></router-outlet>
 </div>
 
-<!-- <script>
-    function searchUsers() {
-        const input = document.getElementById('searchUserInput').value.toLowerCase();
-        const filteredUsers = users.filter(user => {
-            return user.name.toLowerCase().includes(input) ||
-                user.address.toLowerCase().includes(input) ||
-                user.phone.toLowerCase().includes(input) ||
-                user.role.toLowerCase().includes(input) ||
-                user.email.toLowerCase().includes(input);
-        });
-
-        renderUsers(filteredUsers);
-    }
-
-    function submitRole() {
-        const roleName = document.getElementById('roleName').value.trim();
-
-
-        if (!roleName) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        alert("Đã thêm vai trò: ${roleName}");
-        $('#addRoleModal').modal('hide');
-        document.getElementById('addRoleForm').reset();
-    }
-
-    function submitUser() {
-        const userName = document.getElementById('userName').value.trim();
-        const userAddress = document.getElementById('userAddress').value.trim();
-        const userPhone = document.getElementById('userPhone').value.trim();
-        const userRole = document.getElementById('userRole').value.trim();
-        const userEmail = document.getElementById('userEmail').value.trim();
-
-        if (!userName || !userAddress || !userPhone || !userRole || !userEmail) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        alert(`Đã thêm người dùng: ${userName}, Vai trò: ${userRole}`);
-        $('#addUserModal').modal('hide');
-        document.getElementById('addUserForm').reset();
-    }
-
-    function openEditUserModal(id, name, address, phone, role, email) {
-        document.getElementById('editUserId').value = id;
-        document.getElementById('editUserName').value = name;
-        document.getElementById('editUserAddress').value = address;
-        document.getElementById('editUserPhone').value = phone;
-        document.getElementById('editUserRole').value = role;
-        document.getElementById('editUserEmail').value = email;
-        $('#editUserModal').modal('show');
-    }
-
-    function submitEditUser() {
-        const id = document.getElementById('editUserId').value;
-        const userName = document.getElementById('editUserName').value.trim();
-        const userAddress = document.getElementById('editUserAddress').value.trim();
-        const userPhone = document.getElementById('editUserPhone').value.trim();
-        const userRole = document.getElementById('editUserRole').value.trim();
-        const userEmail = document.getElementById('editUserEmail').value.trim();
-
-        if (!userName || !userAddress || !userPhone || !userRole || !userEmail) {
-            alert("Vui lòng điền đầy đủ thông tin!");
-            return;
-        }
-
-        alert(`Đã sửa người dùng: ID: ${id}, Tên: ${userName}, Vai trò: ${userRole}`);
-        $('#editUserModal').modal('hide');
-        document.getElementById('editUserForm').reset();
-    }
-
-    function deleteUser(id) {
-        if (confirm(`Bạn có chắc chắn muốn xóa người dùng với ID: ${id}?`)) {
-            alert(`Người dùng với ID ${id} đã bị xóa!`);
-            // Thêm logic để xóa người dùng từ bảng
-        }
-    }
-
-    function signOut() {
-        if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-            alert("Đã đăng xuất!");
-            window.location.href = 'login.html'; // Điều hướng đến trang đăng nhập
-        }
-    }
-</script>
--->

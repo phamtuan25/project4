@@ -1,0 +1,178 @@
+<div class="form-group mt-3">
+    <div class="input-group">
+        <input type="text" class="form-control" id="searchProvisionInput" placeholder="Search..."
+            (keyup)="handleKeyPress($event)">
+
+        <div class="input-group-append">
+            <button class="btn btn-primary" (click)="searchProvisions()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProvisionModal">Add Provision</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Provision Name</th>
+                <th>Descripton</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="serviceTable">
+            <tr *ngFor="let provision of filterProvisions">
+                <td>{{provision.provisionName}}</td>
+                <td>{{provision.description}}</td>
+                <td>{{provision.price}}</td>
+                <td>{{provision.status}}</td>
+                <td>{{provision.images}}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                        [attr.data-target]="'#editProvisionModal'+provision.provisionId"
+                        (click)="openEditProvision(provision)">Edit</button>
+                </td>
+                <!-- Modal Sửa Dịch Vụ -->
+                <div class="modal fade" id="editProvisionModal{{provision.provisionId}}" tabindex="-1" role="dialog"
+                    aria-labelledby="editProvisionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <form id="editProvisonForm" #editProvisionForm="ngForm"
+                            (ngSubmit)="onSubmitEdit(editProvisionForm)" method="PUT">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProvisionModalLabel">Edit Provision</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="editProvisionId">
+                                    <div class="form-group">
+                                        <label for="provisionName">Provision Name</label>
+                                        <input type="text" class="form-control" id="provisionName" name="provisionName"
+                                            [value]="provision.provisionName" [(ngModel)]="provisionName" required>
+                                    </div>
+                                    <div
+                                        *ngIf="editProvisionForm.controls['provisionName']?.invalid && (editProvisionForm.controls['provisionName']?.touched || editProvisionForm.submitted)">
+                                        <small class="text-danger">Provision Name is required.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" id="description" name="description"
+                                            [(ngModel)]="description" required></textarea>
+                                    </div>
+                                    <div
+                                        *ngIf="editProvisionForm.controls['description']?.invalid && (editProvisionForm.controls['description']?.touched || editProvisionForm.submitted)">
+                                        <small class="text-danger">Description is required.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price">Price</label>
+                                        <input type="number" class="form-control" id="price" name="price"
+                                            [(ngModel)]="price" required>
+                                    </div>
+                                    <div
+                                        *ngIf="editProvisionForm.controls['price']?.invalid && (editProvisionForm.controls['price']?.touched || editProvisionForm.submitted)">
+                                        <small class="text-danger">Price is required.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <select class="form-control" id="status" name="status" [(ngModel)]="status"
+                                            required>
+                                            <option value="ACTIVE">ACTIVE</option>
+                                            <option value="INACTIVE">INACTIVE</option>
+                                        </select>
+                                    </div>
+                                    <!-- <div class="form-group">
+                                        <label for="images">Image</label>
+                                        <input type="text" class="form-control" id="images" name="images" [(images)]="status" required>
+                                    </div> -->
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="su" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal Thêm Dịch Vụ -->
+    <div class="modal fade" id="addProvisionModal" tabindex="-1" role="dialog" aria-labelledby="addProvisionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="addProvisionForm" method="POST" (ngSubmit)="onSubmitAdd()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProvisionModalLabel">Add New Provision</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="provisionName">Priovision Name</label>
+                            <input type="text" class="form-control" id="provisionName" name="provisionName"
+                                [(ngModel)]="provisionName" required>
+                        </div>
+                        <span *ngIf="errors">{{findErrors("provisionName")}}</span>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" [(ngModel)]="description"
+                                required></textarea>
+                        </div>
+                        <span *ngIf="errors">{{findErrors("description")}}</span>
+                        <div class="form-group">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" name="price" [(ngModel)]="price"
+                                required>
+                        </div>
+                        <span *ngIf="errors">{{findErrors("price")}}</span>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" id="status" name="status" [(ngModel)]="status" required>
+                                <option value="ACTIVE">ACTIVE</option>
+                                <option value="INACTIVE">INACTIVE</option>
+                            </select>
+                        </div>
+                        <!-- <div class="form-group">
+                                        <label for="images">Image</label>
+                                        <input type="text" class="form-control" id="images" name="images" [(images)]="status" required>
+                                    </div> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Phân Trang -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="">1</a></li>
+            <li class="page-item"><a class="page-link" href="">2</a></li>
+            <li class="page-item"><a class="page-link" href="">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

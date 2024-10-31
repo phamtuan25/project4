@@ -25,6 +25,7 @@ export class RoomManagerComponent implements OnInit {
     this.getRooms();
   }
 
+  //get list Room
   getRooms() {
     this.adminService.getRoom().subscribe(
       (response: Room[]) => {
@@ -33,6 +34,7 @@ export class RoomManagerComponent implements OnInit {
       }
     )
   }
+  // tìm kiếm Room
   searchRooms(): void {
     const input: string = (document.getElementById('searchRoomInput') as HTMLInputElement).value.toLowerCase();
     this.filterRooms = this.rooms.filter(room => {
@@ -49,6 +51,7 @@ export class RoomManagerComponent implements OnInit {
     }
   }
 
+  //submit room đã add
   errors:any=[];
   onSubmitAdd() {
     this.adminService.addRoom(this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice).subscribe(
@@ -79,7 +82,7 @@ export class RoomManagerComponent implements OnInit {
     return this.errors.find((error:any)=>error.key==key)?.message;
   }
 
-
+// gán giá trị Room edit
   openEditRoom(room: Room) {
     this.roomId = room.roomId
     this.roomNumber = room.roomNumber
@@ -109,8 +112,8 @@ export class RoomManagerComponent implements OnInit {
         },
       );
     }
-    
   }
+  // reset lại biến
   resetFormData() {
     this.roomNumber = "";
     this.roomType = "";
@@ -118,12 +121,6 @@ export class RoomManagerComponent implements OnInit {
     this.dayPrice = 0;
     this.hourPrice = 0;
     // this.images = "";
-  }
-
-    deleteRoom(roomId: number): void {
-    if (confirm(`Bạn có chắc chắn muốn xóa phòng với ID: ${roomId}?`)) {
-      alert(`Phòng với ID ${roomId} đã bị xóa!`);
-    }
   }
 }
 

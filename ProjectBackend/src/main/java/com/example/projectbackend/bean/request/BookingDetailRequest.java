@@ -1,5 +1,6 @@
 package com.example.projectbackend.bean.request;
 
+import com.example.projectbackend.entity.BookingDetail;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -32,4 +33,6 @@ public class BookingDetailRequest {
     @NotNull(message = "Price is required")
     @PositiveOrZero(message = "Price must be non-negative")
     private Double price;
+
+    private BookingDetail.BookingDetailStatus status;
 }
