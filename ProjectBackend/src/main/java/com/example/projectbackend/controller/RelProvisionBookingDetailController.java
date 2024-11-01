@@ -7,6 +7,7 @@ import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.entity.RelProvisionBookingDetail;
 import com.example.projectbackend.service.RelProvisionBookingDetailService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class RelProvisionBookingDetailController {
     }
 
     @PostMapping
-    public RelProvisionBookingDetail createRel(@RequestBody RelProvisionBookingDetailRequest relProvisionBookingDetailRequest){
+    public RelProvisionBookingDetail createRel(@Valid @RequestBody RelProvisionBookingDetailRequest relProvisionBookingDetailRequest){
         return  relProvisionBookingDetailService.createRel(relProvisionBookingDetailRequest);
     }
 

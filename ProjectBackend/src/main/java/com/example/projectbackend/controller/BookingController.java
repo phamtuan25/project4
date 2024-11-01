@@ -4,6 +4,7 @@ import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.service.BookingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class BookingController {
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")
     @PostMapping
-    public Booking createBooking(@RequestBody BookingRequest bookingRequest) {
+    public Booking createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return bookingService.createBooking(bookingRequest);
     }
 

@@ -7,6 +7,7 @@ import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.service.ImageService;
 import com.example.projectbackend.service.ProvisionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +43,7 @@ public class ProvisionController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE, APPLICATION_JSON_VALUE})
-    public Provision createProvision(@RequestPart("provisionRequest") ProvisionRequest provisionRequest,
+    public Provision createProvision(@Valid @RequestPart("provisionRequest") ProvisionRequest provisionRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
             // Tạo mới một Provision

@@ -6,6 +6,7 @@ import com.example.projectbackend.bean.response.RoomResponse;
 import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.ImageService;
 import com.example.projectbackend.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,8 +40,8 @@ public class RoomController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE, APPLICATION_JSON_VALUE})
-    public Room createRoom(@RequestPart("roomRequest") RoomRequest roomRequest,
+    @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE})
+    public Room createRoom(@Valid @RequestPart("roomRequest") RoomRequest roomRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
             // Tạo mới một Room

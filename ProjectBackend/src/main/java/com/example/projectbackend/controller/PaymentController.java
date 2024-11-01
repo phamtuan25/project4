@@ -5,6 +5,7 @@ import com.example.projectbackend.bean.response.PaymentResponse;
 import com.example.projectbackend.bean.response.RoomResponse;
 import com.example.projectbackend.entity.Payment;
 import com.example.projectbackend.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public Payment createPayment(@RequestBody PaymentRequest paymentRequest) {
+    public Payment createPayment(@Valid @RequestBody PaymentRequest paymentRequest) {
         return paymentService.createPayment(paymentRequest);
     }
 

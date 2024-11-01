@@ -6,6 +6,7 @@ import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.BookingDetailService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class BookingDetailController {
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @PostMapping("/{bookingId}")
-    public BookingDetail createBookingDetail(@PathVariable Long bookingId, @RequestBody BookingDetailRequest bookingDetailRequest){
+    public BookingDetail createBookingDetail(@Valid @PathVariable Long bookingId, @RequestBody BookingDetailRequest bookingDetailRequest){
         return bookingDetailService.createBookingDetail(bookingDetailRequest, bookingId);
     }
     @PostMapping("/bookingDetailId")
