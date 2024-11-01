@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    List<ImageResponse> findAllByNameAndReferenceId(String Name, Long referenceId);
+    List<Image> findAllByNameAndReferenceId(String Name, Long referenceId);
 }

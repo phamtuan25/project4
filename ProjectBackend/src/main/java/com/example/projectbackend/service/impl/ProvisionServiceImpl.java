@@ -1,11 +1,13 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.ProvisionRequest;
+import com.example.projectbackend.bean.response.ImageResponse;
 import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.entity.User;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
+import com.example.projectbackend.mapper.ImageMapper;
 import com.example.projectbackend.mapper.ProvisionMapper;
 import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
@@ -28,11 +30,25 @@ public class ProvisionServiceImpl implements ProvisionService {
 
     @Override
     public List<ProvisionResponse> getAllProvision() {
-        if(provisionRepository.findAll().isEmpty()) {
-            throw new EmptyListException("Provision","This list Provision is empty");
+        List<Provision> provisions = provisionRepository.findAll();
+
+        if (provisions.isEmpty()) {
+            throw new EmptyListException("ProvisionEmpty", "This Provision list is empty");
         }
-        return provisionRepository.findAll().stream().map(ProvisionMapper::convertToResponse)
-                .peek(provisionResponse -> provisionResponse.setImages(imageRepository.findAllByNameAndReferenceId("provision", provisionResponse.getProvisionId())))
+
+        return provisions.stream()
+                .map(provision -> {
+                    ProvisionResponse provisionResponse = ProvisionMapper.convertToResponse(provision);
+
+                    // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
+                    List<ImageResponse> images = imageRepository.findAllByNameAndReferenceId("PROVISION", provision.getProvisionId())
+                            .stream()
+                            .map(ImageMapper::convertToResponse)
+                            .collect(Collectors.toList());
+
+                    provisionResponse.setImages(images);
+                    return provisionResponse;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -73,6 +89,7 @@ public class ProvisionServiceImpl implements ProvisionService {
     public void setProvision(Provision provisionUpdate, Provision provisionInput) {
         provisionUpdate.setProvisionName(provisionInput.getProvisionName());
         provisionUpdate.setDescription(provisionInput.getDescription());
+        provisionUpdate.setStatus(provisionInput.getStatus());
         provisionUpdate.setPrice(provisionInput.getPrice());
     }
 }

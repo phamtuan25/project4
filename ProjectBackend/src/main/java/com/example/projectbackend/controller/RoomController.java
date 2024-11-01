@@ -1,10 +1,8 @@
 package com.example.projectbackend.controller;
 
 import com.example.projectbackend.bean.request.ImageRequest;
-import com.example.projectbackend.bean.request.ProvisionRequest;
 import com.example.projectbackend.bean.request.RoomRequest;
 import com.example.projectbackend.bean.response.RoomResponse;
-import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.ImageService;
 import com.example.projectbackend.service.RoomService;
@@ -45,7 +43,7 @@ public class RoomController {
     public Room createRoom(@RequestPart("roomRequest") RoomRequest roomRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
-            // Tạo mới một Provision
+            // Tạo mới một Room
             Room room = roomService.createRoom(roomRequest);
 
             // Lưu hình ảnh

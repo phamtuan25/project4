@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -44,7 +46,7 @@ public class ImageServiceImpl implements ImageService {
 
         // Nếu bạn muốn lưu đường dẫn, hãy tạo một trường tương ứng trong thực thể Image
         image.setImagePath(path.toString()); // Giả sử bạn có trường imagePath trong entity
-
+        image.setUploadDate(LocalDate.now());
         // Lưu hình ảnh vào cơ sở dữ liệu
         imageRepository.save(image);
 

@@ -1,11 +1,17 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.RoomRequest;
+import com.example.projectbackend.bean.response.ImageResponse;
+import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.bean.response.RoomResponse;
+import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
+import com.example.projectbackend.mapper.ImageMapper;
+import com.example.projectbackend.mapper.ProvisionMapper;
 import com.example.projectbackend.mapper.RoomMapper;
+import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.RoomRepository;
 import com.example.projectbackend.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +27,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public List<RoomResponse> getAllRooms() {
-        if(roomRepository.findAll().isEmpty()) {
-            throw new EmptyListException("EmptyRoom","This list Room is empty");
+        List<Room> rooms = roomRepository.findAll();
+
+        if (rooms.isEmpty()) {
+            throw new EmptyListException("RoomEmpty", "This Room list is empty");
         }
-        return roomRepository.findAll().stream().map(RoomMapper::convertToResponse).collect(Collectors.toList());
+
+        return rooms.stream()
+                .map(room -> {
+                    RoomResponse roomResponse = RoomMapper.convertToResponse(room);
+
+                    // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
+                    List<ImageResponse> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
+                            .stream()
+                            .map(ImageMapper::convertToResponse)
+                            .collect(Collectors.toList());
+
+                    roomResponse.setImages(images);
+                    return roomResponse;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

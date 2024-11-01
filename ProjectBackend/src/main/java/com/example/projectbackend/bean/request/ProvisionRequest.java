@@ -31,6 +31,4 @@ public class ProvisionRequest {
     @NotNull(message = "Status is required")
     private Provision.ProvisionStatus status;
 
-    private List<ImageRequest> images;
-
 }
