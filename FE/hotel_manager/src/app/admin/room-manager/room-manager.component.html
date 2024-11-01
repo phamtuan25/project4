@@ -31,7 +31,14 @@
                 <td>{{room.status}}</td>
                 <td>{{room.dayPrice}}</td>
                 <td>{{room.hourPrice}}</td>
-                <td>{{room.images}}</td>
+                <td>
+                    <ng-container *ngIf="room.images && room.images.length > 0; else noImage">
+                        <img [src]="'/FE/hotel_manager/public/upload_images/' + room.images[0].imageFileName" alt="Room Image" style="width: 100px; height: auto;" />
+                    </ng-container>
+                    <ng-template #noImage>
+                        <span>No Image Available</span>
+                    </ng-template>
+                </td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-toggle="modal" [attr.data-target]="'#editRoomModal'+room.roomId" (click)="openEditRoom(room)">Edit</button>
                 </td>

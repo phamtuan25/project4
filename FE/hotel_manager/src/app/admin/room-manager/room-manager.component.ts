@@ -63,11 +63,11 @@ export class RoomManagerComponent implements OnInit {
         // Kiểm tra định dạng tệp
         const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
         if (!this.files.some(file => validFormats.includes(file.type))) {
-            this.errors.push({ key: 'images', message: 'Chỉ chấp nhận hình ảnh định dạng JPEG, PNG hoặc GIF.' });
+            this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
         }
     } else {
         this.files = [];
-        this.errors.push({ key: 'images', message: 'Vui lòng chọn một hình ảnh.' });
+        this.errors.push({ key: 'images', message: 'Please select an image.' });
     }
 }
   //submit room đã add
@@ -94,10 +94,10 @@ export class RoomManagerComponent implements OnInit {
             this.errors = [];
             if (error.error && Array.isArray(error.error)) {
                 error.error.forEach((element: any) => {
-                    this.errors.push({ key: element.key || 'unknown', message: element.message || 'Có lỗi xảy ra' });
+                    this.errors.push({ key: element.key || 'unknown', message: element.message || 'An error occurred' });
                 });
             } else {
-                this.errors.push({ key: 'general', message: 'Đã xảy ra lỗi không xác định. Vui lòng thử lại!' });
+                this.errors.push({ key: 'general', message: 'An unknown error has occurred. Please try again!' });
             }
             console.log("error", error.error);
         }
@@ -161,8 +161,5 @@ export interface Room {
   hourPrice: number;
   images: Images[];
 }
-
-
-
 
 

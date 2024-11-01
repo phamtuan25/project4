@@ -11,7 +11,8 @@
     </div>
 </div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProvisionModal">Add Provision</button>
+    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProvisionModal"
+        (click)="resetFormData()">Add Provision</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -29,7 +30,15 @@
                 <td>{{provision.description}}</td>
                 <td>{{provision.price}}</td>
                 <td>{{provision.status}}</td>
-                <td>{{provision.images}}</td>
+                <td>
+                    <ng-container *ngIf="provision.images && provision.images.length > 0; else noImage">
+                        <img [src]="'/FE/hotel_manager/public/upload_images/' + provision.images[0].imageFileName"
+                            alt="Room Image" style="width: 100px; height: auto;" />
+                    </ng-container>
+                    <ng-template #noImage>
+                        <span>No Image Available</span>
+                    </ng-template>
+                </td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-toggle="modal"
                         [attr.data-target]="'#editProvisionModal'+provision.provisionId"
@@ -85,10 +94,11 @@
                                             <option value="INACTIVE">INACTIVE</option>
                                         </select>
                                     </div>
-                                    <!-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="images">Image</label>
-                                        <input type="text" class="form-control" id="images" name="images" [(images)]="status" required>
-                                    </div> -->
+                                        <input type="file" multiple class="form-control" id="images" [(ngModel)]="files"
+                                            (change)="onFileChange($event)" accept="image/*">
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -141,10 +151,12 @@
                                 <option value="INACTIVE">INACTIVE</option>
                             </select>
                         </div>
-                        <!-- <div class="form-group">
-                                        <label for="images">Image</label>
-                                        <input type="text" class="form-control" id="images" name="images" [(images)]="status" required>
-                                    </div> -->
+                        <div class="form-group">
+                            <label for="images">Image</label>
+                            <input type="file" multiple class="form-control" id="images" (change)="onFileChange($event)"
+                                accept="image/*">
+                        </div>
+                        <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

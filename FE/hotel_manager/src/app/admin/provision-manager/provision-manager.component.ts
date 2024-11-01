@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
 import $ from 'jquery';
 import 'bootstrap';
-import { AdminService } from '../admin.service';
+import { AdminService, Images } from '../admin.service';
 import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-provision-manager',
@@ -17,8 +17,9 @@ export class ProvisionManagerComponent implements OnInit {
   description: string = "";
   price: number = 0;
   status: string = "ACTIVE";
-  // images: string = "";
-  constructor(public admin: AdminComponent, private adminService: AdminService){}
+  files: File[] | null = [];
+  errors: any[] = [];
+  constructor(public admin: AdminComponent, private adminService: AdminService) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Provision Management';
     this.getProvisions();
@@ -39,7 +40,7 @@ export class ProvisionManagerComponent implements OnInit {
     const input: string = (document.getElementById('searchProvisionInput') as HTMLInputElement).value.toLowerCase();
     this.filterProvisions = this.provisions.filter(provision => {
       return provision.provisionName?.toLowerCase().includes(input) ||
-      provision.description?.toLowerCase().includes(input) ||
+        provision.description?.toLowerCase().includes(input) ||
         String(provision.price).toLowerCase().includes(input) ||
         provision.status?.toLowerCase().includes(input)
     });
@@ -50,36 +51,58 @@ export class ProvisionManagerComponent implements OnInit {
     }
   }
 
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    this.errors = [];
+    if (input.files && input.files.length > 0) {
+      this.files = Array.from(input.files);
+
+      // Kiểm tra định dạng tệp
+      const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!this.files.some(file => validFormats.includes(file.type))) {
+        this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
+      }
+    } else {
+      this.files = [];
+      this.errors.push({ key: 'images', message: 'Please select an image.' });
+    }
+  }
+
   //submit provision đã add
-  errors:any=[];
+
   onSubmitAdd() {
-    this.adminService.addProvision(this.provisionName, this.description, this.price, this.status).subscribe(
+    this.adminService.addProvision(this.provisionName, this.description, this.price, this.status, this.files).subscribe(
       response => {
         alert("Add Success!");
         const modalElement = document.getElementById(`addProvisionModal`);
-          if (modalElement) {
-            modalElement.style.display = 'none'; 
-            modalElement.classList.remove('show');
-          }
-          const backdrop = document.querySelector('.modal-backdrop.fade.show');
-          if (backdrop) {
-            document.body.removeChild(backdrop);
-          }
+        if (modalElement) {
+          modalElement.style.display = 'none';
+          modalElement.classList.remove('show');
+        }
+        const backdrop = document.querySelector('.modal-backdrop.fade.show');
+        if (backdrop) {
+          document.body.removeChild(backdrop);
+        }
+        this.files = [];
         this.getProvisions();
         this.resetFormData();
       },
       error => {
-        console.log("error",error.error)
         this.errors = [];
-        error.error.forEach((element:any) => {
-          this.errors.push(element);
-        });
-        
+            if (error.error && Array.isArray(error.error)) {
+                error.error.forEach((element: any) => {
+                    this.errors.push({ key: element.key || 'unknown', message: element.message || 'An error occurred' });
+                });
+            } else {
+                this.errors.push({ key: 'general', message: 'An unknown error has occurred. Please try again!' });
+            }
+            console.log("error", error.error);
       }
     );
   }
-  findErrors(key:string){
-    return this.errors.find((error:any)=>error.key==key)?.message;
+  findErrors(key: string) {
+    return this.errors.find((error: any) => error.key == key)?.message;
   }
 
 
@@ -94,13 +117,13 @@ export class ProvisionManagerComponent implements OnInit {
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
-    if(form.valid) {
-      this.adminService.eidtProvision(this.provisionId, this.provisionName,this.description, this.price, this.status).subscribe(
+    if (form.valid) {
+      this.adminService.eidtProvision(this.provisionId, this.provisionName, this.description, this.price, this.status).subscribe(
         response => {
           alert("Edit Success!");
           const modalElement = document.getElementById(`editProvisionModal${this.provisionId}`);
           if (modalElement) {
-            modalElement.style.display = 'none'; 
+            modalElement.style.display = 'none';
             modalElement.classList.remove('show');
           }
           const backdrop = document.querySelector('.modal-backdrop.fade.show');
@@ -113,14 +136,14 @@ export class ProvisionManagerComponent implements OnInit {
       );
     }
   }
-    // reset lại biến
-    resetFormData() {
-      this.provisionName = "";
-      this.description = "";
-      this.price = 0;
-      this.status = "";
-      // this.images = "";
-    }
+  // reset lại biến
+  resetFormData() {
+    this.provisionName = "";
+    this.description = "";
+    this.price = 0;
+    this.status = "ACTIVE";
+    this.files = null;
+  }
 
 }
 
@@ -128,9 +151,9 @@ export interface Provision {
   provisionId: number;
   provisionName: string;
   description: string;
-  price: number; 
-  status: string; 
-  images: string;
+  price: number;
+  status: string;
+  images: Images[];
 }
 
 

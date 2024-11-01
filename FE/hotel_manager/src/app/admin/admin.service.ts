@@ -82,7 +82,6 @@ export class AdminService {
       status: status,
       dayPrice: dayPrice,
       hourPrice: hourPrice,
-      // images: images
     };
     const headers = this.config.getHttpHeaders();
     return this.http.put(this.apiUrl + 'rooms/' + roomId, body, { headers });
@@ -94,16 +93,26 @@ export class AdminService {
     return this.http.get<Provision[]>(this.apiUrl + 'provisions', { headers });
   }
 
-  addProvision(provisionName: string, description: string, price: number, status: string): Observable<any> {
-    const body = {
+  addProvision(provisionName: string, description: string, price: number, status: string, files: File[] | null): Observable<any> {
+    const params = {
       provisionName: provisionName,
       description: description,
       price: price,
       status: status,
-      // images: images
     };
-    const headers = this.config.getHttpHeaders();
-    return this.http.post(this.apiUrl + 'provisions', body, { headers });
+    const formData = new FormData();
+    formData.append('provisionRequest', new Blob([JSON.stringify(params)], { type: 'application/json' }));
+
+    if(files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    let headers = this.config.getHttpHeaders();
+    if (headers.has('Content-Type')) {
+      headers = headers.delete('Content-Type');
+    }
+    return this.http.post(this.apiUrl + 'provisions', formData, { headers });
   }
 
   eidtProvision(provisionId: number, provisionName: string, description: string, price: number, status: string): Observable<any> {
@@ -112,7 +121,6 @@ export class AdminService {
       description: description,
       price: price,
       status: status,
-      // images: images
     };
     const headers = this.config.getHttpHeaders();
     return this.http.put(this.apiUrl + 'provisions/' + provisionId, body, { headers });
