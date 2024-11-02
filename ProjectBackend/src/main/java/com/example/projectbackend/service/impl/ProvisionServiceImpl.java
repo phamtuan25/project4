@@ -41,9 +41,10 @@ public class ProvisionServiceImpl implements ProvisionService {
                     ProvisionResponse provisionResponse = ProvisionMapper.convertToResponse(provision);
 
                     // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
-                    List<ImageResponse> images = imageRepository.findAllByNameAndReferenceId("PROVISION", provision.getProvisionId())
+                    List<String> images = imageRepository.findAllByNameAndReferenceId("PROVISION", provision.getProvisionId())
                             .stream()
-                            .map(ImageMapper::convertToResponse)
+                            .map(image -> ImageMapper.convertToResponse(image))
+                            .map(ImageResponse::getImageFileName)
                             .collect(Collectors.toList());
 
                     provisionResponse.setImages(images);
@@ -68,10 +69,10 @@ public class ProvisionServiceImpl implements ProvisionService {
     }
 
     @Override
-    public Provision updateProvision(Long provisionId, Provision provision) {
+    public Provision updateProvision(Long provisionId, ProvisionRequest provisionRequest) {
         Provision provisionUpdate = provisionRepository.findById(provisionId).orElse(null);
         if(provisionUpdate != null){
-            setProvision(provisionUpdate, provision);
+            setProvision(provisionUpdate, provisionRequest);
         }
         return provisionRepository.save(provisionUpdate);
     }
@@ -86,7 +87,7 @@ public class ProvisionServiceImpl implements ProvisionService {
         provisionRepository.deleteById(provisionId);
     }
 
-    public void setProvision(Provision provisionUpdate, Provision provisionInput) {
+    public void setProvision(Provision provisionUpdate, ProvisionRequest provisionInput) {
         provisionUpdate.setProvisionName(provisionInput.getProvisionName());
         provisionUpdate.setDescription(provisionInput.getDescription());
         provisionUpdate.setStatus(provisionInput.getStatus());

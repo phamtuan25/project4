@@ -4,6 +4,9 @@ import $ from 'jquery';
 import 'bootstrap';
 import { AdminService, Images } from '../admin.service';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-room-manager',
   templateUrl: './room-manager.component.html',
@@ -11,7 +14,7 @@ import { NgForm } from '@angular/forms';
 })
 export class RoomManagerComponent implements OnInit {
   rooms: Room[] = [];
-  filterRooms: Room[] = [];
+  filterRooms: Room[] = []; 
   roomId: number = 0;
   roomNumber: string = "";
   roomType: string = "SINGLE";
@@ -20,7 +23,12 @@ export class RoomManagerComponent implements OnInit {
   hourPrice: number = 0;
   files: File[] | null = [];
   errors: any[] = [];
-  constructor(public admin: AdminComponent, private adminService: AdminService) { }
+  imagePaths: ImagePaths[] = [];
+  isShowAddPopup: Boolean = false;
+  isShowEditPopup: Boolean = false;
+  deleteFiles: string[] = [];
+  imageOrigin: string[] = [];
+  constructor(public admin: AdminComponent, private adminService: AdminService, private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Room Management';
     this.getRooms();
@@ -32,6 +40,7 @@ export class RoomManagerComponent implements OnInit {
       (response: Room[]) => {
         this.rooms = response;
         this.filterRooms = response
+        console.log("this.filterRooms", this.filterRooms)
       }
     )
   }
@@ -59,7 +68,21 @@ export class RoomManagerComponent implements OnInit {
     this.errors = [];
     if (input.files && input.files.length > 0) {
         this.files = Array.from(input.files);
-
+        console.log('this.files',this.files)
+        Array.from(input.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (e.target && e.target.result) {
+              this.imagePaths.push({
+                name: file.lastModified + file.name,
+                path: e.target.result as string
+              });
+              this.cdr.detectChanges();
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+        console.log("this.imagePaths",this.imagePaths)
         // Kiểm tra định dạng tệp
         const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
         if (!this.files.some(file => validFormats.includes(file.type))) {
@@ -77,18 +100,9 @@ export class RoomManagerComponent implements OnInit {
     this.adminService.addRoom(this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice, this.files).subscribe(
         response => {
             alert("Add Success!");
-            const modalElement = document.getElementById(`addRoomModal`);
-            if (modalElement) {
-                modalElement.style.display = 'none'; 
-                modalElement.classList.remove('show');
-            }
-            const backdrop = document.querySelector('.modal-backdrop.fade.show');
-            if (backdrop) {
-                document.body.removeChild(backdrop);
-            }
             this.files=[];
-            this.getRooms();
             this.resetFormData();
+            this.getRooms();
         },
         error => {
             this.errors = [];
@@ -108,7 +122,11 @@ findErrors(key: string) {
     return this.errors.find((error: any) => error.key === key)?.message;
 }
 
-
+openAddRoom() {
+  this.resetFormData();
+  this.isShowAddPopup = true;
+  this.openPopup();
+}
 
 // gán giá trị Room edit
   openEditRoom(room: Room) {
@@ -118,23 +136,27 @@ findErrors(key: string) {
     this.status = room.status
     this.dayPrice = room.dayPrice
     this.hourPrice = room.hourPrice
-  }
+    this.imageOrigin = room.images
+    room.images.map(image => {
+      this.convertImageToBase64('/upload_images/' + image).subscribe(base64 => {
+        this.imagePaths.push({
+          name: image,
+          path: base64
+        });
+      }, error => {
+        console.error('Error converting image:', error);
+      });
+  })
+  this.isShowEditPopup = true;
+  this.openPopup();
+}
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
     if(form.valid) {
-      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType, this.status,this.dayPrice, this.hourPrice).subscribe(
+      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType, this.status,this.dayPrice, this.hourPrice, this.files, this.deleteFiles).subscribe(
         response => {
           alert("Edit Success!");
-          const modalElement = document.getElementById(`editRoomModal${this.roomId}`);
-          if (modalElement) {
-            modalElement.style.display = 'none'; 
-            modalElement.classList.remove('show');
-          }
-          const backdrop = document.querySelector('.modal-backdrop.fade.show');
-          if (backdrop) {
-            document.body.removeChild(backdrop);
-          }
           this.getRooms();
           this.resetFormData();
         },
@@ -149,6 +171,41 @@ findErrors(key: string) {
     this.dayPrice = 0;
     this.hourPrice = 0;
     this.files = null;
+    this.errors = [];
+    this.imagePaths = [];
+    this.isShowAddPopup = false;
+    this.isShowEditPopup = false;
+    this.closePopup();
+  }
+  removeImage(image: ImagePaths, index: number) {
+    this.imagePaths.splice(index, 1);
+    this.files = this.files?.filter(file => file.lastModified + file.name !== image.name) ?? null;
+    this.deleteFiles = this.imageOrigin.filter(ori => 
+    !this.imagePaths.some(path => path.name === ori)
+);
+  }
+  convertImageToBase64(imageUrl: string): Observable<string> {
+    return new Observable(observer => {
+      this.http.get(imageUrl, { responseType: 'blob' }).subscribe(blob => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          observer.next(reader.result as string);
+          observer.complete();
+        };
+        reader.readAsDataURL(blob);
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
+  openPopup() {
+    document.body.style.paddingRight = '17px'
+    document.body.classList.add('modal-open')
+      
+  }
+  closePopup() {
+    document.body.style.paddingRight = '';
+    document.body.classList.remove('modal-open')
   }
 }
 
@@ -159,7 +216,11 @@ export interface Room {
   status: string;
   dayPrice: number;
   hourPrice: number;
-  images: Images[];
+  images: string[];
 }
 
+interface ImagePaths {
+  name: string,
+  path: string;
+}
 

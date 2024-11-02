@@ -10,4 +10,5 @@ import java.io.IOException;
 @Service
 public interface ImageService {
     String saveImages(MultipartFile file, ImageRequest imageRequest) throws IOException;
+    String deleteImageByFileName(String[] fileName) throws IOException;
 }

@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addRoomModal" (click)="resetFormData()">Add Room</button>
+    <button class="btn btn-primary mb-3" (click)="openAddRoom()">Add Room</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -31,96 +31,32 @@
                 <td>{{room.status}}</td>
                 <td>{{room.dayPrice}}</td>
                 <td>{{room.hourPrice}}</td>
-                <td>
+                <td class="d-flex image-col">
                     <ng-container *ngIf="room.images && room.images.length > 0; else noImage">
-                        <img [src]="'/FE/hotel_manager/public/upload_images/' + room.images[0].imageFileName" alt="Room Image" style="width: 100px; height: auto;" />
+                        <img [src]="'/upload_images/' + room.images[0]" alt="Room Image" style="width: 100px; height: auto;" />
+                        <span *ngIf="room.images.length > 1" class="pl-3">+{{room.images.length - 1}}</span>
                     </ng-container>
                     <ng-template #noImage>
                         <span>No Image Available</span>
                     </ng-template>
                 </td>
                 <td>
-                    <button class="btn btn-warning btn-sm" data-toggle="modal" [attr.data-target]="'#editRoomModal'+room.roomId" (click)="openEditRoom(room)">Edit</button>
+                    <button class="btn btn-warning btn-sm" (click)="openEditRoom(room)">Edit</button>
                 </td>
-                <!-- Modal Sửa Phòng -->
-                <div class="modal fade" id="editRoomModal{{room.roomId}}" tabindex="-1" role="dialog"
-                    aria-labelledby="editRoomModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <form id="editRoomForm" #editRoomForm="ngForm" (ngSubmit)="onSubmitEdit(editRoomForm)" method="PUT">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editRoomModalLabel">Edit Room</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" id="editRoomId">
-                                    <div class="form-group">
-                                        <label for="roomNumber">Room Number</label>
-                                        <input type="text" class="form-control" id="roomNumber" name="roomNumber"[value]="room.roomNumber" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="roomType">Room Type</label>
-                                        <select class="form-control" id="roomType" name="roomType" [(ngModel)]="roomType" required>
-                                            <option value="SINGLE">SINGLE</option>
-                                            <option value="DOUBLE">DOUBLE</option>
-                                            <option value="DELUXE">DELUXE</option>
-                                            <option value="FAMILY">FAMILY</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <select class="form-control" id="status" name="status" [(ngModel)]="status" required>
-                                            <option value="AVAILABLE">AVAILABLE</option>
-                                            <option value="BOOKED">BOOKED</option>
-                                            <option value="MAINTENANCE">MAINTENANCE</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="dayPrice">Day Price</label>
-                                        <input type="number" class="form-control" id="dayPrice" name="dayPrice" [(ngModel)]="dayPrice" required>
-                                    </div>
-                                    <div
-                                        *ngIf="editRoomForm.controls['dayPrice']?.invalid && (editRoomForm.controls['dayPrice']?.touched || editRoomForm.submitted)">
-                                        <small class="text-danger">Day Price is required.</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="hourPrice">Hour Price</label>
-                                        <input type="number" class="form-control" id="hourPrice" name="hourPrice" [(ngModel)]="hourPrice" required>
-                                    </div>
-                                    <div
-                                            *ngIf="editRoomForm.controls['hourPrice']?.invalid && (editRoomForm.controls['hourPrice']?.touched || editRoomForm.submitted)">
-                                            <small class="text-danger">Hour Price is required.</small>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="images">Image</label>
-                                            <input type="file" multiple class="form-control" id="images" [(ngModel)]="files" (change)="onFileChange($event)" accept="image/*">
-                                        </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </tr>
         </tbody>
     </table>
 
 
-
+    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Phòng -->
-    <div class="modal fade" id="addRoomModal" tabindex="-1" role="dialog" aria-labelledby="addRoomModalLabel"
-        aria-hidden="true">
+    <div class="modal fade show custom-show" *ngIf="isShowAddPopup" >
         <div class="modal-dialog" role="document">
             <form id="" method="POST" (ngSubmit)="onSubmitAdd()">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -162,19 +98,99 @@
                         <span *ngIf="errors">{{findErrors("hourPrice")}}</span>
                         <div class="form-group">
                             <label for="images">Image</label>
-                            <input type="file" multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*">
+                            <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Chọn file</button>
+                            <div class="d-flex align-items-center image-box pt-3">
+                                <ng-container *ngFor="let image of imagePaths; let i = index">
+                                    <div class="box" width="120" height="100">
+                                        <img [src]="image.path" alt="" width="120" height="100">
+                                        <i class="fa-solid fa-circle-xmark" (click)="removeImage(image, i)"></i>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
                         <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
+    <!-- Modal Sửa Phòng -->
+    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal-dialog" role="document">
+        <form id="editRoomForm" #editRoomForm="ngForm" (ngSubmit)="onSubmitEdit(editRoomForm)" method="PUT">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomModalLabel">Edit Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editRoomId">
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number</label>
+                        <input type="text" class="form-control" id="roomNumber" name="roomNumber" [value]="roomNumber" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomType">Room Type</label>
+                        <select class="form-control" id="roomType" name="roomType" [(ngModel)]="roomType" required>
+                            <option value="SINGLE">SINGLE</option>
+                            <option value="DOUBLE">DOUBLE</option>
+                            <option value="DELUXE">DELUXE</option>
+                            <option value="FAMILY">FAMILY</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" [(ngModel)]="status" required>
+                            <option value="AVAILABLE">AVAILABLE</option>
+                            <option value="BOOKED">BOOKED</option>
+                            <option value="MAINTENANCE">MAINTENANCE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dayPrice">Day Price</label>
+                        <input type="number" class="form-control" id="dayPrice" name="dayPrice" [(ngModel)]="dayPrice" required>
+                    </div>
+                    <div
+                        *ngIf="editRoomForm.controls['dayPrice']?.invalid && (editRoomForm.controls['dayPrice']?.touched || editRoomForm.submitted)">
+                        <small class="text-danger">Day Price is required.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="hourPrice">Hour Price</label>
+                        <input type="number" class="form-control" id="hourPrice" name="hourPrice" [(ngModel)]="hourPrice" required>
+                    </div>
+                    <div
+                            *ngIf="editRoomForm.controls['hourPrice']?.invalid && (editRoomForm.controls['hourPrice']?.touched || editRoomForm.submitted)">
+                            <small class="text-danger">Hour Price is required.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="images">Image</label>
+                            <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Choose file</button>
+                            <div class="d-flex align-items-center image-box pt-3">
+                                <ng-container *ngFor="let image of imagePaths; let i = index">
+                                    <div class="box" width="120" height="100">
+                                        <img [src]="image.path" alt="" width="120" height="100">
+                                        <i class="fa-solid fa-circle-xmark" (click)="removeImage(image,i)"></i>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
     <!-- Phân Trang -->
     <nav aria-label="Page navigation">

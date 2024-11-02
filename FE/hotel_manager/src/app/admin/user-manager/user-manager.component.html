@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addUserModal" (click)="resetFormData()">Add User</button>
+    <button class="btn btn-primary mb-3" (click)="openAddUser()">Add User</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,85 +36,18 @@
                     <button class="btn btn-warning btn-sm" data-toggle="modal"
                         [attr.data-target]="'#editUserModal'+user.userId" (click)="openEditUser(user)">Edit</button>
                 </td>
-                <!-- Modal Sửa Người Dùng -->
-                <div class="modal fade" id="editUserModal{{user.userId}}" tabindex="-1" role="dialog"
-                    aria-labelledby="editUserModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <form id="editUserForm" #editUserForm="ngForm" (ngSubmit)="onSubmitEdit(editUserForm)"
-                            method="PUT">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" id="editUserId">
-                                    <div class="form-group">
-                                        <label for="editFullName">Full Name</label>
-                                        <input type="text" class="form-control" name="fullName" required
-                                            [value]="user.fullName" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editPhoneNumber">Phone Number</label>
-                                        <input type="text" class="form-control" [(ngModel)]="phoneNumber"
-                                            id="editPhoneNumber" name="phoneNumber" required>
-                                        <div
-                                            *ngIf="editUserForm.controls['phoneNumber']?.invalid && (editUserForm.controls['phoneNumber']?.touched || editUserForm.submitted)">
-                                            <small class="text-danger">Phone Number is required.</small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editUserAddress">Address</label>
-                                        <input type="text" class="form-control" [(ngModel)]="address"
-                                            id="editUserAddress" name="address" required>
-                                        <div
-                                            *ngIf="editUserForm.controls['address']?.invalid && (editUserForm.controls['address']?.touched || editUserForm.submitted)">
-                                            <small class="text-danger">Address is required.</small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editUserEmail">Email</label>
-                                        <input type="email" class="form-control" [(ngModel)]="email" name="email"
-                                            id="editUserEmail" readonly>
-                                        <div
-                                            *ngIf="editUserForm.controls['email']?.invalid && (editUserForm.controls['email']?.touched || editUserForm.submitted)">
-                                            <small class="text-danger">Email is required.</small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="editUserRole">Role</label>
-                                        <select class="form-control" id="editUserRole" [(ngModel)]="role" name="role"
-                                            required>
-                                            <option value="ADMIN">ADMIN</option>
-                                            <option value="EMPLOYEE">EMPLOYEE</option>
-                                            <option value="MANAGER">MANAGER</option>
-                                            <option value="CUSTOMER">CUSTOMER</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" id="onSubmit" class="btn btn-primary">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
             </tr>
         </tbody>
     </table>
-
+    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Người Dùng -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel"
-        aria-hidden="true">
+    <div class="modal fade show custom-show" *ngIf="isShowAddPopup">
         <div class="modal-dialog" role="document">
             <form id="addUserForm" method="POST" (ngSubmit)="onSubmitAdd()">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -153,13 +86,78 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <!-- Modal Sửa Người Dùng -->
+    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal-dialog" role="document">
+        <form id="editUserForm" #editUserForm="ngForm" (ngSubmit)="onSubmitEdit(editUserForm)"
+            method="PUT">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editUserId">
+                    <div class="form-group">
+                        <label for="editFullName">Full Name</label>
+                        <input type="text" class="form-control" name="fullName" required
+                            [value]="fullName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhoneNumber">Phone Number</label>
+                        <input type="text" class="form-control" [(ngModel)]="phoneNumber"
+                            id="editPhoneNumber" name="phoneNumber" required>
+                        <div
+                            *ngIf="editUserForm.controls['phoneNumber']?.invalid && (editUserForm.controls['phoneNumber']?.touched || editUserForm.submitted)">
+                            <small class="text-danger">Phone Number is required.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserAddress">Address</label>
+                        <input type="text" class="form-control" [(ngModel)]="address"
+                            id="editUserAddress" name="address" required>
+                        <div
+                            *ngIf="editUserForm.controls['address']?.invalid && (editUserForm.controls['address']?.touched || editUserForm.submitted)">
+                            <small class="text-danger">Address is required.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserEmail">Email</label>
+                        <input type="email" class="form-control" [(ngModel)]="email" name="email"
+                            id="editUserEmail" readonly>
+                        <div
+                            *ngIf="editUserForm.controls['email']?.invalid && (editUserForm.controls['email']?.touched || editUserForm.submitted)">
+                            <small class="text-danger">Email is required.</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserRole">Role</label>
+                        <select class="form-control" id="editUserRole" [(ngModel)]="role" name="role"
+                            required>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="EMPLOYEE">EMPLOYEE</option>
+                            <option value="MANAGER">MANAGER</option>
+                            <option value="CUSTOMER">CUSTOMER</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
+                    <button type="submit" id="onSubmit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item disabled">

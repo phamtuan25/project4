@@ -11,6 +11,6 @@ public interface ProvisionService {
     public List<ProvisionResponse> getAllProvision();
     public ProvisionResponse getDetailProvision(Long serviceId);
     public Provision createProvision(ProvisionRequest provisionRequest);
-    public Provision updateProvision(Long provisionId, Provision provision);
+    public Provision updateProvision(Long provisionId, ProvisionRequest provisionRequest);
     public void deleteProvision(Long provisionId);
 }

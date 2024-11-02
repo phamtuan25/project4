@@ -4,6 +4,9 @@ import $ from 'jquery';
 import 'bootstrap';
 import { AdminService, Images } from '../admin.service';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-provision-manager',
   templateUrl: './provision-manager.component.html',
@@ -19,13 +22,18 @@ export class ProvisionManagerComponent implements OnInit {
   status: string = "ACTIVE";
   files: File[] | null = [];
   errors: any[] = [];
-  constructor(public admin: AdminComponent, private adminService: AdminService) { }
+  imagePaths: ImagePaths[] = [];
+  isShowAddPopup: Boolean = false;
+  isShowEditPopup: Boolean = false;
+  deleteFiles: string[] = [];
+  imageOrigin: string[] = [];
+  constructor(public admin: AdminComponent, private adminService: AdminService,private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Provision Management';
     this.getProvisions();
   }
 
-  //get list Provision
+  //get list Provision   
   getProvisions() {
     this.adminService.getProvisions().subscribe(
       (response: Provision[]) => {
@@ -53,21 +61,35 @@ export class ProvisionManagerComponent implements OnInit {
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
-
+    
     this.errors = [];
     if (input.files && input.files.length > 0) {
-      this.files = Array.from(input.files);
-
-      // Kiểm tra định dạng tệp
-      const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
-      if (!this.files.some(file => validFormats.includes(file.type))) {
-        this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
-      }
+        this.files = Array.from(input.files);
+        console.log('this.files',this.files)
+        Array.from(input.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (e.target && e.target.result) {
+              this.imagePaths.push({
+                name: file.lastModified + file.name,
+                path: e.target.result as string
+              });
+              this.cdr.detectChanges();
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+        console.log("this.imagePaths",this.imagePaths)
+        // Kiểm tra định dạng tệp
+        const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!this.files.some(file => validFormats.includes(file.type))) {
+            this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
+        }
     } else {
-      this.files = [];
-      this.errors.push({ key: 'images', message: 'Please select an image.' });
+        this.files = [];
+        this.errors.push({ key: 'images', message: 'Please select an image.' });
     }
-  }
+}
 
   //submit provision đã add
 
@@ -75,15 +97,6 @@ export class ProvisionManagerComponent implements OnInit {
     this.adminService.addProvision(this.provisionName, this.description, this.price, this.status, this.files).subscribe(
       response => {
         alert("Add Success!");
-        const modalElement = document.getElementById(`addProvisionModal`);
-        if (modalElement) {
-          modalElement.style.display = 'none';
-          modalElement.classList.remove('show');
-        }
-        const backdrop = document.querySelector('.modal-backdrop.fade.show');
-        if (backdrop) {
-          document.body.removeChild(backdrop);
-        }
         this.files = [];
         this.getProvisions();
         this.resetFormData();
@@ -105,7 +118,11 @@ export class ProvisionManagerComponent implements OnInit {
     return this.errors.find((error: any) => error.key == key)?.message;
   }
 
-
+  openAddProvision() {
+    this.resetFormData();
+    this.isShowAddPopup = true;
+    this.openPopup();
+  }
   // gán giá trị Room edit
   openEditProvision(provision: Provision) {
     this.provisionId = provision.provisionId
@@ -113,23 +130,27 @@ export class ProvisionManagerComponent implements OnInit {
     this.description = provision.description
     this.price = provision.price
     this.status = provision.status
+    this.imageOrigin = provision.images
+    provision.images.map(image => {
+      this.convertImageToBase64('/upload_images/' + image).subscribe(base64 => {
+        this.imagePaths.push({
+          name: image,
+          path: base64
+        });
+      }, error => {
+        console.error('Error converting image:', error);
+      });
+  })
+    this.isShowEditPopup = true;
+    this.openPopup();
   }
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
     if (form.valid) {
-      this.adminService.eidtProvision(this.provisionId, this.provisionName, this.description, this.price, this.status).subscribe(
+      this.adminService.eidtProvision(this.provisionId, this.provisionName, this.description, this.price, this.status, this.files, this.deleteFiles).subscribe(
         response => {
           alert("Edit Success!");
-          const modalElement = document.getElementById(`editProvisionModal${this.provisionId}`);
-          if (modalElement) {
-            modalElement.style.display = 'none';
-            modalElement.classList.remove('show');
-          }
-          const backdrop = document.querySelector('.modal-backdrop.fade.show');
-          if (backdrop) {
-            document.body.removeChild(backdrop);
-          }
           this.getProvisions();
           this.resetFormData();
         },
@@ -143,8 +164,42 @@ export class ProvisionManagerComponent implements OnInit {
     this.price = 0;
     this.status = "ACTIVE";
     this.files = null;
+    this.errors = [];
+    this.imagePaths = [];
+    this.isShowAddPopup = false;
+    this.isShowEditPopup = false;
+    this.closePopup();
   }
-
+  removeImage(image: ImagePaths, index: number) {
+    this.imagePaths.splice(index, 1);
+    this.files = this.files?.filter(file => file.lastModified + file.name !== image.name) ?? null;
+    this.deleteFiles = this.imageOrigin.filter(ori => 
+    !this.imagePaths.some(path => path.name === ori)
+);
+  }
+  convertImageToBase64(imageUrl: string): Observable<string> {
+    return new Observable(observer => {
+      this.http.get(imageUrl, { responseType: 'blob' }).subscribe(blob => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          observer.next(reader.result as string);
+          observer.complete();
+        };
+        reader.readAsDataURL(blob);
+      }, error => {
+        observer.error(error);
+      });
+    });
+  }
+  openPopup() {
+    document.body.style.paddingRight = '17px'
+    document.body.classList.add('modal-open')
+      
+  }
+  closePopup() {
+    document.body.style.paddingRight = '';
+    document.body.classList.remove('modal-open')
+  }
 }
 
 export interface Provision {
@@ -153,10 +208,13 @@ export interface Provision {
   description: string;
   price: number;
   status: string;
-  images: Images[];
+  images: string[];
 }
 
-
+interface ImagePaths {
+  name: string,
+  path: string;
+}
 
 
 

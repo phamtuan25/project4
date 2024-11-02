@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -52,4 +53,27 @@ public class ImageServiceImpl implements ImageService {
 
         return newFilename;
     }
+
+    @Override
+    public String deleteImageByFileName(String[] fileNames) throws IOException {
+        for (String fileName : fileNames) {
+            // Tìm kiếm hình ảnh trong cơ sở dữ liệu bằng tên tệp
+            Optional<Image> optionalImage = imageRepository.findByImageFileName(fileName);
+
+            if (optionalImage.isPresent()) {
+                Image image = optionalImage.get();
+
+                // Xóa tệp khỏi hệ thống file
+                Path path = Paths.get(uploadDir + fileName);
+                Files.deleteIfExists(path);
+
+                // Xóa hình ảnh khỏi cơ sở dữ liệu
+                imageRepository.delete(image);
+            } else {
+                System.out.println("Image not found: " + fileName);
+            }
+        }
+        return "Images deleted successfully.";
+    }
+
 }

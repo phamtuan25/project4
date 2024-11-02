@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,9 +43,10 @@ public class RoomServiceImpl implements RoomService {
                     RoomResponse roomResponse = RoomMapper.convertToResponse(room);
 
                     // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
-                    List<ImageResponse> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
+                    List<String> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
                             .stream()
-                            .map(ImageMapper::convertToResponse)
+                            .map(image -> ImageMapper.convertToResponse(image))
+                            .map(ImageResponse::getImageFileName)
                             .collect(Collectors.toList());
 
                     roomResponse.setImages(images);
@@ -69,10 +71,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room updateRoom(Long roomId, Room room) {
+    public Room updateRoom(Long roomId, RoomRequest roomRequest) {
         Room roomUpdate = roomRepository.findById(roomId).orElse(null);
         if(roomUpdate != null){
-            setRoom(roomUpdate, room);
+            setRoom(roomUpdate, roomRequest);
         }
         return roomRepository.save(roomUpdate);
     }
@@ -87,7 +89,7 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.deleteById(roomId);
     }
 
-    public void setRoom(Room roomUpdate, Room roomInput) {
+    public void setRoom(Room roomUpdate, RoomRequest roomInput) {
         roomUpdate.setRoomNumber(roomInput.getRoomNumber());
         roomUpdate.setRoomType(roomInput.getRoomType());
         roomUpdate.setStatus(roomInput.getStatus());

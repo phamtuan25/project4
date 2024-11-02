@@ -22,5 +22,5 @@ public class RoomResponse {
     private Room.RoomStatus status;
     private Double dayPrice;
     private Double hourPrice;
-    private List<ImageResponse> images;
+    private List<String> images;
 }

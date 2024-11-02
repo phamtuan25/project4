@@ -72,8 +72,36 @@ public class RoomController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @PutMapping("/{roomId}")
-    public Room updateRoom(@PathVariable Long roomId, @RequestBody Room room) {
-        return roomService.updateRoom(roomId, room);
+    public Room updateRoom(@PathVariable Long roomId,
+                           @RequestPart("roomRequest") RoomRequest roomRequest,
+                           @RequestPart(value = "files", required = false) MultipartFile[] files)
+                            {
+        try {
+            // Update thông tin room
+            Room updatedRoom = roomService.updateRoom(roomId, roomRequest);
+
+            // Xử lý các tệp được gửi lên
+            if (files != null && files.length > 0) {
+                for (MultipartFile file : files) {
+                    ImageRequest imageRequest = new ImageRequest();
+                    imageRequest.setReferenceId(updatedRoom.getRoomId());
+                    imageRequest.setName("ROOM");
+                    imageRequest.setImageFileName(file.getOriginalFilename());
+                    imageService.saveImages(file, imageRequest);
+                }
+            }
+
+            // Xử lý các tệp cần xóa
+            if (roomRequest.getDeleteFiles() != null && roomRequest.getDeleteFiles().length > 0) {
+                    imageService.deleteImageByFileName(roomRequest.getDeleteFiles());
+            }
+
+            return updatedRoom;
+        } catch (IOException e) {
+            throw new RuntimeException("Error while updating images: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("An unexpected error occurred: " + e.getMessage(), e);
+        }
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @DeleteMapping("/{roomId}")

@@ -12,6 +12,6 @@ public interface RoomService {
     public List<RoomResponse> getAllRooms();
     public RoomResponse getDetailRoom(Long roomId);
     public Room createRoom(RoomRequest roomRequest);
-    public Room updateRoom(Long roomId, Room room);
+    public Room updateRoom(Long roomId, RoomRequest roomRequest);
     public void deleteRoom(Long roomId);
 }

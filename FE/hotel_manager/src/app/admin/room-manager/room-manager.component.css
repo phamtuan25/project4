@@ -5,7 +5,7 @@ td{
     max-width: 200px; /* Đặt chiều rộng tối da cho ô văn bản*/
 }
 
-.table img {
+.table .image-col img {
     max-width: 40%;  /* Giới hạn chiều rộng tối đa */
     max-height: 40%; /* Giới hạn chiều cao tối đa */
     object-fit: contain; /* Đảm bảo ảnh không bị biến dạng */
@@ -17,3 +17,24 @@ a.active {
     background-color: #007bff; /* Màu nền khi active */
     color: white; /* Màu chữ khi active */
 }
+
+input.ng-invalid {
+    border: 2px solid red;
+}
+
+span {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    z-index: 1040; /* Đảm bảo backdrop ở phía dưới modal */
+  }
+  

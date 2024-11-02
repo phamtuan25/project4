@@ -53,8 +53,9 @@ export class AdminService {
   }
 
   addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null): Observable<any> {
+    
     const params = {
-      roomNumber: roomNumber,
+      roomNumber: roomNumber == '' ? null : roomNumber,
       roomType: roomType,
       status: status,
       dayPrice: dayPrice,
@@ -75,16 +76,28 @@ export class AdminService {
     return this.http.post(this.apiUrl + 'rooms', formData, { headers });
   }
 
-  eidtRoom(roomId: number, roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number): Observable<any> {
-    const body = {
+  eidtRoom(roomId: number, roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number,files: File[] | null, deleteFiles: string[]): Observable<any> {
+    const params = {
       roomNumber: roomNumber,
       roomType: roomType,
       status: status,
       dayPrice: dayPrice,
       hourPrice: hourPrice,
+      deleteFiles: deleteFiles
     };
-    const headers = this.config.getHttpHeaders();
-    return this.http.put(this.apiUrl + 'rooms/' + roomId, body, { headers });
+    const formData = new FormData();
+    formData.append('roomRequest', new Blob([JSON.stringify(params)], { type: 'application/json' }));
+
+    if(files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    let headers = this.config.getHttpHeaders();
+    if (headers.has('Content-Type')) {
+      headers = headers.delete('Content-Type');
+    }
+    return this.http.put(this.apiUrl + 'rooms/' + roomId, formData, { headers });
   }
 
    //Call Api Provision
@@ -95,8 +108,8 @@ export class AdminService {
 
   addProvision(provisionName: string, description: string, price: number, status: string, files: File[] | null): Observable<any> {
     const params = {
-      provisionName: provisionName,
-      description: description,
+      provisionName: provisionName == '' ? null : provisionName,
+      description: description == '' ? null : description,
       price: price,
       status: status,
     };
@@ -115,15 +128,28 @@ export class AdminService {
     return this.http.post(this.apiUrl + 'provisions', formData, { headers });
   }
 
-  eidtProvision(provisionId: number, provisionName: string, description: string, price: number, status: string): Observable<any> {
-    const body = {
+  eidtProvision(provisionId: number, provisionName: string, description: string, price: number, status: string,files: File[] | null, deleteFiles: string[]): Observable<any> {
+    const params = {
       provisionName: provisionName,
       description: description,
       price: price,
       status: status,
+      deleteFiles: deleteFiles
+
     };
-    const headers = this.config.getHttpHeaders();
-    return this.http.put(this.apiUrl + 'provisions/' + provisionId, body, { headers });
+    const formData = new FormData();
+    formData.append('provisionRequest', new Blob([JSON.stringify(params)], { type: 'application/json' }));
+
+    if(files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    let headers = this.config.getHttpHeaders();
+    if (headers.has('Content-Type')) {
+      headers = headers.delete('Content-Type');
+    }
+    return this.http.put(this.apiUrl + 'provisions/' + provisionId, formData, { headers });
   }
 
   //Call Api Booking

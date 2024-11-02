@@ -11,8 +11,7 @@
     </div>
 </div>
 <div class="table-responsive">
-    <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#addProvisionModal"
-        (click)="resetFormData()">Add Provision</button>
+    <button class="btn btn-primary mb-3" (click)="openAddProvision()">Add Provision</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -24,6 +23,7 @@
                 <th>Action</th>
             </tr>
         </thead>
+
         <tbody id="serviceTable">
             <tr *ngFor="let provision of filterProvisions">
                 <td>{{provision.provisionName}}</td>
@@ -32,8 +32,8 @@
                 <td>{{provision.status}}</td>
                 <td>
                     <ng-container *ngIf="provision.images && provision.images.length > 0; else noImage">
-                        <img [src]="'/FE/hotel_manager/public/upload_images/' + provision.images[0].imageFileName"
-                            alt="Room Image" style="width: 100px; height: auto;" />
+                        <img [src]="'/upload_images/' + provision.images[0]" alt="Provision Image" style="width: 100px; height: auto;" />
+                        <span *ngIf="provision.images.length > 1" class="pl-3">+{{provision.images.length - 1}}</span>
                     </ng-container>
                     <ng-template #noImage>
                         <span>No Image Available</span>
@@ -44,83 +44,19 @@
                         [attr.data-target]="'#editProvisionModal'+provision.provisionId"
                         (click)="openEditProvision(provision)">Edit</button>
                 </td>
-                <!-- Modal Sửa Dịch Vụ -->
-                <div class="modal fade" id="editProvisionModal{{provision.provisionId}}" tabindex="-1" role="dialog"
-                    aria-labelledby="editProvisionModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <form id="editProvisonForm" #editProvisionForm="ngForm"
-                            (ngSubmit)="onSubmitEdit(editProvisionForm)" method="PUT">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editProvisionModalLabel">Edit Provision</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" id="editProvisionId">
-                                    <div class="form-group">
-                                        <label for="provisionName">Provision Name</label>
-                                        <input type="text" class="form-control" id="provisionName" name="provisionName"
-                                            [value]="provision.provisionName" [(ngModel)]="provisionName" required>
-                                    </div>
-                                    <div
-                                        *ngIf="editProvisionForm.controls['provisionName']?.invalid && (editProvisionForm.controls['provisionName']?.touched || editProvisionForm.submitted)">
-                                        <small class="text-danger">Provision Name is required.</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Description</label>
-                                        <textarea class="form-control" id="description" name="description"
-                                            [(ngModel)]="description" required></textarea>
-                                    </div>
-                                    <div
-                                        *ngIf="editProvisionForm.controls['description']?.invalid && (editProvisionForm.controls['description']?.touched || editProvisionForm.submitted)">
-                                        <small class="text-danger">Description is required.</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="price">Price</label>
-                                        <input type="number" class="form-control" id="price" name="price"
-                                            [(ngModel)]="price" required>
-                                    </div>
-                                    <div
-                                        *ngIf="editProvisionForm.controls['price']?.invalid && (editProvisionForm.controls['price']?.touched || editProvisionForm.submitted)">
-                                        <small class="text-danger">Price is required.</small>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <select class="form-control" id="status" name="status" [(ngModel)]="status"
-                                            required>
-                                            <option value="ACTIVE">ACTIVE</option>
-                                            <option value="INACTIVE">INACTIVE</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="images">Image</label>
-                                        <input type="file" multiple class="form-control" id="images" [(ngModel)]="files"
-                                            (change)="onFileChange($event)" accept="image/*">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="su" class="btn btn-primary">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                
             </tr>
         </tbody>
     </table>
-
+    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Dịch Vụ -->
-    <div class="modal fade" id="addProvisionModal" tabindex="-1" role="dialog" aria-labelledby="addProvisionModalLabel"
-        aria-hidden="true">
+    <div class="modal fade show custom-show" *ngIf="isShowAddPopup">
         <div class="modal-dialog" role="document">
             <form id="addProvisionForm" method="POST" (ngSubmit)="onSubmitAdd()">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addProvisionModalLabel">Add New Provision</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -153,13 +89,13 @@
                         </div>
                         <div class="form-group">
                             <label for="images">Image</label>
-                            <input type="file" multiple class="form-control" id="images" (change)="onFileChange($event)"
-                                accept="image/*">
+                            <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Chọn file</button>
                         </div>
                         <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
@@ -167,7 +103,77 @@
         </div>
     </div>
 
-
+    <!-- Modal Sửa Dịch Vụ -->
+    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal-dialog" role="document">
+        <form id="editProvisonForm" #editProvisionForm="ngForm"
+            (ngSubmit)="onSubmitEdit(editProvisionForm)" method="PUT">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProvisionModalLabel">Edit Provision</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetFormData()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editProvisionId">
+                    <div class="form-group">
+                        <label for="provisionName">Provision Name</label>
+                        <input type="text" class="form-control" id="provisionName" name="provisionName"
+                            [value]="provisionName" [(ngModel)]="provisionName" required>
+                    </div>
+                    <div
+                        *ngIf="editProvisionForm.controls['provisionName']?.invalid && (editProvisionForm.controls['provisionName']?.touched || editProvisionForm.submitted)">
+                        <small class="text-danger">Provision Name is required.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description"
+                            [(ngModel)]="description" required></textarea>
+                    </div>
+                    <div
+                        *ngIf="editProvisionForm.controls['description']?.invalid && (editProvisionForm.controls['description']?.touched || editProvisionForm.submitted)">
+                        <small class="text-danger">Description is required.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price"
+                            [(ngModel)]="price" required>
+                    </div>
+                    <div
+                        *ngIf="editProvisionForm.controls['price']?.invalid && (editProvisionForm.controls['price']?.touched || editProvisionForm.submitted)">
+                        <small class="text-danger">Price is required.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" [(ngModel)]="status"
+                            required>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="INACTIVE">INACTIVE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="images">Image</label>
+                            <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Choose file</button>
+                            <div class="d-flex align-items-center image-box pt-3">
+                                <ng-container *ngFor="let image of imagePaths; let i = index">
+                                    <div class="box" width="120" height="100">
+                                        <img [src]="image.path" alt="" width="120" height="100">
+                                        <i class="fa-solid fa-circle-xmark" (click)="removeImage(image,i)"></i>
+                                    </div>
+                                </ng-container>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
+                    <button type="su" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
     <!-- Phân Trang -->
     <nav aria-label="Page navigation">

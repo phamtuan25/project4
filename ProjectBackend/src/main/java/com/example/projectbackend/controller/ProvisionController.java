@@ -3,8 +3,10 @@ package com.example.projectbackend.controller;
 
 import com.example.projectbackend.bean.request.ImageRequest;
 import com.example.projectbackend.bean.request.ProvisionRequest;
+import com.example.projectbackend.bean.request.RoomRequest;
 import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.entity.Provision;
+import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.ImageService;
 import com.example.projectbackend.service.ProvisionService;
 import jakarta.validation.Valid;
@@ -73,8 +75,36 @@ public class ProvisionController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{provisionId}")
-    public Provision updateProvision(@PathVariable Long provisionId, @RequestBody Provision provision) {
-        return provisionService.updateProvision(provisionId, provision);
+    public Provision updateProvision(@PathVariable Long provisionId,
+                                     @RequestPart("provisionRequest") ProvisionRequest provisionRequest,
+                                     @RequestPart(value = "files", required = false) MultipartFile[] files){
+        try {
+        // Update thông tin Provision
+        Provision updateProvision = provisionService.updateProvision(provisionId, provisionRequest);
+
+        // Xử lý các tệp được gửi lên
+        if (files != null && files.length > 0) {
+            for (MultipartFile file : files) {
+                ImageRequest imageRequest = new ImageRequest();
+                imageRequest.setReferenceId(updateProvision.getProvisionId());
+                imageRequest.setName("PROVISION");
+                imageRequest.setImageFileName(file.getOriginalFilename());
+                imageService.saveImages(file, imageRequest);
+            }
+        }
+
+        // Xử lý các tệp cần xóa
+        if (provisionRequest.getDeleteFiles() != null && provisionRequest.getDeleteFiles().length > 0) {
+            imageService.deleteImageByFileName(provisionRequest.getDeleteFiles());
+        }
+
+        return updateProvision;
+    } catch (IOException e) {
+        throw new RuntimeException("Error while updating images: " + e.getMessage(), e);
+    } catch (Exception e) {
+        throw new RuntimeException("An unexpected error occurred: " + e.getMessage(), e);
+    }
+
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")

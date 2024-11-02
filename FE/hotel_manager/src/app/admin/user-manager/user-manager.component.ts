@@ -23,6 +23,9 @@ export class UserManagerComponent implements OnInit {
   phoneNumber: string = ""; 
   role: string = "";
   password: string = "";
+  fullName: string = "";
+  isShowAddPopup: Boolean = false;
+  isShowEditPopup: Boolean = false;
   constructor(public admin: AdminComponent,private adminService: AdminService){}
   
   ngOnInit(): void {
@@ -55,13 +58,21 @@ export class UserManagerComponent implements OnInit {
       this.searchUsers();
     }
   }
+  openAddUser() {
+    this.resetFormData();
+    this.isShowAddPopup = true;
+    this.openPopup();
+  }
   // gán giá trị user edit
   openEditUser(user: User) {
     this.userId = user.userId
     this.email = user.email
+    this.fullName = user.fullName
     this.address = user.address
     this.phoneNumber = user.phoneNumber
     this.role = user.role
+    this.isShowEditPopup = true;
+    this.openPopup();
   }
   // submit user đã edit
   onSubmitEdit(form: NgForm) {
@@ -69,15 +80,6 @@ export class UserManagerComponent implements OnInit {
       this.adminService.eidtUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
         response => {
           alert("Edit Success!");
-          const modalElement = document.getElementById(`editUserModal${this.userId}`);
-          if (modalElement) {
-            modalElement.style.display = 'none'; 
-            modalElement.classList.remove('show');
-          }
-          const backdrop = document.querySelector('.modal-backdrop.fade.show');
-          if (backdrop) {
-            document.body.removeChild(backdrop);
-          }
           this.getUsers();
           this.resetFormData();
         },
@@ -92,15 +94,6 @@ export class UserManagerComponent implements OnInit {
     this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
         alert("Add Success!");
-        const modalElement = document.getElementById(`addUserModal`);
-          if (modalElement) {
-            modalElement.style.display = 'none'; 
-            modalElement.classList.remove('show');
-          }
-          const backdrop = document.querySelector('.modal-backdrop.fade.show');
-          if (backdrop) {
-            document.body.removeChild(backdrop);
-          }
         this.getUsers();
         this.resetFormData();
       },
@@ -127,9 +120,21 @@ export class UserManagerComponent implements OnInit {
     this.address = "";
     this.phoneNumber = "";
     this.password = "";
+    this.isShowAddPopup = false;
+    this.isShowEditPopup = false;
+    this.closePopup();
   }
   isObject(value: any) {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
+  openPopup() {
+    document.body.style.paddingRight = '17px'
+    document.body.classList.add('modal-open')
+      
+  }
+  closePopup() {
+    document.body.style.paddingRight = '';
+    document.body.classList.remove('modal-open')
   }
 }
 
