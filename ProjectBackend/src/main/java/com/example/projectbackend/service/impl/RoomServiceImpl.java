@@ -15,7 +15,12 @@ import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.RoomRepository;
 import com.example.projectbackend.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -30,29 +35,24 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ImageRepository imageRepository;
 
-    @Override
-    public List<RoomResponse> getAllRooms() {
-        List<Room> rooms = roomRepository.findAll();
+    public Page<RoomResponse> getAllRooms(@PageableDefault(size = 10, page = 0)Pageable pageable,
+                                            @RequestParam(required = false) String keyword) {
+        Specification<Room> spec = searchByKeyword(keyword);
+        Page<Room> roomsPage = roomRepository.findAll(spec, pageable);
 
-        if (rooms.isEmpty()) {
-            throw new EmptyListException("RoomEmpty", "This Room list is empty");
-        }
+        return roomsPage.map(room -> {
+            RoomResponse roomResponse = RoomMapper.convertToResponse(room);
 
-        return rooms.stream()
-                .map(room -> {
-                    RoomResponse roomResponse = RoomMapper.convertToResponse(room);
+            // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
+            List<String> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
+                    .stream()
+                    .map(ImageMapper::convertToResponse)
+                    .map(ImageResponse::getImageFileName)
+                    .collect(Collectors.toList());
 
-                    // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
-                    List<String> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
-                            .stream()
-                            .map(image -> ImageMapper.convertToResponse(image))
-                            .map(ImageResponse::getImageFileName)
-                            .collect(Collectors.toList());
-
-                    roomResponse.setImages(images);
-                    return roomResponse;
-                })
-                .collect(Collectors.toList());
+            roomResponse.setImages(images);
+            return roomResponse;
+        });
     }
 
     @Override
@@ -95,5 +95,21 @@ public class RoomServiceImpl implements RoomService {
         roomUpdate.setStatus(roomInput.getStatus());
         roomUpdate.setHourPrice(roomInput.getHourPrice());
         roomUpdate.setDayPrice(roomInput.getDayPrice());
+    }
+
+    public static Specification<Room> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("roomNumber").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("roomType").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("dayPrice").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("hourPrice").as(String.class)), likePattern)
+            );
+        };
     }
 }

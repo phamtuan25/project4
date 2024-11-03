@@ -17,9 +17,9 @@ export class AdminService {
 
   constructor(private http: HttpClient, private config: ConfigService) { }
   //Call Api User
-  getUser() {
+  getUser(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
-    return this.http.get<User[]>(this.apiUrl + 'users', { headers });
+    return this.http.get<User[]>(`${this.apiUrl}users?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 
   addUser(firstName: string, lastName: string, address: string, email: string, phoneNumber: String, password: string): Observable<any> {
@@ -47,10 +47,10 @@ export class AdminService {
   }
 
   //Call Api Room
-  getRoom() {
+  getRooms(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
-    return this.http.get<Room[]>(this.apiUrl + 'rooms', { headers });
-  }
+    return this.http.get<Room[]>(`${this.apiUrl}rooms?page=${page}&size=${size}&keyword=${keyword}`, { headers });
+}
 
   addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null): Observable<any> {
     
@@ -101,9 +101,9 @@ export class AdminService {
   }
 
    //Call Api Provision
-   getProvisions() {
+   getProvisions(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
-    return this.http.get<Provision[]>(this.apiUrl + 'provisions', { headers });
+    return this.http.get<Provision[]>(`${this.apiUrl}provisions?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 
   addProvision(provisionName: string, description: string, price: number, status: string, files: File[] | null): Observable<any> {

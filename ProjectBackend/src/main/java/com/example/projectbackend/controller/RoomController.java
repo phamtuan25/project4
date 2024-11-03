@@ -9,6 +9,8 @@ import com.example.projectbackend.service.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +32,8 @@ public class RoomController {
     private final RoomService roomService;
     private final ImageService imageService;
     @GetMapping
-    public List<RoomResponse> getAllRooms() {
-        return roomService.getAllRooms();
+    public Page<RoomResponse> getAllRooms(Pageable pageable, @RequestParam(required = false) String keyword) {
+        return roomService.getAllRooms(pageable, keyword);
     }
 
     @GetMapping("/{roomId}")

@@ -11,6 +11,8 @@ import com.example.projectbackend.service.UserService;
 import com.example.projectbackend.util.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,8 +34,8 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserResponse> getAllUsers(Pageable pageable, @RequestParam(required = false) String keyword) {
+        return userService.getAllUsers(pageable, keyword);
     }
 
     @GetMapping("/{userId}")

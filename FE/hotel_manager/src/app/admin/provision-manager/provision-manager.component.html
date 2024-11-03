@@ -25,7 +25,7 @@
         </thead>
 
         <tbody id="serviceTable">
-            <tr *ngFor="let provision of filterProvisions">
+            <tr *ngFor="let provision of provisions">
                 <td>{{provision.provisionName}}</td>
                 <td>{{provision.description}}</td>
                 <td>{{provision.price}}</td>
@@ -48,6 +48,7 @@
             </tr>
         </tbody>
     </table>
+    <div class="text-center w-100 pb-3" *ngIf="provisions.length == 0">Data not found</div>
     <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Dịch Vụ -->
     <div class="modal fade show custom-show" *ngIf="isShowAddPopup">
@@ -90,7 +91,7 @@
                         <div class="form-group">
                             <label for="images">Image</label>
                             <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
-                            <button (click)="fileInput.click()" type="button" class="upload-button">Chọn file</button>
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Choose file</button>
                         </div>
                         <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>
@@ -178,19 +179,19 @@
     <!-- Phân Trang -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="">1</a></li>
-            <li class="page-item"><a class="page-link" href="">2</a></li>
-            <li class="page-item"><a class="page-link" href="">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+            <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1" [attr.aria-current]="currentPage === i + 1 ? 'page' : null">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link"aria-label="Next" (click)="goToPage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
         </ul>
-    </nav>
+      </nav>
 </div>

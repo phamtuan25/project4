@@ -3,15 +3,15 @@ package com.example.projectbackend.controller;
 
 import com.example.projectbackend.bean.request.ImageRequest;
 import com.example.projectbackend.bean.request.ProvisionRequest;
-import com.example.projectbackend.bean.request.RoomRequest;
 import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.entity.Provision;
-import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.ImageService;
 import com.example.projectbackend.service.ProvisionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +34,8 @@ public class ProvisionController {
     private final ImageService imageService;
 
     @GetMapping
-    public List<ProvisionResponse> getAllProvision() {
-        return provisionService.getAllProvision();
+    public Page<ProvisionResponse> getAllProvision(Pageable pageable, @RequestParam(required = false) String keyword) {
+        return provisionService.getAllProvision(pageable, keyword);
     }
 
     @GetMapping("/{provisionId}")

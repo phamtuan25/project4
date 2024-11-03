@@ -27,31 +27,46 @@ export class ProvisionManagerComponent implements OnInit {
   isShowEditPopup: Boolean = false;
   deleteFiles: string[] = [];
   imageOrigin: string[] = [];
+  keyword: string = '';
+  totalProvisions: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 0;
   constructor(public admin: AdminComponent, private adminService: AdminService,private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Provision Management';
-    this.getProvisions();
+    this.getProvisions(this.currentPage , this.pageSize, this.keyword);
   }
 
   //get list Provision   
-  getProvisions() {
-    this.adminService.getProvisions().subscribe(
-      (response: Provision[]) => {
-        this.provisions = response;
-        this.filterProvisions = response
+  getProvisions(page: number, size: number, keyword: string) {
+    this.adminService.getProvisions(page - 1, size, keyword).subscribe(
+      (response: any) => {
+        this.provisions = response.content;
+        this.totalProvisions = response.totalElements;
+        this.totalPages = Math.ceil(this.totalProvisions / this.pageSize);
+      },
+      (error) => {
+        console.error("Error fetching provision", error);
+        this.provisions = [];
+        this.errors.push(error);
       }
-    )
+    );
   }
 
-  //tìm kiếm Provision
+  goToPage(page: number): void {
+    if (page < 1 || page > Math.ceil(this.totalProvisions / this.pageSize)) return;
+    this.currentPage = page;
+    this.getProvisions(this.currentPage, this.pageSize, this.keyword);
+  }
+
+
+  // tìm kiếm Provision
   searchProvisions(): void {
-    const input: string = (document.getElementById('searchProvisionInput') as HTMLInputElement).value.toLowerCase();
-    this.filterProvisions = this.provisions.filter(provision => {
-      return provision.provisionName?.toLowerCase().includes(input) ||
-        provision.description?.toLowerCase().includes(input) ||
-        String(provision.price).toLowerCase().includes(input) ||
-        provision.status?.toLowerCase().includes(input)
-    });
+    const input: string = (document.getElementById('searchProvisionInput') as HTMLInputElement).value.trim();
+    this.keyword = input;
+    this.currentPage = 1;
+    this.getProvisions(this.currentPage, this.pageSize, this.keyword);
   }
   handleKeyPress(event: any) {
     if (event.key === 'Enter') {
@@ -98,7 +113,7 @@ export class ProvisionManagerComponent implements OnInit {
       response => {
         alert("Add Success!");
         this.files = [];
-        this.getProvisions();
+        this.getProvisions(this.currentPage , this.pageSize, this.keyword);
         this.resetFormData();
       },
       error => {
@@ -151,7 +166,7 @@ export class ProvisionManagerComponent implements OnInit {
       this.adminService.eidtProvision(this.provisionId, this.provisionName, this.description, this.price, this.status, this.files, this.deleteFiles).subscribe(
         response => {
           alert("Edit Success!");
-          this.getProvisions();
+          this.getProvisions(this.currentPage , this.pageSize, this.keyword);
           this.resetFormData();
         },
       );

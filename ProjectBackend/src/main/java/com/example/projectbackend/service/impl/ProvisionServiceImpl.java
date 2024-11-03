@@ -4,8 +4,6 @@ import com.example.projectbackend.bean.request.ProvisionRequest;
 import com.example.projectbackend.bean.response.ImageResponse;
 import com.example.projectbackend.bean.response.ProvisionResponse;
 import com.example.projectbackend.entity.Provision;
-import com.example.projectbackend.entity.User;
-import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.ImageMapper;
 import com.example.projectbackend.mapper.ProvisionMapper;
@@ -13,9 +11,13 @@ import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
 import com.example.projectbackend.service.ProvisionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,28 +31,23 @@ public class ProvisionServiceImpl implements ProvisionService {
 
 
     @Override
-    public List<ProvisionResponse> getAllProvision() {
-        List<Provision> provisions = provisionRepository.findAll();
+    public Page<ProvisionResponse> getAllProvision(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                   @RequestParam(required = false) String keyword) {
+        Specification<Provision> spec = searchByKeyword(keyword);
+        Page<Provision> provisionPage = provisionRepository.findAll(spec, pageable);
 
-        if (provisions.isEmpty()) {
-            throw new EmptyListException("ProvisionEmpty", "This Provision list is empty");
-        }
+        return provisionPage.map(provision -> {
+            ProvisionResponse provisionResponse = ProvisionMapper.convertToResponse(provision);
 
-        return provisions.stream()
-                .map(provision -> {
-                    ProvisionResponse provisionResponse = ProvisionMapper.convertToResponse(provision);
+            List<String> images = imageRepository.findAllByNameAndReferenceId("PROVISION", provision.getProvisionId())
+                    .stream()
+                    .map(ImageMapper::convertToResponse)
+                    .map(ImageResponse::getImageFileName)
+                    .collect(Collectors.toList());
 
-                    // Lấy danh sách ảnh và chuyển đổi chúng sang ImageResponse
-                    List<String> images = imageRepository.findAllByNameAndReferenceId("PROVISION", provision.getProvisionId())
-                            .stream()
-                            .map(image -> ImageMapper.convertToResponse(image))
-                            .map(ImageResponse::getImageFileName)
-                            .collect(Collectors.toList());
-
-                    provisionResponse.setImages(images);
-                    return provisionResponse;
-                })
-                .collect(Collectors.toList());
+            provisionResponse.setImages(images);
+            return provisionResponse;
+        });
     }
 
     @Override
@@ -92,5 +89,20 @@ public class ProvisionServiceImpl implements ProvisionService {
         provisionUpdate.setDescription(provisionInput.getDescription());
         provisionUpdate.setStatus(provisionInput.getStatus());
         provisionUpdate.setPrice(provisionInput.getPrice());
+    }
+
+    public static Specification<Provision> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("provisionName").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("price").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern)
+            );
+        };
     }
 }

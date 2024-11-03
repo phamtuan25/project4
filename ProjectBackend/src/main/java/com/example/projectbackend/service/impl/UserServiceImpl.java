@@ -1,11 +1,9 @@
 package com.example.projectbackend.service.impl;
 
-import com.example.projectbackend.bean.request.LoginRequest;
 import com.example.projectbackend.bean.request.PasswordRequest;
 import com.example.projectbackend.bean.request.UserRequest;
 import com.example.projectbackend.bean.response.UserResponse;
 import com.example.projectbackend.entity.User;
-import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.ExistException;
 import com.example.projectbackend.exception.InvalidException;
 import com.example.projectbackend.exception.NotFoundException;
@@ -13,8 +11,15 @@ import com.example.projectbackend.mapper.UserMapper;
 import com.example.projectbackend.repository.UserRepository;
 import com.example.projectbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -27,11 +32,16 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        if(userRepository.findAll().isEmpty()) {
-            throw new EmptyListException("EmptyUser","This list User is empty");
-        }
-        return userRepository.findAll().stream().map(UserMapper::convertToResponse).collect(Collectors.toList());
+    public Page<UserResponse> getAllUsers(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                          @RequestParam(required = false) String keyword) {
+        Specification<User> spec = searchByKeyword(keyword);
+        Page<User> userPage = userRepository.findAll(spec, pageable);
+
+        List<UserResponse> userResponses = userPage.getContent().stream()
+                .map(UserMapper::convertToResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(userResponses, pageable, userPage.getTotalElements());
     }
 
     @Override
@@ -92,5 +102,21 @@ public class UserServiceImpl implements UserService {
         userUpdate.setEmail(userInput.getEmail());
         userUpdate.setRole(userInput.getRole());
         userUpdate.setUpdatedAt(LocalDateTime.now());
+    }
+
+    public static Specification<User> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("fullName").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("email").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("address").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("role").as(String.class)), likePattern)
+            );
+        };
     }
 }

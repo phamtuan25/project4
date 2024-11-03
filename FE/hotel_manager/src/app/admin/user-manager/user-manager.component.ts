@@ -26,34 +26,45 @@ export class UserManagerComponent implements OnInit {
   fullName: string = "";
   isShowAddPopup: Boolean = false;
   isShowEditPopup: Boolean = false;
+  totalUsers: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 0;
+  keyword: string = '';
   constructor(public admin: AdminComponent,private adminService: AdminService){}
   
   ngOnInit(): void {
     this.admin.pageTitle = 'User Management';
-    this.getUsers();
+    this.getUsers(this.currentPage , this.pageSize, this.keyword);
   }
   //Get User list
-  getUsers(){
-    this.adminService.getUser().subscribe(
-      (response: User[]) =>{
-        this.users = response;
-        this.filterUser = response
+  getUsers(page: number, size: number, keyword: string){
+    this.adminService.getUser(page - 1, size, keyword).subscribe(
+      (response: any) => {
+        this.users = response.content;
+        this.totalUsers = response.totalElements;
+        this.totalPages = Math.ceil(this.totalUsers / this.pageSize);
+      },
+      (error) => {
+        console.error("Error fetching users", error);
+        this.users = [];
+        this.errors.push(error);
       }
     )
-    
+  }
+  goToPage(page: number): void {
+    if (page < 1 || page > Math.ceil(this.totalUsers / this.pageSize)) return;
+    this.currentPage = page;
+    this.getUsers(this.currentPage, this.pageSize, this.keyword);
   }
   //Tìm kiếm User 
   searchUsers(): void {
-    const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.toLowerCase();
-    this.filterUser = this.users.filter(user => {
-        return user.fullName?.toLowerCase().includes(input) ||
-            user.address?.toLowerCase().includes(input) ||
-            user.phoneNumber?.toLowerCase().includes(input) ||
-            user.role?.toLowerCase().includes(input) ||
-            user.email?.toLowerCase().includes(input);
-    });
+    const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.trim();
+    this.keyword = input;
+    this.currentPage = 1;
+    this.getUsers(this.currentPage, this.pageSize, this.keyword);
   }
-  handleKeyPress(event:any) {
+  handleKeyPress(event: any) {
     if (event.key === 'Enter') {
       this.searchUsers();
     }
@@ -80,7 +91,7 @@ export class UserManagerComponent implements OnInit {
       this.adminService.eidtUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
         response => {
           alert("Edit Success!");
-          this.getUsers();
+          this.getUsers(this.currentPage , this.pageSize, this.keyword);
           this.resetFormData();
         },
       );
@@ -94,7 +105,7 @@ export class UserManagerComponent implements OnInit {
     this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
       response => {
         alert("Add Success!");
-        this.getUsers();
+        this.getUsers(this.currentPage , this.pageSize, this.keyword);
         this.resetFormData();
       },
       error => {

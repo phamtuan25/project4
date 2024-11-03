@@ -14,7 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class RoomManagerComponent implements OnInit {
   rooms: Room[] = [];
-  filterRooms: Room[] = []; 
+  keyword: string = '';
   roomId: number = 0;
   roomNumber: string = "";
   roomType: string = "SINGLE";
@@ -28,32 +28,45 @@ export class RoomManagerComponent implements OnInit {
   isShowEditPopup: Boolean = false;
   deleteFiles: string[] = [];
   imageOrigin: string[] = [];
+  totalRooms: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 0;
   constructor(public admin: AdminComponent, private adminService: AdminService, private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Room Management';
-    this.getRooms();
+    this.getRooms(this.currentPage , this.pageSize, this.keyword);
   }
 
   //get list Room
-  getRooms() {
-    this.adminService.getRoom().subscribe(
-      (response: Room[]) => {
-        this.rooms = response;
-        this.filterRooms = response
-        console.log("this.filterRooms", this.filterRooms)
+  getRooms(page: number, size: number, keyword: string) {
+    this.adminService.getRooms(page - 1, size, keyword).subscribe(
+      (response: any) => {
+        this.rooms = response.content;
+        this.totalRooms = response.totalElements;
+        this.totalPages = Math.ceil(this.totalRooms / this.pageSize);
+      },
+      (error) => {
+        console.error("Error fetching rooms", error);
+        this.rooms = [];
+        this.errors.push(error);
       }
-    )
+    );
   }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > Math.ceil(this.totalRooms / this.pageSize)) return;
+    this.currentPage = page;
+    this.getRooms(this.currentPage, this.pageSize, this.keyword);
+  }
+
+
   // tìm kiếm Room
   searchRooms(): void {
-    const input: string = (document.getElementById('searchRoomInput') as HTMLInputElement).value.toLowerCase();
-    this.filterRooms = this.rooms.filter(room => {
-      return room.roomNumber?.toLowerCase().includes(input) ||
-        room.roomType?.toLowerCase().includes(input) ||
-        room.status?.toLowerCase().includes(input) ||
-        String(room.dayPrice).toLowerCase().includes(input) ||
-        String(room.hourPrice).toLowerCase().includes(input);
-    });
+    const input: string = (document.getElementById('searchRoomInput') as HTMLInputElement).value.trim();
+    this.keyword = input;
+    this.currentPage = 1;
+    this.getRooms(this.currentPage, this.pageSize, this.keyword);
   }
   handleKeyPress(event: any) {
     if (event.key === 'Enter') {
@@ -64,71 +77,71 @@ export class RoomManagerComponent implements OnInit {
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    
+
     this.errors = [];
     if (input.files && input.files.length > 0) {
-        this.files = Array.from(input.files);
-        console.log('this.files',this.files)
-        Array.from(input.files).forEach(file => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            if (e.target && e.target.result) {
-              this.imagePaths.push({
-                name: file.lastModified + file.name,
-                path: e.target.result as string
-              });
-              this.cdr.detectChanges();
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-        console.log("this.imagePaths",this.imagePaths)
-        // Kiểm tra định dạng tệp
-        const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!this.files.some(file => validFormats.includes(file.type))) {
-            this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
-        }
+      this.files = Array.from(input.files);
+      console.log('this.files', this.files)
+      Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target && e.target.result) {
+            this.imagePaths.push({
+              name: file.lastModified + file.name,
+              path: e.target.result as string
+            });
+            this.cdr.detectChanges();
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+      console.log("this.imagePaths", this.imagePaths)
+      // Kiểm tra định dạng tệp
+      const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!this.files.some(file => validFormats.includes(file.type))) {
+        this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
+      }
     } else {
-        this.files = [];
-        this.errors.push({ key: 'images', message: 'Please select an image.' });
+      this.files = [];
+      this.errors.push({ key: 'images', message: 'Please select an image.' });
     }
-}
+  }
   //submit room đã add
- 
+
 
   onSubmitAdd() {
     this.adminService.addRoom(this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice, this.files).subscribe(
-        response => {
-            alert("Add Success!");
-            this.files=[];
-            this.resetFormData();
-            this.getRooms();
-        },
-        error => {
-            this.errors = [];
-            if (error.error && Array.isArray(error.error)) {
-                error.error.forEach((element: any) => {
-                    this.errors.push({ key: element.key || 'unknown', message: element.message || 'An error occurred' });
-                });
-            } else {
-                this.errors.push({ key: 'general', message: 'An unknown error has occurred. Please try again!' });
-            }
-            console.log("error", error.error);
+      response => {
+        alert("Add Success!");
+        this.files = [];
+        this.resetFormData();
+        this.getRooms(this.currentPage, this.pageSize, this.keyword);
+      },
+      error => {
+        this.errors = [];
+        if (error.error && Array.isArray(error.error)) {
+          error.error.forEach((element: any) => {
+            this.errors.push({ key: element.key || 'unknown', message: element.message || 'An error occurred' });
+          });
+        } else {
+          this.errors.push({ key: 'general', message: 'An unknown error has occurred. Please try again!' });
         }
+        console.log("error", error.error);
+      }
     );
-}
+  }
 
-findErrors(key: string) {
+  findErrors(key: string) {
     return this.errors.find((error: any) => error.key === key)?.message;
-}
+  }
 
-openAddRoom() {
-  this.resetFormData();
-  this.isShowAddPopup = true;
-  this.openPopup();
-}
+  openAddRoom() {
+    this.resetFormData();
+    this.isShowAddPopup = true;
+    this.openPopup();
+  }
 
-// gán giá trị Room edit
+  // gán giá trị Room edit
   openEditRoom(room: Room) {
     this.roomId = room.roomId
     this.roomNumber = room.roomNumber
@@ -146,18 +159,18 @@ openAddRoom() {
       }, error => {
         console.error('Error converting image:', error);
       });
-  })
-  this.isShowEditPopup = true;
-  this.openPopup();
-}
+    })
+    this.isShowEditPopup = true;
+    this.openPopup();
+  }
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
-    if(form.valid) {
-      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType, this.status,this.dayPrice, this.hourPrice, this.files, this.deleteFiles).subscribe(
+    if (form.valid) {
+      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice, this.files, this.deleteFiles).subscribe(
         response => {
           alert("Edit Success!");
-          this.getRooms();
+          this.getRooms(this.currentPage, this.pageSize, this.keyword);
           this.resetFormData();
         },
       );
@@ -180,9 +193,9 @@ openAddRoom() {
   removeImage(image: ImagePaths, index: number) {
     this.imagePaths.splice(index, 1);
     this.files = this.files?.filter(file => file.lastModified + file.name !== image.name) ?? null;
-    this.deleteFiles = this.imageOrigin.filter(ori => 
-    !this.imagePaths.some(path => path.name === ori)
-);
+    this.deleteFiles = this.imageOrigin.filter(ori =>
+      !this.imagePaths.some(path => path.name === ori)
+    );
   }
   convertImageToBase64(imageUrl: string): Observable<string> {
     return new Observable(observer => {
@@ -201,7 +214,7 @@ openAddRoom() {
   openPopup() {
     document.body.style.paddingRight = '17px'
     document.body.classList.add('modal-open')
-      
+
   }
   closePopup() {
     document.body.style.paddingRight = '';

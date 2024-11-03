@@ -24,30 +24,31 @@
                 <th>Action</th>
             </tr>
         </thead>
+        <ng-container *ngIf="rooms.length > 0">
         <tbody id="roomTable">
-            <tr *ngFor="let room of filterRooms">
-                <td>{{room.roomNumber}}</td>
-                <td>{{room.roomType}}</td>
-                <td>{{room.status}}</td>
-                <td>{{room.dayPrice}}</td>
-                <td>{{room.hourPrice}}</td>
-                <td class="d-flex image-col">
-                    <ng-container *ngIf="room.images && room.images.length > 0; else noImage">
-                        <img [src]="'/upload_images/' + room.images[0]" alt="Room Image" style="width: 100px; height: auto;" />
-                        <span *ngIf="room.images.length > 1" class="pl-3">+{{room.images.length - 1}}</span>
-                    </ng-container>
-                    <ng-template #noImage>
-                        <span>No Image Available</span>
-                    </ng-template>
-                </td>
-                <td>
-                    <button class="btn btn-warning btn-sm" (click)="openEditRoom(room)">Edit</button>
-                </td>
-            </tr>
+                <tr *ngFor="let room of rooms">
+                    <td>{{room.roomNumber}}</td>
+                    <td>{{room.roomType}}</td>
+                    <td>{{room.status}}</td>
+                    <td>{{room.dayPrice}}</td>
+                    <td>{{room.hourPrice}}</td>
+                    <td class="d-flex image-col">
+                        <ng-container *ngIf="room.images && room.images.length > 0; else noImage">
+                            <img [src]="'/upload_images/' + room.images[0]" alt="Room Image" style="width: 100px; height: auto;" />
+                            <span *ngIf="room.images.length > 1" class="pl-3">+{{room.images.length - 1}}</span>
+                        </ng-container>
+                        <ng-template #noImage>
+                            <span>No Image Available</span>
+                        </ng-template>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" (click)="openEditRoom(room)">Edit</button>
+                    </td>
+                </tr>
         </tbody>
+        </ng-container>
     </table>
-
-
+    <div class="text-center w-100 pb-3" *ngIf="rooms.length == 0">Data not found</div>
     <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Phòng -->
     <div class="modal fade show custom-show" *ngIf="isShowAddPopup" >
@@ -99,7 +100,7 @@
                         <div class="form-group">
                             <label for="images">Image</label>
                             <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
-                            <button (click)="fileInput.click()" type="button" class="upload-button">Chọn file</button>
+                            <button (click)="fileInput.click()" type="button" class="upload-button">Choose file</button>
                             <div class="d-flex align-items-center image-box pt-3">
                                 <ng-container *ngFor="let image of imagePaths; let i = index">
                                     <div class="box" width="120" height="100">
@@ -195,19 +196,20 @@
     <!-- Phân Trang -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="">1</a></li>
-            <li class="page-item"><a class="page-link" href="">2</a></li>
-            <li class="page-item"><a class="page-link" href="">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+            <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1" [attr.aria-current]="currentPage === i + 1 ? 'page' : null">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link"aria-label="Next" (click)="goToPage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
         </ul>
-    </nav>
+      </nav>
+      
 </div>
