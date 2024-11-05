@@ -1,0 +1,82 @@
+.container_main {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+aside {
+    width: 200px;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+aside .username {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+aside ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+aside ul li {
+    margin-bottom: 15px;
+}
+
+aside ul li a {
+    text-decoration: none;
+    color: #e74c3c;
+}
+
+aside ul li a:hover {
+    text-decoration: underline;
+}
+
+.content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #c0392b;
+}
+
+.input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(100% - 20px); /* Giảm bớt khoảng cách từ hai bên */
+}

@@ -10,13 +10,18 @@ const routes: Routes = [
     .then(m => m.AdminModule)
   },
   { 
+    path: '',
+    loadChildren: () => import('./client/client.module')
+    .then(m => m.ClientModule)
+  },
+  { 
     path: 'register',
     component: RegisterComponent
   },
   { 
-    path: '',
+    path: 'login',
     component: LoginComponent
-  }
+  },
 ];
 
 @NgModule({

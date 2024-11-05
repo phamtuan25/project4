@@ -1,0 +1,77 @@
+/* content */
+
+main {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+
+.card {
+    margin-bottom: 10px;
+    /* Khoảng cách giữa các thẻ card */
+    border: none;
+    /* Xóa viền card */
+    border-radius: 5px;
+    /* Bo tròn các góc của card */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Ẩn các phần vượt quá card */
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Hiệu ứng chuyển động */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    /* Nâng card lên khi hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Thêm bóng cho card khi hover */
+}
+
+.card-img-top {
+    height: 200px;
+    /* Đặt chiều cao cho hình ảnh */
+    object-fit: cover;
+    /* Giữ tỷ lệ hình ảnh */
+    filter: brightness(0.10);
+    /* Làm tối hình ảnh */
+}
+
+.card-body {
+    padding: 10px;
+    /* Thêm khoảng cách cho nội dung card */
+}
+
+.card-title {
+    font-size: 1.5rem;
+    /* Tăng kích thước tiêu đề */
+    color: #333;
+    /* Màu tiêu đề */
+}
+
+.card-text {
+    font-size: 1rem;
+    /* Kích thước chữ thông tin */
+    color: #666;
+    /* Màu chữ thông tin */
+}
+
+.btn-primary {
+    background-color: #4e54c8;
+    /* Màu nền nút */
+    border: none;
+    /* Xóa viền nút */
+    padding: 10px 20px;
+    /* Khoảng cách bên trong nút */
+    border-radius: 5px;
+    /* Bo tròn góc nút */
+    transition: background-color 0.3s;
+    /* Hiệu ứng chuyển màu */
+}
+
+.btn-primary:hover {
+    background-color: #8f94fb;
+    /* Màu nền nút khi hover */
+}
+/* content */
