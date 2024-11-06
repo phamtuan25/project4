@@ -64,10 +64,7 @@ public class BookingDetailServiceImpl implements BookingDetailService {
                 .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetailRequest.getRoomId()));
         bookingDetail.setRoom(room);
 
-        // Thiết lập thời gian tạo
-        bookingDetail.setCreatedAt(LocalDateTime.now());
-
-        // Lưu BookingDetail vào cơ sở dữ liệu
+        // Lưu BookingDetail vào cơ sở dữ liệu (createdAt sẽ tự động được thiết lập khi gọi save)
         return bookingDetailRepository.save(bookingDetail);
     }
 

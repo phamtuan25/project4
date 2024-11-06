@@ -36,6 +36,7 @@ public class RelProvisionBookingDetail {
     @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private RelProvisionBookingDetailStatus status;
 
