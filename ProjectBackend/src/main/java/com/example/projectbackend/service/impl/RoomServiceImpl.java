@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ImageRepository imageRepository;
-
+    @Override
     public Page<RoomResponse> getAllRooms(@PageableDefault(size = 10, page = 0)Pageable pageable,
                                             @RequestParam(required = false) String keyword,
                                           @RequestParam(required = false) String status){
@@ -47,7 +47,7 @@ public class RoomServiceImpl implements RoomService {
             return roomResponse;
         });
     }
-
+    @Override
     public RoomResponse getDetailRoom(Long roomId) {
         Room room = roomRepository.findById(roomId).orElse(null);
         if (Objects.isNull(room)) {

@@ -6,6 +6,8 @@ import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,8 @@ import java.util.List;
 public class BookingController {
     private final BookingService bookingService;
     @GetMapping
-    public List<BookingResponse> getAllBookings() {
-        return bookingService.getAllBookings();
+    public Page<BookingResponse> getAllBookings(Pageable pageable, @RequestParam(required = false) String keyword) {
+        return bookingService.getAllBookings(pageable,keyword);
     }
 
     @GetMapping("/{bookingId}")

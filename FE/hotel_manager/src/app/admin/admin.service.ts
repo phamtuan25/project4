@@ -153,9 +153,9 @@ export class AdminService {
   }
 
   //Call Api Booking
-  getBooking() {
+  getBooking(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
-    return this.http.get<Booking[]>(this.apiUrl + 'bookings', { headers });
+    return this.http.get<Booking[]>(`${this.apiUrl}bookings?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 }
 

@@ -3,10 +3,7 @@ package com.example.projectbackend.service.impl;
 import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
-import com.example.projectbackend.entity.Booking;
-import com.example.projectbackend.entity.BookingDetail;
-import com.example.projectbackend.entity.Room;
-import com.example.projectbackend.entity.User;
+import com.example.projectbackend.entity.*;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingMapper;
@@ -16,7 +13,12 @@ import com.example.projectbackend.repository.RoomRepository;
 import com.example.projectbackend.repository.UserRepository;
 import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,12 +32,16 @@ import java.util.stream.Collectors;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     @Override
-    public List<BookingResponse> getAllBookings() {
-        if(bookingRepository.findAll().isEmpty()) {
-            throw new EmptyListException("EmptyBooking","This list Booking is empty");
-        }
-        return bookingRepository.findAll().stream().map(BookingMapper::convertToResponse).collect(Collectors.toList());
+    public Page<BookingResponse> getAllBookings(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                @RequestParam(required = false) String keyword) {
+        Specification<Booking> spec = searchByKeyword(keyword);
+        Page<Booking> bookingsPage = bookingRepository.findAll(spec, pageable);
+        return bookingsPage.map(booking -> {
+            BookingResponse bookingResponse = BookingMapper.convertToResponse(booking);
+            return bookingResponse;
+        });
     }
+
 
     @Override
     public BookingResponse getDetailBooking(Long bookingId) {
@@ -133,5 +139,18 @@ import java.util.stream.Collectors;
         bookingUpdate.setDeposit(booking.getDeposit());
         bookingUpdate.setTotalAmount(booking.getTotalAmount());
          bookingUpdate.setUpdatedAt(LocalDateTime.now());
+    }
+    public static Specification<Booking> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("deposit").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("totalAmount").as(String.class)), likePattern)
+            );
+        };
     }
 }
