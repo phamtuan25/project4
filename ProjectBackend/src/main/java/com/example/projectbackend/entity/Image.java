@@ -14,10 +14,9 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;
-
-    private String imageFileName; // Tên tệp
-    private String name;           // Tên mô tả
-    private Long referenceId;      // ID tham chiếu
-    private String imagePath;      // Đường dẫn đến hình ảnh
-    private LocalDate uploadDate;  // Ngày tải lên
+    private String imageFileName;
+    private String name;
+    private Long referenceId;
+    private String imagePath;  
+    private LocalDate uploadDate;
 }
