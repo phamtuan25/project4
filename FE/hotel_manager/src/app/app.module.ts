@@ -19,7 +19,7 @@ import { LoginComponent } from './auth/login/login.component';
     AppRoutingModule,
     CommonModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     provideClientHydration(),

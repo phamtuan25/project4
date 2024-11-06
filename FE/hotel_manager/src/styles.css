@@ -63,3 +63,6 @@ body:has(.signup-page) {
     color:red;
     cursor: pointer;
 }
+a {
+    cursor: pointer;
+}

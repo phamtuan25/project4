@@ -2,70 +2,52 @@
     <div class="row">
         <main class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4" *ngFor="let room of rooms">
                     <div class="card">
-                        <img src="image1.jpg" class="card-img-top" alt="Image 1">
+                        <img [src]="'/upload_images/' + room.images[0]" alt="Room Image" style="height: 140px;" />
                         <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 1</h5>
-                            <p class="card-text">Thông tin về nội dung 1 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="image2.jpg" class="card-img-top" alt="Image 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 2</h5>
-                            <p class="card-text">Thông tin về nội dung 2 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="image3.jpg" class="card-img-top" alt="Image 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 3</h5>
-                            <p class="card-text">Thông tin về nội dung 3 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
+                            <h5 class="card-title mb-3">
+                                <span class="text-primary">{{ room.roomNumber }}</span> - {{ room.roomType }}
+                            </h5>
+                            <div class="room-prices mb-3">
+                                <p><strong>Daily Price:</strong> 
+                                    <span class="price-red">{{ room.dayPrice | currency: '$' }}</span>
+                                </p>
+                                <p><strong>Hourly Price:</strong> 
+                                    <span class="price-red">{{ room.hourPrice | currency: '$' }}</span>
+                                </p>
+                            </div>
+                            <button class="btn btn-primary" [routerLink]="['/room-detail', room.roomId]"
+                                [queryParams]="{ page: currentPage }">View Detail</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="image1.jpg" class="card-img-top" alt="Image 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 1</h5>
-                            <p class="card-text">Thông tin về nội dung 1 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="image2.jpg" class="card-img-top" alt="Image 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 2</h5>
-                            <p class="card-text">Thông tin về nội dung 2 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="image3.jpg" class="card-img-top" alt="Image 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Tiêu Đề 3</h5>
-                            <p class="card-text">Thông tin về nội dung 3 sẽ được hiển thị ở đây.</p>
-                            <a href="#" class="btn btn-primary">Xem Chi Tiết</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
 
+            <!-- Phân trang -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)"
+                            [attr.aria-disabled]="currentPage === 1">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+                        <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1"
+                            [attr.aria-current]="currentPage === i + 1 ? 'page' : null">
+                            {{ i + 1 }}
+                        </a>
+                    </li>
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)"
+                            [attr.aria-disabled]="currentPage === totalPages">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </main>
     </div>
 </div>

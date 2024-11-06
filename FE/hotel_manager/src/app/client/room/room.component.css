@@ -7,7 +7,15 @@ main {
     border-bottom-left-radius: 8px;
 }
 
-
+.price-red {
+    color: red;         
+    font-weight: bold;  
+    font-size: 1em;   
+}
+a.active {
+    background-color: #007bff; 
+    color: white;
+}
 .card {
     margin-bottom: 10px;
     /* Khoảng cách giữa các thẻ card */

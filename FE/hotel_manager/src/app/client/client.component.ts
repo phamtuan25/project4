@@ -8,12 +8,12 @@ import { Router } from '@angular/router';
 })
 export class ClientComponent {
   title = 'hotel_manager';
-  pageTitle = 'Management Page';
+  pageTitle = 'Client Page';
   constructor(private router: Router){}
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {
         alert("Signed out!");
-        this.router.navigate(['']) 
+        this.router.navigate(['/login']) 
     }
   }
 }

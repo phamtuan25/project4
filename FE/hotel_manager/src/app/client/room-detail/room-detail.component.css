@@ -1,0 +1,79 @@
+.room-image {
+    width: 100%;
+    height: auto;
+}
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+h4 {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+}
+.btn-primary {
+    background-color: #4e54c8;
+    border-color: #4e54c8;
+}
+.btn-primary:hover {
+    background-color: #797fee;
+    border-color: #797fee;
+}
+
+.check-availability {
+    background-color: #8f94fb;
+    padding: 20px;
+}
+.price-red {
+    color: red;         
+    font-weight: bold;  
+    font-size: 1em;   
+}
+/* Tùy chỉnh các nút điều khiển */
+.carousel-control-prev, .carousel-control-next {
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    border: none; /* Xóa viền mặc định */
+    color: #fff; /* Màu chữ */
+    font-size: 24px; /* Kích thước chữ */
+    height: 50px; /* Chiều cao của nút */
+    width: 50px; /* Chiều rộng của nút */
+    border-radius: 50%; /* Bo tròn nút */
+    display: flex; /* Căn giữa các biểu tượng */
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+    z-index: 10;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .carousel-control-prev {
+    left: 10px; /* Đặt nút "Previous" bên trái */
+  }
+  
+  .carousel-control-next {
+    right: 10px; /* Đặt nút "Next" bên phải */
+  }
+  
+  /* Thay đổi màu nền khi hover */
+  .carousel-control-prev:hover, .carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Tăng độ mờ khi hover */
+    transform: scale(1.1); /* Tăng kích thước khi hover */
+  }
+  
+  /* Định dạng cho biểu tượng "previous" và "next" */
+  .carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: white; /* Màu biểu tượng */
+    border-radius: 50%; /* Bo tròn các biểu tượng */
+    width: 30px; /* Kích thước biểu tượng */
+    height: 30px;
+  }
+  
+  .carousel-control-prev-icon::before {
+    content: '<'; /* Ký tự cho nút Previous */
+  }
+  
+  .carousel-control-next-icon::before {
+    content: '>'; /* Ký tự cho nút Next */
+  }
+  

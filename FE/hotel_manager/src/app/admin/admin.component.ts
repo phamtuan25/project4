@@ -13,7 +13,7 @@ export class AdminComponent {
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {
         alert("Signed out!");
-        this.router.navigate(['']) 
+        this.router.navigate(['/login']) 
     }
   }
 }
