@@ -89,6 +89,7 @@ import java.util.stream.Collectors;
                     .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetail.getRoom().getRoomId()));
             bookingDetail.setRoom(room);
             bookingDetail.setBooking(savedBooking); // Gán booking cho chi tiết đặt phòng
+            bookingDetail.setCreatedAt(savedBooking.getCreatedAt()); // Gán createdAt của booking cho bookingDetail
         }
 
         // Lưu BookingDetails
@@ -101,7 +102,6 @@ import java.util.stream.Collectors;
         // Cập nhật booking với tổng số tiền
         return bookingRepository.save(savedBooking);
     }
-
 
 
     @Override
