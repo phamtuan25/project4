@@ -14,7 +14,6 @@ export class ClientService {
     getRooms(page: number, size: number, keyword: string, status?: string) {
         const headers = this.config.getHttpHeaders();
         var params = `page=${page}&size=${size}&keyword=${keyword}`;
-        console.log("status", status)
         if (status) {
             params = params + `&status=${status}`;
         }

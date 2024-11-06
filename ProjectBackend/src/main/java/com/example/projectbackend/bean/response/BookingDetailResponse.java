@@ -15,6 +15,7 @@ public class BookingDetailResponse {
     private Long bookingDetailId;
     private Long bookingId;
     private Long roomId;
+    private String roomNumber;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
     private LocalDateTime createdAt;

@@ -5,23 +5,25 @@ import com.example.projectbackend.bean.response.BookingDetailResponse;
 import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.Room;
-import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingDetailMapper;
-import com.example.projectbackend.mapper.RoomMapper;
 import com.example.projectbackend.repository.BookingDetailRepository;
 import com.example.projectbackend.repository.BookingRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
 import com.example.projectbackend.repository.RoomRepository;
 import com.example.projectbackend.service.BookingDetailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +31,14 @@ public class BookingDetailServiceImpl implements BookingDetailService {
     private final BookingDetailRepository bookingDetailRepository;
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
-    private final ProvisionRepository provisionRepository;
 
     @Override
-    public List<BookingDetailResponse> getAllBookingDetails() {
-        if(bookingDetailRepository.findAll().isEmpty()){
-            throw new EmptyListException("EmptyBookingDetail","This list BookingDetail empty");
-        }
-        return bookingDetailRepository.findAll().stream().map(BookingDetailMapper::convertToResponse).collect(Collectors.toList());
+    public Page<BookingDetailResponse> getAllBookingDetails(Pageable pageable, String keyword, Long bookingId) {
+        Specification<BookingDetail> spec = Specification.where(searchByKeyword(keyword))
+                .and(hasBookingId(bookingId));
+        Page<BookingDetail> bookingDetailPage = bookingDetailRepository.findAll(spec, pageable);
+
+        return bookingDetailPage.map(BookingDetailMapper::convertToResponse);
     }
 
     @Override
@@ -51,34 +53,27 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
     @Override
     public BookingDetail createBookingDetail(BookingDetailRequest bookingDetailRequest, Long bookingId) {
-        // Chuyển đổi từ BookingDetailRequest sang BookingDetail
         BookingDetail bookingDetail = BookingDetailMapper.convertFromRequest(bookingDetailRequest);
 
-        // Lấy Booking từ cơ sở dữ liệu
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
         bookingDetail.setBooking(booking);
 
-        // Lấy Room từ cơ sở dữ liệu dựa trên roomId
         Room room = roomRepository.findById(bookingDetailRequest.getRoomId())
                 .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetailRequest.getRoomId()));
         bookingDetail.setRoom(room);
 
-        // Lưu BookingDetail vào cơ sở dữ liệu (createdAt sẽ tự động được thiết lập khi gọi save)
         return bookingDetailRepository.save(bookingDetail);
     }
 
 
     @Override
     public BookingDetail updateBookingDetail(Long bookingDetailId, BookingDetail bookingDetail) {
-        // Tìm kiếm BookingDetail theo bookingDetailId
         BookingDetail bookingDetailUpdate = bookingDetailRepository.findById(bookingDetailId)
                 .orElseThrow(() -> new NotFoundException("BookingDetailNotFound", "Booking Detail not found with ID: " + bookingDetailId));
 
-        // Cập nhật thông tin bookingDetail
         setBookingDetail(bookingDetailUpdate, bookingDetail);
 
-        // Lưu BookingDetail đã cập nhật vào cơ sở dữ liệu
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
 
@@ -98,5 +93,24 @@ public class BookingDetailServiceImpl implements BookingDetailService {
         bookingDetailUpdate.setSpecialRequests(bookingDetail.getSpecialRequests());
         bookingDetailUpdate.setPrice(bookingDetail.getPrice());
         bookingDetailUpdate.setUpdatedAt(LocalDateTime.now());
+    }
+    public static Specification<BookingDetail> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("specialRequests").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("price").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("room").get("roomNumber").as(String.class)), likePattern)
+            );
+        };
+    }
+    public static Specification<BookingDetail> hasBookingId(Long bookingId) {
+        return (root, query, criteriaBuilder) -> {
+            return criteriaBuilder.equal(root.get("booking").get("id"), bookingId);
+        };
     }
 }

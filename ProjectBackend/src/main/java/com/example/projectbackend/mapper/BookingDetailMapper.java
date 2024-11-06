@@ -18,6 +18,7 @@ public class BookingDetailMapper {
         bookingDetailResponse.setStatus(bookingDetail.getStatus());
         bookingDetailResponse.setSpecialRequests(bookingDetail.getSpecialRequests());
         bookingDetailResponse.setPrice(bookingDetail.getPrice());
+        bookingDetailResponse.setRoomNumber(bookingDetail.getRoom().getRoomNumber());
         return bookingDetailResponse;
     }
 

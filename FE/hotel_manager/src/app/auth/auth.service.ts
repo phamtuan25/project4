@@ -10,14 +10,15 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(firstName: string, lastName: string, address: string, email: string, phoneNumber:String, password: string): Observable<any> {
+  register(firstName: string, lastName: string, address: string, email: string, phoneNumber:String, password: string, role: string): Observable<any> {
     const body = {  
       firstName: firstName,
       lastName: lastName,
       address: address,
       email: email,
       phoneNumber: phoneNumber,
-      password: password
+      password: password,
+      role: role
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 

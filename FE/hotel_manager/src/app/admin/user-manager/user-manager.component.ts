@@ -14,14 +14,13 @@ import { NgForm } from '@angular/forms';
 
 export class UserManagerComponent implements OnInit {
   users: User[] = [];
-  filterUser: User[] = [];
   userId: number = 0;
   firstName: string = "";
   lastName: string = "";
   email: string = "";
   address: string = "";
   phoneNumber: string = ""; 
-  role: string = "";
+  role: string = "EMPLOYEE";
   password: string = "";
   fullName: string = "";
   isShowAddPopup: Boolean = false;
@@ -102,7 +101,7 @@ export class UserManagerComponent implements OnInit {
   // submit user đã add
   errors:any=[];
   onSubmitAdd() {
-    this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
+    this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password, this.role).subscribe(
       response => {
         alert("Add Success!");
         this.getUsers(this.currentPage , this.pageSize, this.keyword);
@@ -156,7 +155,7 @@ export interface User {
   address: string;
   phoneNumber: string; 
   role: string;
-  booking: Booking[];
+  bookings: [];
 }
 
 

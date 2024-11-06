@@ -134,7 +134,6 @@ import java.util.stream.Collectors;
     }
 
     private void setBooking(Booking bookingUpdate, Booking booking) {
-        bookingUpdate.setUser(booking.getUser());
         bookingUpdate.setStatus(booking.getStatus());
         bookingUpdate.setDeposit(booking.getDeposit());
         bookingUpdate.setTotalAmount(booking.getTotalAmount());

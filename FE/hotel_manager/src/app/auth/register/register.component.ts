@@ -20,11 +20,11 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router) { }
 
   onSubmit() {
-    this.authService.register(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password).subscribe(
+    this.authService.register(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password, 'CUSTOMER').subscribe(
       response => {
         this.errors = [];
         alert("Register Success!");
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       },
       error => {
         this.errors = [];

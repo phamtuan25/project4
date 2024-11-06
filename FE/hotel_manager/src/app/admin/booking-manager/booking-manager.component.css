@@ -2,3 +2,13 @@ a.active {
     background-color: #007bff; /* Màu nền khi active */
     color: white; /* Màu chữ khi active */
 }
+input.ng-invalid {
+    border: 2px solid red;
+}
+
+span {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}

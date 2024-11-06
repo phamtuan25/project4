@@ -8,6 +8,9 @@ import com.example.projectbackend.entity.Room;
 import com.example.projectbackend.service.BookingDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,17 +18,21 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bookingdetails")
+@RequestMapping("/api/bookingDetails")
 public class BookingDetailController {
     private final BookingDetailService bookingDetailService;
 
+
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
-    @GetMapping
-    public List<BookingDetailResponse> getAllBookingDetails(){
-        return bookingDetailService.getAllBookingDetails();
+    @GetMapping()
+    public Page<BookingDetailResponse> getAllBookingDetails(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long bookingId,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return bookingDetailService.getAllBookingDetails(pageable, keyword, bookingId);
     }
 
-    @GetMapping("/bookingDetailId")
+    @GetMapping("/{bookingDetailId}")
     public BookingDetailResponse getBookingDetailById(@PathVariable Long bookingDetailId){
         return bookingDetailService.getDetailBookingDetail(bookingDetailId);
     }
@@ -34,7 +41,7 @@ public class BookingDetailController {
     public BookingDetail createBookingDetail(@Valid @PathVariable Long bookingId, @RequestBody BookingDetailRequest bookingDetailRequest){
         return bookingDetailService.createBookingDetail(bookingDetailRequest, bookingId);
     }
-    @PostMapping("/bookingDetailId")
+    @PutMapping("/bookingDetailId")
     public BookingDetail updateBookingDetail(@PathVariable Long bookingDetailId, @RequestBody BookingDetail bookingDetail){
         return bookingDetailService.updateBookingDetail(bookingDetailId, bookingDetail);
     }

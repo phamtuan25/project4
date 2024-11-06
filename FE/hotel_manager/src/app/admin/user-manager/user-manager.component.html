@@ -31,9 +31,9 @@
                 <td>{{user.phoneNumber}}</td>
                 <td>{{user.address}}</td>
                 <td>{{user.role}}</td>
-                <td>{{user.booking}}</td>
+                <td>{{user.bookings.length}}</td>
                 <td>
-                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                    <button class="btn btn-warning btn-sm" data-toggle="modal" [disabled]="user.role=='CUSTOMER'"
                         [attr.data-target]="'#editUserModal'+user.userId" (click)="openEditUser(user)">Edit</button>
                 </td>
             </tr>
@@ -84,7 +84,14 @@
                             <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
                         </div>
                         <span *ngIf="errors">{{findErrors("password")}}</span>
-
+                        <div class="form-group">
+                            <label for="editUserRole">Role</label>
+                            <select class="form-control" id="editUserRole" [(ngModel)]="role" name="role"
+                                required>
+                                <option value="EMPLOYEE">EMPLOYEE</option>
+                                <option value="MANAGER">MANAGER</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetFormData()">Close</button>
@@ -147,7 +154,6 @@
                             <option value="ADMIN">ADMIN</option>
                             <option value="EMPLOYEE">EMPLOYEE</option>
                             <option value="MANAGER">MANAGER</option>
-                            <option value="CUSTOMER">CUSTOMER</option>
                         </select>
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import { RoomManagerComponent } from './room-manager/room-manager.component';
 import { BookingManagerComponent } from './booking-manager/booking-manager.component';
 import { ProvisionManagerComponent } from './provision-manager/provision-manager.component';
 import { UserManagerComponent } from './user-manager/user-manager.component';
+import { BookingDetailManagerComponent } from './booking-detail-manager/booking-detail-manager.component';
 
 const routes: Routes = [
     {
@@ -15,6 +16,7 @@ const routes: Routes = [
             { path: 'booking-manager', component: BookingManagerComponent },
             { path: 'provision-manager', component: ProvisionManagerComponent },
             { path: 'user-manager', component: UserManagerComponent },
+            { path: 'booking-detail-manager/:bookingId', component: BookingDetailManagerComponent },
         ]
     }
 ];
