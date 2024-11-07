@@ -28,52 +28,18 @@ h4 {
     font-weight: bold;  
     font-size: 1em;   
 }
-/* Tùy chỉnh các nút điều khiển */
-.carousel-control-prev, .carousel-control-next {
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-    border: none; /* Xóa viền mặc định */
-    color: #fff; /* Màu chữ */
-    font-size: 24px; /* Kích thước chữ */
-    height: 50px; /* Chiều cao của nút */
-    width: 50px; /* Chiều rộng của nút */
-    border-radius: 50%; /* Bo tròn nút */
-    display: flex; /* Căn giữa các biểu tượng */
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%); /* Căn giữa theo chiều dọc */
-    z-index: 10;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .carousel-control-prev {
-    left: 10px; /* Đặt nút "Previous" bên trái */
-  }
-  
-  .carousel-control-next {
-    right: 10px; /* Đặt nút "Next" bên phải */
-  }
-  
-  /* Thay đổi màu nền khi hover */
-  .carousel-control-prev:hover, .carousel-control-next:hover {
-    background-color: rgba(0, 0, 0, 0.7); /* Tăng độ mờ khi hover */
-    transform: scale(1.1); /* Tăng kích thước khi hover */
-  }
-  
-  /* Định dạng cho biểu tượng "previous" và "next" */
-  .carousel-control-prev-icon, .carousel-control-next-icon {
-    background-color: white; /* Màu biểu tượng */
-    border-radius: 50%; /* Bo tròn các biểu tượng */
-    width: 30px; /* Kích thước biểu tượng */
-    height: 30px;
-  }
-  
-  .carousel-control-prev-icon::before {
-    content: '<'; /* Ký tự cho nút Previous */
-  }
-  
-  .carousel-control-next-icon::before {
-    content: '>'; /* Ký tự cho nút Next */
-  }
-  
+.carousel-control-next, .carousel-control-prev {
+  top: 50%;
+  transform: translateY(-50%);
+  height: 50px;
+  width: 50px;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.carousel-control-next:focus, .carousel-control-prev:focus{
+  outline: 0;
+}
+.carousel-item {
+  transition: opacity 0.5s ease;
+}

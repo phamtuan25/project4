@@ -66,3 +66,12 @@ body:has(.signup-page) {
 a {
     cursor: pointer;
 }
+.form-submit:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.1) !important;
+}
+
+.form-submit:active {
+    background-color: #004085 !important; 
+    transform: scale(0.96) !important;
+}

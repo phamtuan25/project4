@@ -17,6 +17,7 @@ const routes: Routes = [
             { path: 'provision-manager', component: ProvisionManagerComponent },
             { path: 'user-manager', component: UserManagerComponent },
             { path: 'booking-detail-manager/:bookingId', component: BookingDetailManagerComponent },
+            { path: '', redirectTo: '/booking-manager', pathMatch: 'full' }
         ]
     }
 ];

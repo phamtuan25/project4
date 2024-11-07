@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
 import { AdminService } from '../admin.service';
-import { ActivatedRoute, Route } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -26,25 +26,37 @@ export class BookingDetailManagerComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   keyword: string = '';
+  currentBookingPage: number = 0;
   constructor(
     public admin: AdminComponent,
     private adminService: AdminService,
     private route: ActivatedRoute,
-    // private router: Route , 
+    private router: Router , 
   ) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Booking Detail Management';
-    this.bookingId = +this.route.snapshot.paramMap.get('bookingId')!;
-    this.getBookingDetails(this.currentPage, this.pageSize, this.keyword);
 
-    this.route.queryParams.subscribe(params => {
-      const page = params['page'];
-      if (page) {
-        this.currentPage = +page; 
-      }
-    });
+    this.bookingId = +this.route.snapshot.paramMap.get('bookingId')!;
+    if (isNaN(this.bookingId)) {
+      console.error('Invalid bookingId');
+    }
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras.state) {
+      this.currentBookingPage = navigation.extras.state['currentPage'];
+    }
+    this.getBookingDetails(this.currentPage, this.pageSize, this.keyword);
   }
 
+  goBack(): void {
+    console.log(this.currentPage)
+    if (this.currentPage) {
+      this.router.navigate(['/admin/booking-manager'], {
+        queryParams: { page: this.currentBookingPage }
+      });
+    } else {
+      this.router.navigate(['/admin/booking-manager']);
+    }
+  }
   getBookingDetails(page: number, size: number, keyword: string): void {
     this.adminService.getBookingDetail(this.bookingId, page - 1, size, keyword).subscribe(
       (response: any) => {
@@ -82,7 +94,7 @@ export class BookingDetailManagerComponent implements OnInit {
   }
 
   openEditBookingDetail(bookingDetail: BookingDetail) {
-    this.bookingDetailId = bookingDetail.bookingId
+    this.bookingDetailId = bookingDetail.bookingDetailId
     this.roomNumber = bookingDetail.roomNumber
     this.checkIn = bookingDetail.checkIn;
     this.checkOut = bookingDetail.checkOut
@@ -126,12 +138,6 @@ export class BookingDetailManagerComponent implements OnInit {
     document.body.style.paddingRight = '';
     document.body.classList.remove('modal-open')
   }
-
-  // goBack(): void {
-  //   this.router.navigate(['/booking-manager'], {
-  //     queryParams: { page: this.currentPage }
-  //   });
-  // }
 }
 
 

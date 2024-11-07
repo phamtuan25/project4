@@ -32,6 +32,7 @@ export class ProvisionManagerComponent implements OnInit {
   pageSize: number = 10;
   currentPage: number = 1;
   totalPages: number = 0;
+  selectedProvision: any;
   constructor(public admin: AdminComponent, private adminService: AdminService,private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Provision Management';
@@ -140,6 +141,7 @@ export class ProvisionManagerComponent implements OnInit {
   }
   // gán giá trị Room edit
   openEditProvision(provision: Provision) {
+    this.selectedProvision = provision;
     this.provisionId = provision.provisionId
     this.provisionName = provision.provisionName
     this.description = provision.description
@@ -147,7 +149,7 @@ export class ProvisionManagerComponent implements OnInit {
     this.status = provision.status
     this.imageOrigin = provision.images
     provision.images.map(image => {
-      this.convertImageToBase64('/upload_images/' + image).subscribe(base64 => {
+      this.convertImageToBase64('http://localhost:8080/upload_images/' + image).subscribe(base64 => {
         this.imagePaths.push({
           name: image,
           path: base64

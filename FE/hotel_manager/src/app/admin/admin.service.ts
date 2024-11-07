@@ -183,7 +183,12 @@ export class AdminService {
       price: price
     };
     const headers = this.config.getHttpHeaders();
-    return this.http.put(this.apiUrl + 'bookingDetail/' + bookingDetailId, body, { headers });
+    return this.http.put(this.apiUrl + 'bookingDetails/' + bookingDetailId, body, { headers });
+  }
+  
+  getUserLogin(email: string | null) {
+    const headers = this.config.getHttpHeaders();
+    return this.http.post(this.apiUrl + 'users/userLogin', email,{headers})
   }
 }
 

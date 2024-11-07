@@ -31,8 +31,9 @@ export class LoginComponent {
       response => {
         const token = '"' + response.token + '"'
         this.config.setToken(token);
-        console.log('Login successful:', response);
-        this.router.navigate(['/admin']);
+        this.config.setEmail(response.message);
+        console.log('Login successful:', response.message);
+        this.router.navigate(['/']);
       },
       error => {
         this.errors = [];

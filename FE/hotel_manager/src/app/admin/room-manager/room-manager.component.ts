@@ -32,6 +32,7 @@ export class RoomManagerComponent implements OnInit {
   pageSize: number = 10;
   currentPage: number = 1;
   totalPages: number = 0;
+  selectedRoom: any;
   constructor(public admin: AdminComponent, private adminService: AdminService, private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Room Management';
@@ -144,6 +145,7 @@ export class RoomManagerComponent implements OnInit {
 
   // gán giá trị Room edit
   openEditRoom(room: Room) {
+    this.selectedRoom = room
     this.roomId = room.roomId
     this.roomNumber = room.roomNumber
     this.roomType = room.roomType
@@ -152,7 +154,7 @@ export class RoomManagerComponent implements OnInit {
     this.hourPrice = room.hourPrice
     this.imageOrigin = room.images
     room.images.map(image => {
-      this.convertImageToBase64('/upload_images/' + image).subscribe(base64 => {
+      this.convertImageToBase64('http://localhost:8080/upload_images/' + image).subscribe(base64 => {
         this.imagePaths.push({
           name: image,
           path: base64

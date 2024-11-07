@@ -32,7 +32,7 @@
                 <td>{{provision.status}}</td>
                 <td>
                     <ng-container *ngIf="provision.images && provision.images.length > 0; else noImage">
-                        <img [src]="'/upload_images/' + provision.images[0]" alt="Provision Image" style="width: 100px; height: auto;" />
+                        <img [src]="'http://localhost:8080/upload_images/' + provision.images[0]" alt="Provision Image" style="width: 100px; height: auto;" />
                         <span *ngIf="provision.images.length > 1" class="pl-3">+{{provision.images.length - 1}}</span>
                     </ng-container>
                     <ng-template #noImage>
@@ -92,6 +92,14 @@
                             <label for="images">Image</label>
                             <input type="file" #fileInput multiple class="form-control" id="images" (change)="onFileChange($event)" accept="image/*" style="display: none;">
                             <button (click)="fileInput.click()" type="button" class="upload-button">Choose file</button>
+                            <div class="d-flex align-items-center image-box pt-3">
+                                <ng-container *ngFor="let image of imagePaths; let i = index">
+                                    <div class="box" width="120" height="100">
+                                        <img [src]="image.path" alt="" width="120" height="100">
+                                        <i class="fa-solid fa-circle-xmark" (click)="removeImage(image, i)"></i>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
                         <span *ngIf="errors">{{ findErrors('images') }}</span>
                     </div>

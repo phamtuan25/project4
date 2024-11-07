@@ -66,4 +66,8 @@ public class UserController {
     public UserResponse changePassword(@PathVariable Long userId,@Valid @RequestBody PasswordRequest passwordRequest){
         return userService.changePassword(userId,passwordRequest);
     }
+    @PostMapping("/userLogin")
+    public User getUserName(@RequestBody String email) {
+        return userService.getUserName(email);
+    }
 }

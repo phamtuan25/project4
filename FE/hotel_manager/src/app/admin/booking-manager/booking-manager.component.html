@@ -36,7 +36,7 @@
                         [attr.data-target]="'#editBookingModal'+booking.bookingId"
                         (click)="openEditBooking(booking)">Edit</button>
                     <button class="btn btn-warning btn-sm"
-                        [routerLink]="['/admin/booking-detail-manager', booking.bookingId]">
+                        (click)="goToBookingDetail(booking.bookingId)">
                         Details View
                     </button>
             </tr>

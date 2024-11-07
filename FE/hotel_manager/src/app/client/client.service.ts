@@ -10,6 +10,10 @@ export class ClientService {
 
     constructor(private http: HttpClient, private config: ConfigService) { }
 
+    getUserLogin(email: string | null) {
+        const headers = this.config.getHttpHeaders();
+        return this.http.post(this.apiUrl + 'users/userLogin', email,{headers})
+      }
     //Call Api Room
     getRooms(page: number, size: number, keyword: string, status?: string) {
         const headers = this.config.getHttpHeaders();

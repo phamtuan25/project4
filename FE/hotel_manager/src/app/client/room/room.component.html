@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-4" *ngFor="let room of rooms">
                     <div class="card">
-                        <img [src]="'/upload_images/' + room.images[0]" alt="Room Image" style="height: 140px;" />
+                        <img [src]="'http://localhost:8080/upload_images/' + room.images[0]" alt="Room Image" style="height: 140px;" />
                         <div class="card-body">
                             <h5 class="card-title mb-3">
                                 <span class="text-primary">{{ room.roomNumber }}</span> - {{ room.roomType }}

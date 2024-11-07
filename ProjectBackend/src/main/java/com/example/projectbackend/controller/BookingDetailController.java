@@ -38,10 +38,10 @@ public class BookingDetailController {
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @PostMapping("/{bookingId}")
-    public BookingDetail createBookingDetail(@Valid @PathVariable Long bookingId, @RequestBody BookingDetailRequest bookingDetailRequest){
+    public BookingDetail createBookingDetail(@PathVariable Long bookingId, @Valid @RequestBody BookingDetailRequest bookingDetailRequest){
         return bookingDetailService.createBookingDetail(bookingDetailRequest, bookingId);
     }
-    @PutMapping("/bookingDetailId")
+    @PutMapping("/{bookingDetailId}")
     public BookingDetail updateBookingDetail(@PathVariable Long bookingDetailId, @RequestBody BookingDetail bookingDetail){
         return bookingDetailService.updateBookingDetail(bookingDetailId, bookingDetail);
     }
