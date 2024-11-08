@@ -1,1 +1,81 @@
-<p>provision works!</p>
+<div class="container mt-5">
+    <!-- Giới thiệu trang dịch vụ -->
+    <div class="intro">
+      <p>
+        <strong>
+          At Hotel Master, we not only bring you luxurious and comfortable rooms, 
+          but also provides you with many diverse and quality services, making your vacation more perfect and enjoyable.
+        </strong>
+      </p>
+    </div>
+  
+    <!-- Hiển thị các dịch vụ -->
+    <div *ngIf="provisions.length > 0; else noServices" class="services-list">
+      <div *ngFor="let provision of provisions; let i = index" 
+           class="row align-items-center service" 
+           [ngClass]="{'odd': i % 2 === 0, 'even': i % 2 !== 0}">
+        
+        <!-- Cột hình ảnh -->
+        <div id="roomCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+            <ol class="carousel-indicators">
+              <li *ngFor="let image of provision.images; let i = index" [attr.data-bs-target]="'#roomCarousel'"
+                  [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
+            </ol>
+          
+            <div class="carousel-inner">
+              <div *ngFor="let image of provision.images; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
+                <img [src]="'http://localhost:8080/upload_images/' + image" 
+                     alt="{{provision.provisionName}}" 
+                     class="d-block w-100" style="height: 400px; object-fit: cover;" />
+              </div>
+            </div>
+          
+            <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+            </button>
+          </div>
+    
+        <!-- Cột mô tả dịch vụ -->
+        <div class="col-md-6" [ngClass]="{'order-md-1': i % 2 === 0, 'order-md-2': i % 2 !== 0}">
+          <h1>{{provision.provisionName}}</h1>
+          <p>{{provision.description}}</p>
+          <p><span class="price-red">Price: {{provision.price | currency:'$'}}</span></p>
+          <!-- <button class="btn btn-custom" (click)="viewDetails(provision.provisonId)">Tìm Hiểu Thêm</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+    <ng-template #noServices>
+      <div class="alert alert-warning" role="alert">
+        Không có dịch vụ nào để hiển thị.
+      </div>
+    </ng-template>
+
+    <!-- Phân trang -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)"
+                    [attr.aria-disabled]="currentPage === 1">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+                <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1"
+                    [attr.aria-current]="currentPage === i + 1 ? 'page' : null">
+                    {{ i + 1 }}
+                </a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)"
+                    [attr.aria-disabled]="currentPage === totalPages">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>

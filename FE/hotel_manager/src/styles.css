@@ -1,3 +1,11 @@
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../public/fonts/CormorantGaramond-Bold.ttf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 .modal-backdrop {
     position: fixed;
     top: 0;

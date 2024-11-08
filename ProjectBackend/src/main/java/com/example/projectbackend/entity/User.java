@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     public enum RoleType {
         CUSTOMER,
@@ -62,6 +62,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Contact> contacts;
     public void setFirstName(String firstName) {
         this.firstName = firstName;
         updateFullName();

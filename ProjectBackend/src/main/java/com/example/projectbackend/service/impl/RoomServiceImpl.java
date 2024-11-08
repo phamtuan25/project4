@@ -99,10 +99,8 @@ public class RoomServiceImpl implements RoomService {
 
     public static Specification<Room> searchByKeywordAndStatus(String keyword, String status) {
         return (root, query, criteriaBuilder) -> {
-            // Danh sách chứa các điều kiện (predicates)
             List<Predicate> predicates = new ArrayList<>();
 
-            // Kiểm tra và xử lý từ khóa tìm kiếm (keyword)
             if (keyword != null && !keyword.isEmpty()) {
                 String likePattern = "%" + keyword.toLowerCase() + "%";
                 predicates.add(

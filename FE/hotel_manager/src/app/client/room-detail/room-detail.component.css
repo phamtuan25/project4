@@ -11,14 +11,23 @@ h4 {
     margin: 0.5rem 0;
 }
 .btn-primary {
-    background-color: #4e54c8;
-    border-color: #4e54c8;
+    background-color: white;
+    border: solid 1px black;
+    color: black;
 }
 .btn-primary:hover {
-    background-color: #797fee;
-    border-color: #797fee;
+    background-color: #b95c47;
+    color: white;
+    border: 0;
 }
-
+.btn-primary:active {
+    background-color: #b95c47 !important;
+    border-color: #b95c47 !important;
+    
+}
+.btn-primary:focus{
+    box-shadow: none !important;
+}
 .check-availability {
     background-color: #8f94fb;
     padding: 20px;

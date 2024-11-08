@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { ConfigService } from '../../config/config.service';
 import { Room } from './room/room.component';
+import { Provision } from '../admin/provision-manager/provision-manager.component';
+import { Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
@@ -28,4 +30,24 @@ export class ClientService {
         const headers = this.config.getHttpHeaders();
         return this.http.get<Room>(`${this.apiUrl}rooms/${roomId}`, { headers });
     }
+
+     //Call Api Provision
+     getProvision(page: number, size: number, keyword: string, status?: string) {
+        const headers = this.config.getHttpHeaders();
+        var params = `page=${page}&size=${size}&keyword=${keyword}`;
+        if (status) {
+            params = params + `&status=${status}`;
+        }
+        return this.http.get<Provision[]>(`${this.apiUrl}provisions?${params}`, { headers });
+    }
+
+    //Call Api Contact
+    addContact(message: string, userId: number): Observable<any> {
+        const body = {
+            message: message,
+            userId: userId
+        };
+        const headers = this.config.getHttpHeaders();
+        return this.http.post(this.apiUrl + 'contacts', body, { headers });
+      }
 }

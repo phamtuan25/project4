@@ -10,6 +10,7 @@ import com.example.projectbackend.mapper.ProvisionMapper;
 import com.example.projectbackend.repository.ImageRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
 import com.example.projectbackend.service.ProvisionService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,8 +34,9 @@ public class ProvisionServiceImpl implements ProvisionService {
 
     @Override
     public Page<ProvisionResponse> getAllProvision(@PageableDefault(size = 10, page = 0) Pageable pageable,
-                                                   @RequestParam(required = false) String keyword) {
-        Specification<Provision> spec = searchByKeyword(keyword);
+                                                   @RequestParam(required = false) String keyword,
+                                                   @RequestParam(required = false) String status) {
+        Specification<Provision> spec = searchByKeyword(keyword, status);
         Page<Provision> provisionPage = provisionRepository.findAll(spec, pageable);
 
         return provisionPage.map(provision -> {
@@ -91,18 +94,27 @@ public class ProvisionServiceImpl implements ProvisionService {
         provisionUpdate.setPrice(provisionInput.getPrice());
     }
 
-    public static Specification<Provision> searchByKeyword(String keyword) {
+    public static Specification<Provision> searchByKeyword(String keyword, String status) {
         return (root, query, criteriaBuilder) -> {
-            if (keyword == null || keyword.isEmpty()) {
-                return criteriaBuilder.conjunction();
+            List<Predicate> predicates = new ArrayList<>();
+            if (keyword != null && !keyword.isEmpty()) {
+                String likePattern = "%" + keyword.toLowerCase() + "%";
+                predicates.add(
+                        criteriaBuilder.or(
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("provisionName")), likePattern),
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), likePattern),
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("status")), likePattern),
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("price").as(String.class)), likePattern)
+                        )
+                );
             }
-            String likePattern = "%" + keyword + "%";
-            return criteriaBuilder.or(
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("provisionName").as(String.class)), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description").as(String.class)), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("price").as(String.class)), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern)
-            );
+                if (status != null && !status.isEmpty()) {
+                    predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("status")), status.toLowerCase()));
+                }
+                if (predicates.isEmpty()) {
+                    return criteriaBuilder.conjunction();
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

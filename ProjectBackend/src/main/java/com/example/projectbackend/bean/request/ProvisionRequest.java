@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProvisionRequest {
 
-    @NotEmpty(message = "Provision name is required")
+    @NotEmpty(message = "Service name is required")
     private String provisionName;
 
     @NotEmpty(message = "Description is required")
