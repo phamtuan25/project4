@@ -29,7 +29,7 @@ public class BookingRequest {
     @NotNull(message = "Deposit is required")
     private Double deposit;
 
-    @NotNull(message = "Total amount is required")
-    private Double totalAmount;
+//    @NotNull(message = "Total amount is required")
+//    private Double totalAmount;
 
 }

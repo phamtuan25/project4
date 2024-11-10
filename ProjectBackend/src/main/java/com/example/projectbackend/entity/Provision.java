@@ -30,7 +30,7 @@ public class Provision  {
     private String description;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

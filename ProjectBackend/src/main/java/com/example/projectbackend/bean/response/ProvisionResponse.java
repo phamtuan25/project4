@@ -18,7 +18,7 @@ public class ProvisionResponse {
     private Long provisionId;
     private String provisionName;
     private String description;
-    private BigDecimal price;
+    private Double price;
     private Provision.ProvisionStatus status;
     private List<String> images;
 }

@@ -47,5 +47,38 @@ public class Booking {
 
     @Column(name = "total_amount")
     private Double totalAmount;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        // Tính toán tổng tiền (totalAmount) khi booking được tạo
+        calculateTotalAmount();
+    }
+
+    // Phương thức tính toán tổng tiền của booking từ các booking details và provisions
+    public void calculateTotalAmount() {
+        double totalAmount = 0;
+
+        for (BookingDetail bookingDetail : bookingDetails) {
+            // Tính giá của từng bookingDetail = giá phòng + các provision liên quan
+            double roomPrice = bookingDetail.getRoom().getPrice();
+            double provisionsPrice = 0;
+
+            // Tính tổng giá trị của provisions liên quan đến bookingDetail
+            if (bookingDetail.getRelProvisionBookingDetails() != null) {
+                for (RelProvisionBookingDetail rel : bookingDetail.getRelProvisionBookingDetails()) {
+                    provisionsPrice += rel.getProvision().getPrice().doubleValue();
+                }
+            }
+
+            // Cộng giá phòng và giá các provision vào tổng số tiền cho booking
+            totalAmount += roomPrice + provisionsPrice + deposit;
+        }
+
+        // Gán tổng tiền vào thuộc tính totalAmount của Booking
+        this.totalAmount = totalAmount;
+    }
 }
 

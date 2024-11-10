@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,18 +54,38 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
     @Override
     public BookingDetail createBookingDetail(BookingDetailRequest bookingDetailRequest, Long bookingId) {
+        // Chuyển đổi từ request thành entity
         BookingDetail bookingDetail = BookingDetailMapper.convertFromRequest(bookingDetailRequest);
 
+        // Tìm booking
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
+                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking không tìm thấy với ID: " + bookingId));
         bookingDetail.setBooking(booking);
 
+        // Tìm phòng
         Room room = roomRepository.findById(bookingDetailRequest.getRoomId())
-                .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetailRequest.getRoomId()));
+                .orElseThrow(() -> new NotFoundException("RoomNotFound", "Phòng không tìm thấy với ID: " + bookingDetailRequest.getRoomId()));
         bookingDetail.setRoom(room);
+
+        // Kiểm tra nếu phòng có sẵn trong khoảng thời gian đặt
+        boolean isRoomAvailable = checkRoomAvailability(room, bookingDetailRequest.getCheckIn(), bookingDetailRequest.getCheckOut());
+        if (!isRoomAvailable) {
+            throw new IllegalArgumentException("Phòng đã được đặt trong khoảng thời gian bạn yêu cầu");
+        }
+
+        // Đánh dấu phòng là đã được đặt
+        room.setStatus(Room.RoomStatus.BOOKED);
+        roomRepository.save(room);
 
         return bookingDetailRepository.save(bookingDetail);
     }
+
+    private boolean checkRoomAvailability(Room room, LocalDateTime checkIn, LocalDateTime checkOut) {
+        // Kiểm tra nếu phòng đã có booking trong khoảng thời gian này
+        List<BookingDetail> overlappingBookings = bookingDetailRepository.findOverlappingBookings(room.getRoomId(), checkIn, checkOut);
+        return overlappingBookings.isEmpty();
+    }
+
 
 
     @Override

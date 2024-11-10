@@ -26,7 +26,7 @@ public class ProvisionRequest {
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
-    private BigDecimal price;
+    private Double price;
 
     @NotNull(message = "Status is required")
     private Provision.ProvisionStatus status;

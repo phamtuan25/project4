@@ -1,6 +1,7 @@
 package com.example.projectbackend.controller;
 
 import com.example.projectbackend.bean.request.ImageRequest;
+import com.example.projectbackend.bean.request.RoomAvailabilityRequest;
 import com.example.projectbackend.bean.request.RoomRequest;
 import com.example.projectbackend.bean.response.RoomResponse;
 import com.example.projectbackend.entity.Room;
@@ -11,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
@@ -110,4 +113,23 @@ public class RoomController {
     public void deleteRoom(@PathVariable Long roomId) {
         roomService.deleteRoom(roomId);
     }
+
+
+    @PostMapping("/available")
+    public ResponseEntity<List<Room>> findAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
+        LocalDateTime checkIn = request.getCheckIn();
+        LocalDateTime checkOut = request.getCheckOut();
+        Room.RoomType roomType = request.getRoomType();  // Lấy roomType kiểu Room.RoomType từ request
+
+        // Gọi service để lấy các phòng có sẵn
+        List<Room> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, roomType); // Truyền roomType vào
+
+        if (availableRooms.isEmpty()) {
+            return ResponseEntity.noContent().build();  // Nếu không có phòng trống, trả về mã 204
+        }
+
+        return ResponseEntity.ok(availableRooms);  // Nếu có phòng trống, trả về danh sách phòng
+    }
+
+
 }

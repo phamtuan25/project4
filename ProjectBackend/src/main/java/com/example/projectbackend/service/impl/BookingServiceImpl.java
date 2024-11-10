@@ -86,19 +86,32 @@ import java.util.stream.Collectors;
         // Lưu booking để có bookingId
         Booking savedBooking = bookingRepository.save(booking);
 
-        // Cập nhật BookingDetails với booking đã lưu và room đã tìm thấy
+        // Cập nhật trạng thái phòng và BookingDetails
         List<BookingDetail> bookingDetails = new ArrayList<>(booking.getBookingDetails()); // Sao chép danh sách để tránh ConcurrentModificationException
+
         for (BookingDetail bookingDetail : bookingDetails) {
+            // Tìm phòng tương ứng với booking detail
             Room room = rooms.stream()
                     .filter(r -> r.getRoomId().equals(bookingDetail.getRoom().getRoomId()))
                     .findFirst()
                     .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetail.getRoom().getRoomId()));
+
+            // Kiểm tra trạng thái phòng
+            if (room.getStatus() != Room.RoomStatus.AVAILABLE) {
+                throw new NotFoundException("RoomNotAvailable", "Room with ID " + room.getRoomId() + " is not available.");
+            }
+
+            // Cập nhật trạng thái phòng thành BOOKED
+            room.setStatus(Room.RoomStatus.BOOKED);
+            roomRepository.save(room); // Lưu phòng sau khi thay đổi trạng thái
+
+            // Cập nhật thông tin booking detail
             bookingDetail.setRoom(room);
             bookingDetail.setBooking(savedBooking); // Gán booking cho chi tiết đặt phòng
             bookingDetail.setCreatedAt(savedBooking.getCreatedAt()); // Gán createdAt của booking cho bookingDetail
         }
 
-        // Lưu BookingDetails
+        // Lưu tất cả các booking details
         bookingDetailRepository.saveAll(bookingDetails);
 
         // Cập nhật tổng số tiền
@@ -108,6 +121,7 @@ import java.util.stream.Collectors;
         // Cập nhật booking với tổng số tiền
         return bookingRepository.save(savedBooking);
     }
+
 
 
     @Override
