@@ -34,8 +34,8 @@ public class ProvisionController {
     private final ImageService imageService;
 
     @GetMapping
-    public Page<ProvisionResponse> getAllProvision(Pageable pageable, @RequestParam(required = false) String keyword) {
-        return provisionService.getAllProvision(pageable, keyword);
+    public Page<ProvisionResponse> getAllProvision(Pageable pageable, @RequestParam(required = false) String keyword, String status) {
+        return provisionService.getAllProvision(pageable, keyword, status);
     }
 
     @GetMapping("/{provisionId}")

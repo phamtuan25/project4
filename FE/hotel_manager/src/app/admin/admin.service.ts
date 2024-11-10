@@ -8,6 +8,7 @@ import { Provision } from './provision-manager/provision-manager.component';
 import { SrvRecord } from 'dns';
 import { Booking } from './booking-manager/booking-manager.component';
 import { BookingDetail } from './booking-detail-manager/booking-detail-manager.component';
+import { Contact } from './contact-manager/contact-manager.component';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class AdminService {
     return this.http.post(this.apiUrl + 'users', body, { headers });
   }
 
-  eidtUser(userId: number, address: string, email: string, phoneNumber: string, role: string): Observable<any> {
+  editUser(userId: number, address: string, email: string, phoneNumber: string, role: string): Observable<any> {
     const body = {
       address: address,
       email: email,
@@ -183,7 +184,25 @@ export class AdminService {
       price: price
     };
     const headers = this.config.getHttpHeaders();
-    return this.http.put(this.apiUrl + 'bookingDetail/' + bookingDetailId, body, { headers });
+    return this.http.put(this.apiUrl + 'bookingDetails/' + bookingDetailId, body, { headers });
+  }
+  
+  getUserLogin(email: string | null) {
+    const headers = this.config.getHttpHeaders();
+    return this.http.post(this.apiUrl + 'users/userLogin', email,{headers})
+  }
+
+  //Call Api Contact
+  getContact(page: number, size: number, keyword: string) {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<Contact[]>(`${this.apiUrl}contacts?page=${page}&size=${size}&keyword=${keyword}`, { headers });
+  }
+  editContact(contactId: number, status: string): Observable<any> {
+    const body = {
+      status: status
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.put(this.apiUrl + 'contacts/' + contactId, body, { headers });
   }
 }
 

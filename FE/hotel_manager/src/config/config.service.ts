@@ -19,6 +19,12 @@ export class ConfigService {
     localStorage.setItem(this.tokenKey, token);
   }
 
+  getEmail(): string | null{
+    return localStorage.getItem('email');
+  }
+  setEmail(email: string): void{
+    return localStorage.setItem('email', email);
+  }
   // Phương thức để lấy httpHeader
   getHttpHeaders(): HttpHeaders {
     const token = this.getToken();

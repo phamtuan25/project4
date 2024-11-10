@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="header">
+      <img src="/images/logo-hostel.png" alt="Amazing Hotel" class="logo">
+      <h1 class="title">Located right in the heart of Hanoi, our luxury hotel</h1>
+      <p class="subtitle">is minutes from the city's iconic cultural landmarks and close to nearby attractions.</p>
+    </div>
+    <div class="contact-form">
+      <h2 class="form-title">Contact us</h2>
+      <form id="addContactForm" method="POST" (ngSubmit)="onSubmitAdd()">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" [value]="userLogin?.fullName" readonly>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" [value]="userLogin?.email" readonly>
+        </div>
+        <div class="form-group">
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" placeholder="Enter your message" [(ngModel)]="message"></textarea>
+          <span *ngIf="errors">{{findErrors("message")}}</span>
+        </div>
+        <input type="hidden" name="userId" [value]="userLogin?.userId">
+        <button type="submit" class="btn">Send</button>
+      </form>
+    </div>
+    <div class="info">
+      <div class="info-item">
+        <h3>Address:</h3>
+        <p>No. 16 Le Thanh Nghi Street, Hai Ba Trung District, Hanoi, Vietnam</p>
+      </div>
+      <div class="info-item">
+        <h3>Direct support:</h3>
+        <p>Make a reservation: +84 (0) 2143 886 829</p>
+        <p>Phone: +84 (0) 941 604 100</p>
+        <p>Website: <a href="https://www.amazinghotel.com.vn">https://www.amazinghotel.com.vn</a></p>
+      </div>
+      <div class="info-item">
+        <h3>Support & advice:</h3>
+        <p>Phone: +84 (0) 941 986 000</p>
+        <p>Email: quocuong4uagmail.com</p>
+        <p>Hotline: +84 (0) 2143 886 829</p>
+      </div>
+    </div>
+    <div class="map">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.729910476335!2d105.84772707400828!3d21.003461088649463!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac74f21b2307%3A0x3637b5533a105108!2zMTYgUC4gTMOqIFRoYW5oIE5naOG7iywgQ-G6p3UgROG7gW4sIEhhaSBCw6AgVHLGsG5nLCBIw6AgTuG7mWksIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1731068743514!5m2!1svi!2s" 
+          width="100%" 
+          height="400" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+  </div>

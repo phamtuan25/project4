@@ -1,3 +1,11 @@
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('../public/fonts/CormorantGaramond-Bold.ttf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -65,4 +73,13 @@ body:has(.signup-page) {
 }
 a {
     cursor: pointer;
+}
+.form-submit:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.1) !important;
+}
+
+.form-submit:active {
+    background-color: #004085 !important; 
+    transform: scale(0.96) !important;
 }

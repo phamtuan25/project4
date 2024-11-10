@@ -87,7 +87,7 @@ export class UserManagerComponent implements OnInit {
   // submit user đã edit
   onSubmitEdit(form: NgForm) {
     if(form.valid) {
-      this.adminService.eidtUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
+      this.adminService.editUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
         response => {
           alert("Edit Success!");
           this.getUsers(this.currentPage , this.pageSize, this.keyword);

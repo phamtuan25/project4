@@ -4,6 +4,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import { AdminService } from '../admin.service';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-booking-manager',
   templateUrl: './booking-manager.component.html',
@@ -24,7 +25,7 @@ export class BookingManagerComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   keyword: string = '';
-  constructor(public admin: AdminComponent, private adminService: AdminService) { }
+  constructor(public admin: AdminComponent, private adminService: AdminService, private router: Router) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Booking Management';
     this.getBookings(this.currentPage, this.pageSize, this.keyword);
@@ -62,7 +63,11 @@ export class BookingManagerComponent implements OnInit {
       this.searchBookings();
     }
   }
-
+  goToBookingDetail(bookingId: number){
+    this.router.navigate(['/admin/booking-detail-manager', bookingId], {
+      state: { currentPage: this.currentPage }
+    });
+  }
   openEditBooking(booking: Booking) {
     this.bookingId = booking.bookingId
     this.email = booking.userBookingResponse.email;

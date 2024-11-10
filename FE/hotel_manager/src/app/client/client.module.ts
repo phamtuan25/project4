@@ -9,7 +9,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserBookingComponent } from './user-booking/user-booking.component';
 import { ClientRoutingModule } from './client-routing.module';
 import { ClientComponent } from './client.component';
-
+import { ContactComponent } from './contact/contact.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -21,11 +22,13 @@ import { ClientComponent } from './client.component';
     RoomComponent,
     RoomDetailComponent,
     UserProfileComponent,
-    UserBookingComponent
+    UserBookingComponent,
+    ContactComponent
   ],
   imports: [
     CommonModule,
-    ClientRoutingModule
+    ClientRoutingModule,
+    FormsModule
   ]
 })
 export class ClientModule { }

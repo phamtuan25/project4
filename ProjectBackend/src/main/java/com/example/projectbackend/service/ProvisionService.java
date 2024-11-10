@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public interface ProvisionService {
-    public Page<ProvisionResponse> getAllProvision(Pageable pageable, String keyword);
+    public Page<ProvisionResponse> getAllProvision(Pageable pageable, String keyword, String status);
     public ProvisionResponse getDetailProvision(Long serviceId);
     public Provision createProvision(ProvisionRequest provisionRequest);
     public Provision updateProvision(Long provisionId, ProvisionRequest provisionRequest);

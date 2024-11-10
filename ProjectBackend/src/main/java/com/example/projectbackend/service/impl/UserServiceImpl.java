@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,6 +95,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return UserMapper.convertToResponse(user);
+    }
+
+    @Override
+    public User getUserName(String email) {
+       User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("email", "Your Email not found"));
+       return user;
     }
 
     public void setUser(User userUpdate, User userInput) {

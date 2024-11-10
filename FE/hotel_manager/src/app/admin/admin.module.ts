@@ -8,6 +8,7 @@ import { AdminComponent } from './admin.component';
 import { FormsModule } from '@angular/forms';
 import { ProvisionManagerComponent } from './provision-manager/provision-manager.component';
 import { BookingDetailManagerComponent } from './booking-detail-manager/booking-detail-manager.component';
+import { ContactManagerComponent } from './contact-manager/contact-manager.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { BookingDetailManagerComponent } from './booking-detail-manager/booking-
     RoomManagerComponent,
     ProvisionManagerComponent,
     UserManagerComponent,
-    BookingDetailManagerComponent
+    BookingDetailManagerComponent,
+    ContactManagerComponent
   ],
   imports: [
     CommonModule,

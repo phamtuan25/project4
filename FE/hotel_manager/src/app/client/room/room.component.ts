@@ -58,8 +58,6 @@ export class RoomComponent implements OnInit {
       queryParams: { page: this.currentPage },
       queryParamsHandling: 'merge',
     });
-
-    this.getRooms(this.currentPage, this.pageSize, this.keyword);
   }
 }
 

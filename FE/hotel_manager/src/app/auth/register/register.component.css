@@ -269,6 +269,7 @@ display-flex, .display-flex, .display-flex-center {
     background-image: -webkit-linear-gradient(to left, #74ebd5, #9face6);
     background-image: linear-gradient(to left, #74ebd5, #9face6); }
   
+    
   input[type=checkbox]:not(old) {
     width: 2em;
     margin: 0;

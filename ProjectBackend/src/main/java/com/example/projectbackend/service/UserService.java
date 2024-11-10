@@ -16,4 +16,5 @@ public interface UserService {
     public User createUser(UserRequest userRequest);
     public User updateUser(Long userId, User user);
     UserResponse changePassword(Long userId, PasswordRequest passwordRequest);
+     User getUserName(String email);
 }

@@ -1,0 +1,112 @@
+<div class="form-group mt-3">
+    <div class="input-group">
+        <input type="text" class="form-control" id="searchContactsInput" placeholder="Search..."
+            (keyup)="handleKeyPress($event)">
+
+        <div class="input-group-append">
+            <button class="btn btn-primary" (click)="searchContacts()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer Email</th>
+                <th>Customer Full Name</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="contactTable">
+            <tr *ngFor="let contact of contacts">
+                <td>{{contact.userResponse.email}}</td>
+                <td>{{contact.userResponse.fullName}}</td>
+                <td>{{contact.message}}</td>
+                <td>{{contact.status}}</td>
+                <td>{{contact.createdAt}}</td>
+                <td>{{contact.updatedAt || 'N/A'}}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-toggle="modal"
+                        [attr.data-target]="'#editContactModal'+contact.contactId"
+                        (click)="openEditContact(contact)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center w-100 pb-3" *ngIf="contacts.length === 0">Data not found</div>
+    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
+
+    <!-- Modal Sửa Người Dùng -->
+    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+        <div class="modal-dialog" role="document">
+            <form id="editContactForm" #editContactForm="ngForm" (ngSubmit)="onSubmitEdit(editContactForm)"
+                method="PUT">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editContactModalLabel">Edit Contact</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            (click)="resetFormData()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editUserId">
+                        <div class="form-group">
+                            <label for="editFullName">Customer Email</label>
+                            <input type="text" class="form-control" name="email" required [value]="email" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFullName">Customer Full Name</label>
+                            <input type="text" class="form-control" name="fullName" required [value]="fullName"
+                                readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMessage">Message</label>
+                            <input type="text" class="form-control" name="message" required [value]="message" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editStatus">Status</label>
+                            <select class="form-control" id="editStatus" [(ngModel)]="status" name="status" required>
+                                <option value="NEW">NEW</option>
+                                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                                <option value="COMPLETED">COMPLETED</option>
+                                <option value="CANCELLED">CANCELLED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            (click)="resetFormData()">Close</button>
+                        <button type="submit" id="onSubmit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)"
+                    [attr.aria-disabled]="currentPage === 1">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
+                <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1"
+                    [attr.aria-current]="currentPage === i + 1 ? 'page' : null">{{ i + 1 }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)"
+                    [attr.aria-disabled]="currentPage === totalPages">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
