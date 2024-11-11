@@ -52,3 +52,88 @@ h4 {
 .carousel-item {
   transition: opacity 0.5s ease;
 }
+
+/* css T.Cường */
+
+/* .container {
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.carousel-item {
+    height: 483px;
+    /* Chiều cao cố định cho hình ảnh 
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    /* Đặt chiều cao của ảnh bằng chiều cao của item 
+    object-fit: cover;
+    /* Đảm bảo ảnh không bị méo và sẽ bị cắt bớt nếu cần 
+}
+
+.row.full-height {
+    display: flex;
+}
+
+.booking-section {
+    border-radius: 5px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.booking-section h2 {
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.room-rules {
+    margin-top: 20px;
+}
+
+.room-rules h4 {
+    margin-bottom: 10px;
+    color: #dc3545;
+}
+
+.room-rules ul{
+    list-style: none;
+    color: #6c757d;
+}
+
+.btn-success {
+    background-color: #b95c47;
+    border: none;
+    height: 45px;
+    font-size: 16px;
+    border-radius: 2px;
+}
+
+.btn-success:hover {
+    background-color: #a3543d;
+    color: #fff;
+}
+
+.form-control,
+.form-select {
+    border: none;
+    border-bottom: 1px solid #1a1a1a;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.details p {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.details h5 {
+    margin-top: 20px;
+} */
