@@ -1,241 +1,212 @@
-/* content */
-
-main {
-    padding: 20px;
-    background-color: white;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+h2 {
+    margin-bottom: 30px;
+    color: #2c3e50;
 }
 
+h1 {
+    color: #343a40;
+    margin-bottom: 30px;
+}
+
+.room-list {
+    padding: 30px 0;
+    background-color: #F6F6FA;
+}
 
 .card {
-    margin-bottom: 20px;
-    /* Khoảng cách giữa các thẻ card */
     border: none;
-    /* Xóa viền card */
-    border-radius: 10px;
-    /* Bo tròn các góc của card */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* Ẩn các phần vượt quá card */
-    transition: transform 0.3s, box-shadow 0.3s;
-    /* Hiệu ứng chuyển động */
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    /* Nâng card lên khi hover */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    /* Thêm bóng cho card khi hover */
+    width: 600px;
+    margin: auto;
+    background-color: #F6F6FA;
 }
 
 .card-img-top {
-    height: 200px;
-    /* Đặt chiều cao cho hình ảnh */
+    border-radius: 0;
+    height: 400px;
     object-fit: cover;
-    /* Giữ tỷ lệ hình ảnh */
-    filter: brightness(0.10);
-    /* Làm tối hình ảnh */
-}
-
-.card-body {
-    padding: 20px;
-    /* Thêm khoảng cách cho nội dung card */
 }
 
 .card-title {
-    font-size: 1.5rem;
-    /* Tăng kích thước tiêu đề */
-    color: #333;
-    /* Màu tiêu đề */
+    line-height: 1.33;
+    margin-bottom: 0;
+    font-weight: 700;
+    font-size: 38px;
+    color: #1A1A1A;
 }
+
+.card-title:hover {
+    color: #b95c47;
+    cursor: pointer;
+}
+
 
 .card-text {
-    font-size: 1rem;
-    /* Kích thước chữ thông tin */
-    color: #666;
-    /* Màu chữ thông tin */
+    color: #6c757d;
 }
 
-.btn-primary {
-    background-color: #4e54c8;
-    /* Màu nền nút */
-    border: none;
-    /* Xóa viền nút */
-    padding: 10px 20px;
-    /* Khoảng cách bên trong nút */
-    border-radius: 5px;
-    /* Bo tròn góc nút */
-    transition: background-color 0.3s;
-    /* Hiệu ứng chuyển màu */
+.card-body p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 450px;
 }
 
-.btn-primary:hover {
-    background-color: #8f94fb;
-    /* Màu nền nút khi hover */
-}
-
-aside {
-    padding: 20px;
+.btn-custom {
+    height: 50px;
+    border-radius: 3px;
     background-color: white;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-aside h3 {
+    color: black;
+    border: 1px solid black;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    line-height: 1.4em;
+    letter-spacing: 1px;
+    fill: #1A1A1A;
+    color: #1A1A1A;
     text-align: center;
-    font-size: 1.5rem;
-    /* Kích thước tiêu đề */
-    color: #4e54c8;
-    /* Màu tiêu đề */
-    border-bottom: 2px solid #4e54c8;
-    /* Đường dưới tiêu đề */
-    padding-bottom: 10px;
-    /* Khoảng cách dưới tiêu đề */
+    justify-content: center;
 }
 
-aside ul {
-    padding-left: 0;
-    /* Xóa lề trái */
-    list-style: none;
-    /* Xóa dấu chấm */
-}
-
-aside li {
-    margin-bottom: 15px;
-    /* Khoảng cách giữa các mục */
-}
-
-aside a {
-    display: block;
-    /* Làm cho toàn bộ vùng liên kết có thể nhấp được */
-    text-decoration: none;
-    /* Xóa gạch chân */
-    color: #ffffff;
-    /* Màu chữ */
-    background-color: #4e54c8;
-    /* Màu nền */
-    padding: 10px;
-    /* Khoảng cách bên trong */
-    border-radius: 5px;
-    /* Bo góc */
-    text-align: center;
-    /* Căn giữa text */
-    transition: background-color 0.3s;
-    /* Hiệu ứng chuyển màu nền */
-}
-
-aside a:hover {
-    text-decoration: none;
-    background-color: #8f94fb;
-    color: #ffffff;
-}
-
-.check-availability {
-    background-color: #f8f9fa;
-    /* Nền trắng cho form */
-    padding: 20px;
-    margin-top: 20px;
-    /* Khoảng cách với phần phía trên */
-}
-
-.check-availability h2 {
-    text-align: center;
-    /* Căn giữa tiêu đề */
-    color: #4e54c8;
-    /* Màu tiêu đề */
-    margin-bottom: 20px;
-    /* Khoảng cách dưới tiêu đề */
-}
-
-.check-availability .form-group {
-    margin-bottom: 15px;
-    /* Khoảng cách giữa các form group */
-}
-
-.check-availability label {
-    font-weight: bold;
-    /* Làm đậm chữ nhãn */
-    margin-bottom: 5px;
-    /* Khoảng cách dưới nhãn */
-    color: #333;
-    /* Màu chữ nhãn */
-}
-
-.check-availability input[type="date"],
-.check-availability select {
-    border: 1px solid #ddd;
-    /* Viền cho input và select */
-    border-radius: 5px;
-    /* Bo tròn các góc */
-    padding: 10px;
-    /* Padding bên trong */
-    width: 100%;
-    /* Đảm bảo chiếm toàn bộ chiều rộng */
-    transition: border-color 0.3s;
-    /* Hiệu ứng chuyển màu viền */
-}
-
-.check-availability input[type="date"]:focus,
-.check-availability select:focus {
-    border-color: #4e54c8;
-    /* Màu viền khi focus */
-    outline: none;
-    /* Xóa outline mặc định */
-}
-
-.check-availability button {
-    background-color: #4e54c8;
-    /* Màu nền nút */
+.btn-custom:hover {
+    background-color: #b95c47;
     color: white;
-    /* Màu chữ */
-    padding: 10px 15px;
-    /* Padding cho nút */
-    border: none;
-    /* Xóa viền */
-    border-radius: 5px;
-    /* Bo tròn góc */
-    width: 100%;
-    /* Đảm bảo nút chiếm toàn bộ chiều rộng */
-    transition: background-color 0.3s;
-    /* Hiệu ứng chuyển màu nền */
 }
 
-.check-availability button:hover {
-    background-color: #8f94fb;
-    /* Màu nền khi hover */
-}
-
-.check-availability .form-group {
+.info-row {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
 }
 
-.check-availability .form-group>div {
+.info-row img {
+    border-radius: 20px;
+    width: 50%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.info-text {
+    padding: 20px;
+    width: 50%;
+}
+
+.info-text h3 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.29em;
+    color: #1A1A1A;
+    margin-bottom: 0px;
+}
+
+.info-text p {
+    color: #5A5A5A;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.heading-title {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.29em;
+    color: #1A1A1A;
+    margin-bottom: 0px;
+}
+
+p {
+    color: #5A5A5A;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.information {
+    background-color: #F6F6FA;
+    padding: 30px 0;
+}
+
+
+
+/* check available */
+.available {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    /* Sử dụng flex để căn chỉnh form và nút */
+    align-items: stretch;
+    /* Để các phần tử con chiếm hết chiều cao */
+}
+
+.available-group {
+    margin-top: -106px;
+    z-index: 10;
+    display: flex;
+}
+
+.availability-form {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 800px;
     flex: 1;
-    margin-right: 10px;
+    /* Để form chiếm không gian còn lại */
+    display: flex;
+    gap: 10px;
 }
 
-.check-availability .form-group>div:last-child {
-    margin-right: 0;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    /* Để các nhãn nằm trên các trường nhập liệu */
+    flex: 1;
+    /* Cho phép form-group chiếm không gian còn lại */
 }
 
-.check-availability input[type="date"],
-.check-availability select,
-.check-availability button {
-    height: 40px;
-    /* Chiều cao bằng nhau */
-    line-height: 1.5;
-    /* Thiết lập line-height để căn giữa chữ */
-    padding: 0 15px;
-    /* Padding bên trái và bên phải */
+.form-group label {
+    margin-bottom: 5px;
+    color: #333;
 }
 
-.check-availability button {
-    width: 200px;
-    /* Chiều rộng nút */
-    margin-left: 10px;
-    /* Khoảng cách giữa trường nhập liệu và nút */
+input[type="datetime-local"],
+select {
+    padding: 10px;
+    border: none;
+    /* Bỏ viền */
+    background-color: #fff;
+    flex: 1;
+    /* Để các trường chiếm không gian còn lại */
+    height: 100%;
+    box-shadow: none;
+    outline: none;
 }
 
-/* content */
+input[type="datetime-local"]:focus,
+select:focus {
+    outline: none;
+    /* Bỏ outline khi trường được chọn */
+}
+
+.submit-container {
+    display: flex;
+    align-items: stretch;
+    /* Để nút có cùng chiều cao với thẻ form */
+}
+
+input[type="submit"] {
+    background-color: #b95c47;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    height: 100%;
+    padding: 0 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #a3543f;
+}
+
+/* check available */

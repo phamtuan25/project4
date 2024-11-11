@@ -81,7 +81,7 @@ import java.util.stream.Collectors;
         Booking booking = BookingMapper.convertFromRequest(bookingRequest, roomRepository);
         booking.setUser(user); // Gán người dùng đã tìm thấy
         booking.setCreatedAt(LocalDateTime.now());
-        booking.setStatus(Booking.BookingStatus.PENDING);
+        booking.setStatus(Booking.BookingStatus.PENDING); // Set Booking status to PENDING
 
         // Lưu booking để có bookingId
         Booking savedBooking = bookingRepository.save(booking);
@@ -109,16 +109,16 @@ import java.util.stream.Collectors;
             bookingDetail.setRoom(room);
             bookingDetail.setBooking(savedBooking); // Gán booking cho chi tiết đặt phòng
             bookingDetail.setCreatedAt(savedBooking.getCreatedAt()); // Gán createdAt của booking cho bookingDetail
+            bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set BookingDetail status to PENDING
         }
 
         // Lưu tất cả các booking details
         bookingDetailRepository.saveAll(bookingDetails);
 
-        // Cập nhật tổng số tiền
-        double totalAmount = bookingRequest.getDeposit() + bookingDetails.stream().mapToDouble(BookingDetail::getPrice).sum();
-        savedBooking.setTotalAmount(Double.valueOf(totalAmount)); // Đảm bảo tổng số tiền là BigDecimal
+        // Tính toán tổng số tiền và deposit
+        savedBooking.calculateTotalAmount(); // Tính lại totalAmount và deposit sau khi đã có booking details
 
-        // Cập nhật booking với tổng số tiền
+        // Cập nhật booking với tổng số tiền và deposit
         return bookingRepository.save(savedBooking);
     }
 
@@ -133,9 +133,13 @@ import java.util.stream.Collectors;
         // Cập nhật thông tin booking
         setBooking(bookingUpdate, booking);
 
+        // Tính lại totalAmount và deposit sau khi cập nhật
+        bookingUpdate.calculateTotalAmount();
+
         // Lưu booking đã cập nhật vào cơ sở dữ liệu
         return bookingRepository.save(bookingUpdate);
     }
+
 
     @Override
     public void deleteBooking(Long bookingId) {
