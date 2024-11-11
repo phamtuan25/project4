@@ -55,22 +55,19 @@ h4 {
 
 /* css T.Cường */
 
-/* .container {
+.container {
     margin-top: 30px;
     padding: 20px;
 }
 
 .carousel-item {
     height: 483px;
-    /* Chiều cao cố định cho hình ảnh 
 }
 
 .carousel-item img {
     width: 100%;
     height: 100%;
-    /* Đặt chiều cao của ảnh bằng chiều cao của item 
     object-fit: cover;
-    /* Đảm bảo ảnh không bị méo và sẽ bị cắt bớt nếu cần 
 }
 
 .row.full-height {
@@ -136,4 +133,4 @@ h4 {
 
 .details h5 {
     margin-top: 20px;
-} */
+}
