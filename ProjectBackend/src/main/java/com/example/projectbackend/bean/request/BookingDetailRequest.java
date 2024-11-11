@@ -30,9 +30,5 @@ public class BookingDetailRequest {
     @NotEmpty(message = "Special requests cannot be empty")
     private String specialRequests;
 
-//    @NotNull(message = "Price is required")
-//    @PositiveOrZero(message = "Price must be non-negative")
     private Double price;
-
-    private BookingDetail.BookingDetailStatus status;
 }

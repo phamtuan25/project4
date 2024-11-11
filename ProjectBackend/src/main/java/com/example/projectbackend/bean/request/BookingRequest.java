@@ -22,14 +22,4 @@ public class BookingRequest {
 
     @NotNull(message = "User is required")
     private User user;
-
-    @NotNull(message = "Booking status is required")
-    private Booking.BookingStatus status;
-
-    @NotNull(message = "Deposit is required")
-    private Double deposit;
-
-//    @NotNull(message = "Total amount is required")
-//    private Double totalAmount;
-
 }

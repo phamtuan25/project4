@@ -77,8 +77,12 @@ public class BookingDetailServiceImpl implements BookingDetailService {
         room.setStatus(Room.RoomStatus.BOOKED);
         roomRepository.save(room);
 
+        // Set the status to PENDING when creating the BookingDetail
+        bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set BookingDetail status to PENDING
+
         return bookingDetailRepository.save(bookingDetail);
     }
+
 
     private boolean checkRoomAvailability(Room room, LocalDateTime checkIn, LocalDateTime checkOut) {
         // Kiểm tra nếu phòng đã có booking trong khoảng thời gian này
@@ -95,8 +99,14 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
         setBookingDetail(bookingDetailUpdate, bookingDetail);
 
+        // Optionally, set the status to PENDING during an update
+        if (bookingDetailUpdate.getStatus() == null) {
+            bookingDetailUpdate.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set status to PENDING if not already set
+        }
+
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
+
 
     @Override
     public void deleteBookingDetail(Long bookingDetailId) {

@@ -74,11 +74,15 @@ public class Booking {
             }
 
             // Cộng giá phòng và giá các provision vào tổng số tiền cho booking
-            totalAmount += roomPrice + provisionsPrice + deposit;
+            totalAmount += roomPrice + provisionsPrice;
         }
 
         // Gán tổng tiền vào thuộc tính totalAmount của Booking
         this.totalAmount = totalAmount;
+
+        // Tính deposit (10% của tổng số tiền)
+        this.deposit = totalAmount * 0.10;
     }
+
 }
 

@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 public class RoomAvailabilityRequest {
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;
-    private Room.RoomType roomType; // Room type for filtering
+    private Room.RoomType roomType;
 
-    // Getters and Setters
 }
 
 
