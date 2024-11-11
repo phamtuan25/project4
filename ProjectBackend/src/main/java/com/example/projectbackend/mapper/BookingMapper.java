@@ -45,8 +45,6 @@ public class BookingMapper {
         }
 
         booking.setUser(bookingRequest.getUser());
-        booking.setStatus(bookingRequest.getStatus());
-        booking.setDeposit(bookingRequest.getDeposit());
 
         // Kiểm tra nếu danh sách BookingDetails là null
         if (bookingRequest.getBookingDetailRequests() == null) {
@@ -70,7 +68,6 @@ public class BookingMapper {
         BookingDetail bookingDetail = new BookingDetail();
         bookingDetail.setCheckIn(detailRequest.getCheckIn());
         bookingDetail.setCheckOut(detailRequest.getCheckOut());
-        bookingDetail.setStatus(detailRequest.getStatus());
         bookingDetail.setSpecialRequests(detailRequest.getSpecialRequests());
         bookingDetail.setPrice(detailRequest.getPrice());
         bookingDetail.setBooking(booking);

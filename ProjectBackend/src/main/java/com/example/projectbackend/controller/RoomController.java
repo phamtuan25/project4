@@ -115,7 +115,7 @@ public class RoomController {
     }
 
 
-    @PostMapping("/available")
+    @GetMapping("/available")
     public ResponseEntity<List<Room>> findAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
         LocalDateTime checkIn = request.getCheckIn();
         LocalDateTime checkOut = request.getCheckOut();
