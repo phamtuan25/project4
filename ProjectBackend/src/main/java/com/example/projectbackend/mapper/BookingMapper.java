@@ -18,6 +18,7 @@ public class BookingMapper {
         bookingResponse.setBookingId(booking.getBookingId());
         bookingResponse.setUserBookingResponse(UserBookingMapper.convertToResponse(booking.getUser()));
 
+        // Chuyển đổi BookingDetails thành BookingDetailResponse
         List<BookingDetailResponse> detailResponses = booking.getBookingDetails().stream()
                 .map(BookingDetailMapper::convertToResponse)
                 .collect(Collectors.toList());
@@ -64,6 +65,7 @@ public class BookingMapper {
         return booking;
     }
 
+    // Phương thức chuyển đổi BookingDetailRequest thành BookingDetail
     private static BookingDetail convertFromRequestDetail(BookingDetailRequest detailRequest, Booking booking, RoomRepository roomRepository) {
         BookingDetail bookingDetail = new BookingDetail();
         bookingDetail.setCheckIn(detailRequest.getCheckIn());

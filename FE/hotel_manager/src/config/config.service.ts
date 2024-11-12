@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import { User } from '../app/admin/user-manager/user-manager.component';
 
 @Injectable({
   providedIn: 'root'

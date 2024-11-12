@@ -50,4 +50,18 @@ export class ClientService {
         const headers = this.config.getHttpHeaders();
         return this.http.post(this.apiUrl + 'contacts', body, { headers });
       }
+
+    addBooking( userId: number | undefined, bookingDetailResquest: any): Observable<any> {
+    
+    const body = {
+        bookingDetailRequests: [bookingDetailResquest],
+        user: {
+            userId: userId
+        }
+    };
+    
+    const headers = this.config.getHttpHeaders();
+    console.log('body',body)
+    return this.http.post('http://localhost:8080/api/bookings', body, { headers });
+    }
 }

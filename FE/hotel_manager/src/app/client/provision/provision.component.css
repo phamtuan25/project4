@@ -1,6 +1,7 @@
 a.active {
     background-color:  #b95c47; 
     color: white;
+    border-color: #b95c47 !important
 }
 
 h1 {

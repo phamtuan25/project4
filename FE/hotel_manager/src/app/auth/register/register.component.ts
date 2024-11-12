@@ -24,7 +24,7 @@ export class RegisterComponent {
       response => {
         this.errors = [];
         alert("Register Success!");
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       },
       error => {
         this.errors = [];

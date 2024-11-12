@@ -24,7 +24,7 @@
 
     <div class="col-md-5 booking-section">
       <h2>Book Your Room</h2>
-      <form [formGroup]="bookingForm" (ngSubmit)="addRoomToBooking()">
+      <form [formGroup]="bookingForm" (ngSubmit)="addToBooking()">
         <input type="hidden" name="roomId" [value]="roomDetail.roomId">
 
         <!-- Pricing Option Selector -->
@@ -36,27 +36,24 @@
           </select>
         </div>
 
-        <!-- Check-in / Check-out for Hourly -->
         <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-          <label for="checkin" class="form-label">Check-in (Date and Time)</label>
-          <input type="datetime-local" class="form-control" id="checkin" formControlName="checkin" required>
+          <label for="checkin" class="form-label">Check-in</label>
+          <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
         </div>
         
-        <!-- Check-in / Check-out for Daily -->
         <div class="mb-3" *ngIf="pricingOption === 'daily'">
-          <label for="checkin" class="form-label">Check-in (Date Only)</label>
-          <input type="date" class="form-control" id="checkin" formControlName="checkin" required>
+          <label for="checkin" class="form-label">Check-in</label>
+          <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
         </div>
 
         <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-          <label for="checkout" class="form-label">Check-out (Date and Time)</label>
-          <input type="datetime-local" class="form-control" id="checkout" formControlName="checkout" required>
+          <label for="checkout" class="form-label">Check-out</label>
+          <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
         </div>
 
-        <!-- Check-out for Daily -->
         <div class="mb-3" *ngIf="pricingOption === 'daily'">
-          <label for="checkout" class="form-label">Check-out (Date Only)</label>
-          <input type="date" class="form-control" id="checkout" formControlName="checkout" required>
+          <label for="checkout" class="form-label">Check-out</label>
+          <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
         </div>
         <div class="mb-3">
           <label for="specialRequests">Special Requests</label>
@@ -87,7 +84,7 @@
           </select>
         </div> -->
 
-        <button type="submit" class="btn btn-success w-100">Confirm Booking</button>
+        <button type="submit" class="btn btn-success w-100">Add To Booking</button>
       </form>
     </div>
   </div>

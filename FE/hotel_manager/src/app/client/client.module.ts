@@ -30,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ClientRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    
   ]
 })
 export class ClientModule { }

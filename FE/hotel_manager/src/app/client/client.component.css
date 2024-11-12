@@ -55,10 +55,6 @@ nav {
     margin-right: 0;
 }
 
-.logout {
-    margin-left: 300px;
-    /* Tạo khoảng cách giữa các mục */
-}
 
 .navbar-light .navbar-nav .nav-link {
     color: white;
@@ -239,3 +235,40 @@ nav {
 }
 
 /* Footer */
+
+
+
+/* hien thi user */
+.dropdown-menu {
+    min-width: 12rem;
+}
+
+.dropdown-item.logout {
+    color: #dc3545;
+}
+
+.avatar-circle {
+    width: 30px;               
+    height: 30px;              
+    border-radius: 100%;       
+    background-color: black; 
+    color: white;            
+    font-weight: bold;      
+    font-size: 16px;           
+    display: flex;
+    justify-content: center;  
+    align-items: center;       
+    text-transform: uppercase; 
+  }
+  .avatar-circle:hover {
+    background-color: #111111; 
+    cursor: pointer;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+  }
+
+ .userLogin{
+    margin-left: 300px;
+ }

@@ -66,37 +66,62 @@ import java.util.stream.Collectors;
             throw new NotFoundException("BookingDetailEmpty", "Booking Detail cannot be empty.");
         }
 
-        // Lấy danh sách roomId từ bookingDetailRequests
-        List<Long> roomIds = bookingDetailRequests.stream()
-                .map(BookingDetailRequest::getRoomId)
-                .collect(Collectors.toList());
+        // Lấy thông tin phòng từ bookingDetailRequest
+        Long roomId = bookingDetailRequests.get(0).getRoomId();
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + roomId));
 
-        // Lấy danh sách phòng từ cơ sở dữ liệu bằng roomId
-        List<Room> rooms = roomRepository.findAllById(roomIds);
-        if (rooms.isEmpty()) {
-            throw new NotFoundException("RoomNotFound", "One or more rooms not found.");
-        }
+        // Kiểm tra xem người dùng có booking nào chưa hoàn thành (PENDING) không
+        Booking existingBooking = bookingRepository.findFirstByUserAndStatus(user, Booking.BookingStatus.PENDING);
+        Booking booking;
 
-        // Tạo booking từ request
-        Booking booking = BookingMapper.convertFromRequest(bookingRequest, roomRepository);
-        booking.setUser(user); // Gán người dùng đã tìm thấy
-        booking.setCreatedAt(LocalDateTime.now());
-        booking.setStatus(Booking.BookingStatus.PENDING); // Set Booking status to PENDING
+        if (existingBooking != null) {
+            // Nếu đã có booking PENDING, sử dụng booking đó và thêm booking detail mới vào
+            booking = existingBooking;
 
-        // Lưu booking để có bookingId
-        Booking savedBooking = bookingRepository.save(booking);
+            // Lấy danh sách phòng từ booking hiện tại
+            List<Room> currentRooms = booking.getBookingDetails().stream()
+                    .map(bookingDetail -> bookingDetail.getRoom())
+                    .collect(Collectors.toList());
 
-        // Cập nhật trạng thái phòng và BookingDetails
-        List<BookingDetail> bookingDetails = new ArrayList<>(booking.getBookingDetails()); // Sao chép danh sách để tránh ConcurrentModificationException
-
-        for (BookingDetail bookingDetail : bookingDetails) {
-            // Tìm phòng tương ứng với booking detail
-            Room room = rooms.stream()
-                    .filter(r -> r.getRoomId().equals(bookingDetail.getRoom().getRoomId()))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetail.getRoom().getRoomId()));
+            // Kiểm tra phòng mới có trùng với phòng cũ không
+            if (currentRooms.contains(room)) {
+                throw new NotFoundException("RoomAlreadyBooked", "Room with ID " + room.getRoomId() + " has already been booked in this booking.");
+            }
 
             // Kiểm tra trạng thái phòng
+            if (room.getStatus() != Room.RoomStatus.AVAILABLE) {
+                throw new NotFoundException("RoomNotAvailable", "Room with ID " + room.getRoomId() + " is not available.");
+            }
+
+            // Thêm booking detail mới vào booking hiện tại
+            BookingDetail bookingDetail = new BookingDetail();
+            bookingDetail.setRoom(room);
+            bookingDetail.setBooking(booking);
+            bookingDetail.setCreatedAt(LocalDateTime.now());
+            bookingDetail.setPrice(room.getPrice());
+            bookingDetail.setCheckIn(bookingDetailRequests.get(0).getCheckIn());
+            bookingDetail.setCheckOut(bookingDetailRequests.get(0).getCheckOut());
+            bookingDetail.setSpecialRequests(bookingDetailRequests.get(0).getSpecialRequests());
+            bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set status là PENDING cho booking detail
+
+            // Cập nhật trạng thái phòng thành BOOKED
+            room.setStatus(Room.RoomStatus.BOOKED);
+            roomRepository.save(room); // Lưu phòng sau khi thay đổi trạng thái
+
+            booking.getBookingDetails().add(bookingDetail);
+        } else {
+            // Nếu không có booking PENDING, tạo booking mới
+            booking = new Booking();
+            booking.setUser(user); // Gán người dùng đã tìm thấy
+            booking.setCreatedAt(LocalDateTime.now());
+            booking.setStatus(Booking.BookingStatus.PENDING); // Set trạng thái booking là PENDING
+            booking.setBookingDetails(new ArrayList<>());
+
+            // Lưu booking để có bookingId
+            Booking savedBooking = bookingRepository.save(booking);
+
+            // Tạo booking detail và gán vào booking mới
             if (room.getStatus() != Room.RoomStatus.AVAILABLE) {
                 throw new NotFoundException("RoomNotAvailable", "Room with ID " + room.getRoomId() + " is not available.");
             }
@@ -105,22 +130,38 @@ import java.util.stream.Collectors;
             room.setStatus(Room.RoomStatus.BOOKED);
             roomRepository.save(room); // Lưu phòng sau khi thay đổi trạng thái
 
-            // Cập nhật thông tin booking detail
+            // Tạo và thêm booking detail mới vào booking
+            BookingDetail bookingDetail = new BookingDetail();
             bookingDetail.setRoom(room);
-            bookingDetail.setBooking(savedBooking); // Gán booking cho chi tiết đặt phòng
-            bookingDetail.setCreatedAt(savedBooking.getCreatedAt()); // Gán createdAt của booking cho bookingDetail
-            bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set BookingDetail status to PENDING
+            bookingDetail.setBooking(savedBooking);
+            bookingDetail.setCreatedAt(savedBooking.getCreatedAt());
+            bookingDetail.setPrice(room.getPrice());
+            bookingDetail.setCheckIn(bookingDetailRequests.get(0).getCheckIn());
+            bookingDetail.setCheckOut(bookingDetailRequests.get(0).getCheckOut());
+            bookingDetail.setSpecialRequests(bookingDetailRequests.get(0).getSpecialRequests());
+            bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set trạng thái PENDING cho booking detail
+
+            savedBooking.getBookingDetails().add(bookingDetail);
+
+            // Lưu booking detail
+            bookingDetailRepository.save(bookingDetail);
+
+            // Tính toán tổng số tiền và deposit
+            savedBooking.calculateTotalAmount(); // Tính lại totalAmount và deposit
+
+            // Cập nhật booking với tổng số tiền và deposit
+            booking = bookingRepository.save(savedBooking);
         }
 
-        // Lưu tất cả các booking details
-        bookingDetailRepository.saveAll(bookingDetails);
+        // Cập nhật tổng số tiền cho booking
+        booking.calculateTotalAmount(); // Tính lại totalAmount và deposit
 
-        // Tính toán tổng số tiền và deposit
-        savedBooking.calculateTotalAmount(); // Tính lại totalAmount và deposit sau khi đã có booking details
-
-        // Cập nhật booking với tổng số tiền và deposit
-        return bookingRepository.save(savedBooking);
+        // Lưu lại booking sau khi tính toán
+        return bookingRepository.save(booking);
     }
+
+
+
 
 
 

@@ -25,9 +25,21 @@
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="'/contact'">CONTACT</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link logout" (click)="signOut()"><i class="fas fa-sign-out-alt"></i> SIGN OUT</a>
-                </li>
+                <div class="userLogin">
+                    <li *ngIf="userLogin" class="nav-item dropdown">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="avatar-circle me-2">
+                                    {{ getInitial(userLogin?.fullName) }}
+                                  </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end">
+                                <li><a class="dropdown-item" [routerLink]="'/user-profile'">View Profile</a></li>
+                                <li><a class="dropdown-item logout" (click)="signOut()"><i class="fas fa-sign-out-alt"></i> SIGN OUT</a></li>
+                            </ul>
+                          </div>
+                      </li>
+                </div>
             </ul>
         </div>
     </nav>
@@ -64,13 +76,13 @@
                 <h3>Thanh toán</h3>
                 <div class="payment-icons">
                     <div class="icon">
-                        <img src="../../../public/images/american.png" alt="Ngân hàng Maestro">
+                        <img src="/images/american.png" alt="Ngân hàng Maestro">
                     </div>
                     <div class="icon">
-                        <img src="../../../public/images/JBC.png" alt="Ngân hàng Discover">
+                        <img src="/images/JBC.png" alt="Ngân hàng Discover">
                     </div>
                     <div class="icon">
-                        <img src="../../../public/images/visa.png" alt="Ngân hàng Payoneer">
+                        <img src="/images/visa.png" alt="Ngân hàng Payoneer">
                     </div>
                 </div>
             </div>
