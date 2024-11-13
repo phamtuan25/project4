@@ -16,7 +16,6 @@ export class ClientComponent {
   pageTitle = 'Client Page';
   constructor(private router: Router, private config: ConfigService,private clientService: ClientService, private globalStageService: GlobalStateService){}
   userLogin: User | null = null
-  private userSubscription!: Subscription;
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {
       this.config.setToken(''); 
@@ -27,15 +26,11 @@ export class ClientComponent {
     }
   }
   ngOnInit(): void {
-    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
-      this.userLogin = user;
-    });
+    const email = this.config.getEmail();
+    if(email) this.getUserLogin(email);
+   
   }
-  ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-  }
+
   getInitial(fullName: string | null | undefined): string {
     if (!fullName) {
       return 'N/A'; 
@@ -44,5 +39,16 @@ export class ClientComponent {
   }
   
   openProfile() {
+  }
+  getUserLogin(email: string | null){
+    this.clientService.getUserLogin(email).subscribe(
+      (response: any) => {
+        this.userLogin = response;
+        this.globalStageService.setUserStage(response);
+      },
+      (error) => {
+        console.error("Error fetching users", error);
+      }
+    )
   }
 }

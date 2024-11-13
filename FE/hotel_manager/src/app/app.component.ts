@@ -13,21 +13,6 @@ import { GlobalStateService } from '../config/global.stage.service';
 })
 export class AppComponent implements OnInit{
   title = 'hotel_manager';
-  public apiUrl = 'http://localhost:8080/api/';
-  userLogin: User | null = null
-  constructor(private config: ConfigService, private router: Router, private http: HttpClient, private clientService: ClientService, private globalStageService: GlobalStateService) { }
   ngOnInit(): void {
-    const email = this.config.getEmail();
-    if(email) this.getUserLogin(email);
-  }
-  getUserLogin(email: string | null){
-    this.clientService.getUserLogin(email).subscribe(
-      (response: any) => {
-        this.globalStageService.setUserStage(response);
-      },
-      (error) => {
-        console.error("Error fetching users", error);
-      }
-    )
   }
 }

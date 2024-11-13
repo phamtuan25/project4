@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs';
 export class AdminComponent implements OnInit{
   title = 'hotel_manager';
   pageTitle = 'Management Page';
-  private userSubscription!: Subscription;
   constructor(private router: Router, private config: ConfigService, private adminService: AdminService, private globalStageService: GlobalStateService){}
   userLogin: User | null = null
   signOut(): void {
@@ -24,10 +23,20 @@ export class AdminComponent implements OnInit{
         this.config.setToken(''); 
     }
   }
+  getUserLogin(email: string | null){
+    this.adminService.getUserLogin(email).subscribe(
+      (response: any) => {
+        this.userLogin = response;
+        this.globalStageService.setUserStage(response);
+      },
+      (error) => {
+        console.error("Error fetching users", error);
+      }
+    )
+  }
   ngOnInit(): void {
-    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
-      this.userLogin = user;
-    });
+    const email = this.config.getEmail();
+    if(email) this.getUserLogin(email);
     const token = this.config.getToken();
     if(!token) {
       this.router.navigate(['/login']);
@@ -43,11 +52,7 @@ export class AdminComponent implements OnInit{
       window.location.reload();
     });
   }
-  ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
-    }
-  }
+
 }
 
 
