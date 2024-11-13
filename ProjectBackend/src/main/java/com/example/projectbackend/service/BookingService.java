@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface BookingService {
     public Page<BookingResponse> getAllBookings(Pageable pageable, String keyword);
-    public BookingResponse getDetailBooking(Long bookingId);
+    public List<BookingResponse> getBookingsByUserId(Long userId);
     public Booking createBooking(BookingRequest bookingRequest);
     public Booking updateBooking(Long bookingId, Booking booking);
     public void deleteBooking(Long bookingId);

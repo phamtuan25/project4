@@ -44,9 +44,8 @@
         </tbody>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="bookings.length == 0">Data not found</div>
-    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Sửa Đặt Phòng -->
-    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal fade" id="editModal">
         <div class="modal-dialog" role="document">
             <form id="editBookingForm" #editBookingForm="ngForm" (ngSubmit)="onSubmitEdit(editBookingForm)"
                 method="PUT">

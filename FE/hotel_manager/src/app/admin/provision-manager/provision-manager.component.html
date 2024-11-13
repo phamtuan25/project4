@@ -49,9 +49,8 @@
         </tbody>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="provisions.length == 0">Data not found</div>
-    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Dịch Vụ -->
-    <div class="modal fade show custom-show" *ngIf="isShowAddPopup">
+    <div class="modal fade" id="createModal">
         <div class="modal-dialog" role="document">
             <form id="addProvisionForm" method="POST" (ngSubmit)="onSubmitAdd()">
                 <div class="modal-content">
@@ -66,7 +65,7 @@
                         <div class="form-group">
                             <label for="provisionName">Service Name</label>
                             <input type="text" class="form-control" id="provisionName" name="provisionName"
-                                [(ngModel)]="provisionName" required>
+                                [(ngModel)]="provisionName">
                         </div>
                         <span *ngIf="errors">{{findErrors("provisionName")}}</span>
                         <div class="form-group">
@@ -113,7 +112,7 @@
     </div>
 
     <!-- Modal Sửa Dịch Vụ -->
-    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal fade" id="editModal">
     <div class="modal-dialog" role="document">
         <form id="editProvisonForm" #editProvisionForm="ngForm"
             (ngSubmit)="onSubmitEdit(editProvisionForm)" method="PUT">

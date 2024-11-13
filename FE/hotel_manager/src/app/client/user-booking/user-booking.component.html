@@ -1,35 +1,50 @@
 <div class="container_main">
-    <aside>
-        <div class="username">Nguyễn Văn A</div>
-        <ul>
-            <li><a href="#thong-tin">Thông Tin Cá Nhân</a></li>
-            <li><a href="#dat-phong">Thông Tin Đặt Phòng</a></li>
-            <li><a href="#doi-mat-khau">Đổi Mật Khẩu</a></li>
-            <li><a href="#chinh-sua">Chỉnh Sửa Thông Tin</a></li>
+    <div class="sidebar">
+        <div class="username">{{ userLogin?.fullName }}</div>
+        <ul class="routerLink">
+            <li [routerLink]="'/user-profile'">
+                <i class="fas fa-user-circle"></i> Personal Information
+            </li>
         </ul>
-    </aside>
-
+    </div>
     <div class="content">
         <div class="header">
-            <h1>Thông Tin Đặt Phòng</h1>
-        </div>
-
-        <div class="section" id="dat-phong">
-            <h2>Chi Tiết Đặt Phòng</h2>
-            <div class="info">Tên phòng: <strong>Deluxe Room</strong></div>
-            <div class="info">Ngày check-in: <strong>01/11/2024</strong></div>
-            <div class="info">Ngày check-out: <strong>03/11/2024</strong></div>
-            <div class="info">Ngày đặt dịch vụ: <strong>25/10/2024</strong></div>
-            <div class="info">Số người: <strong>2</strong></div>
-
-            <div class="button-container">
-                <button class="button">Hủy</button>
-                <button class="button">Thanh Toán</button>
+            <div class="section" id="booking">
+                <h2>Booking Information</h2>
+                <div *ngIf="bookings.length > 0">
+                    <div *ngFor="let booking of bookings" class="booking-card">
+                        <div (click)="toggleBookingDetail(booking.bookingId)" style="cursor: pointer;">
+                            <p><strong>Booking Person:</strong> {{ booking.userBookingResponse.fullName }}</p>
+                            <p><strong>Booking Date:</strong> {{ booking.createdAt }}</p>
+                            <p><strong>Status:</strong> {{ booking.status }}</p>
+                            <p><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
+                            <p><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
+                            <button class="button">Payment for Booking</button>
+                        </div>
+                        <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId"
+                            class="booking-details-container">
+                            <h3>Booking Details</h3>
+                            <div *ngFor="let detail of selectedBookingDetail.bookingDetailResponses"
+                                class="booking-detail-card">
+                                <p><strong>Room Number:</strong> {{ detail.roomNumber }}</p>
+                                <p><strong>Check-In:</strong> {{ detail.checkIn | date: 'fullDate' }} at {{
+                                    detail.checkIn | date: 'shortTime' }}</p>
+                                <p><strong>Check-Out:</strong> {{ detail.checkOut | date: 'fullDate' }} at {{
+                                    detail.checkOut | date: 'shortTime' }}</p>
+                                <p><strong>Price:</strong> {{ detail.price | currency }}</p>
+                                <p><strong>Special Requests:</strong> {{ detail.specialRequests || 'Không có' }}</p>
+                                <p><strong>Status Booking Detail:</strong> {{ detail.status }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="bookings.length === 0">
+                    <p style="text-align: center; color: #e74c3c;">No booking information yet.</p>
+                </div>
             </div>
-        </div>
-
-        <div class="footer">
-            <p>© 2024 Thông Tin Đặt Phòng</p>
+            <div class="footer">
+                <p>© 2024 My Account</p>
+            </div>
         </div>
     </div>
 </div>

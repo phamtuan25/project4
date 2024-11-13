@@ -1,3 +1,26 @@
+a.active {
+    background-color: #007bff; 
+    color: white;
+}
+input.ng-invalid {
+    border: 2px solid red;
+}
+
+span {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+#information p {
+    font-weight: bold; 
+    font-size: 16px; 
+    margin-bottom: 10px; 
+}
+
+#information p span {
+    font-weight: normal; 
+}
 .container_main {
     max-width: 1200px;
     margin: auto;
@@ -8,26 +31,53 @@
     width: 100%;
 }
 
-aside {
-    width: 200px;
+.sidebar {
+    margin-top: 100px;
+    width: 250px;
+    background-color: #2c3e50; 
+    color: #ecf0f1; 
     padding: 20px;
-    border-right: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+    height: 100%; 
+    margin-right:150px ;
 }
 
-aside .username {
-    font-weight: bold;
+.username {
     font-size: 1.5em;
-    margin-bottom: 20px;
+    font-weight: bold; 
+    margin-bottom: 20px; 
+    text-align: center;
+    border-bottom: 2px solid  #e74c3c;
+    padding-bottom: 10px;
 }
 
-aside ul {
-    list-style-type: none;
+.routerLink {
+    list-style-type: none; 
     padding: 0;
+    margin: 0; 
 }
 
-aside ul li {
-    margin-bottom: 15px;
+.routerLink li {
+    padding: 10px 15px; 
+    border-radius: 5px; 
+    transition: background 0.3s; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    background-color: #fff;
+    color: #e74c3c;
 }
+
+.routerLink li:hover {
+    background-color:  #e74c3c; 
+    color: #fff;
+}
+
+.routerLink li i {
+    margin-right: 10px; 
+    font-size: 1.2em;
+} 
 
 aside ul li a {
     text-decoration: none;
@@ -41,11 +91,12 @@ aside ul li a:hover {
 .content {
     padding: 20px;
     flex-grow: 1;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 20px;
+    margin-left: 30px;
+    background-color: #ecf0f1; 
+    border-radius: 10px; 
+    margin-top: 100px;
+    margin-bottom: 30px;
+    margin-right: 100px;
 }
 
 .section {
@@ -54,7 +105,6 @@ aside ul li a:hover {
 
 .footer {
     text-align: center;
-    margin-top: 20px;
     font-size: 0.9em;
     color: #777;
 }
@@ -78,5 +128,39 @@ aside ul li a:hover {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: calc(100% - 20px); /* Giảm bớt khoảng cách từ hai bên */
+    width: calc(100% - 20px); 
+}
+.routerLink{
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .routerLink :hover{
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  h2{
+    text-align: center;
+  }
+  .personal-information {
+    margin: 20px 0;
+    padding: 15px; 
+    background-color: #f9f9f9; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.personal-information p {
+    margin: 15px 0; 
+    font-size: 1.1em;
+    color: #333; 
+}
+
+.personal-information span {
+    font-weight: bold;
+    color: #2c3e50; 
 }

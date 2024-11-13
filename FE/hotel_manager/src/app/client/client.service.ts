@@ -50,7 +50,7 @@ export class ClientService {
         const headers = this.config.getHttpHeaders();
         return this.http.post(this.apiUrl + 'contacts', body, { headers });
       }
-
+    //Call api booking
     addBooking( userId: number | undefined, bookingDetailResquest: any): Observable<any> {
     
     const body = {
@@ -64,4 +64,31 @@ export class ClientService {
     console.log('body',body)
     return this.http.post('http://localhost:8080/api/bookings', body, { headers });
     }
+
+    getBookingByUser(userId: number | undefined): Observable<any>{
+        const headers = this.config.getHttpHeaders();
+        return this.http.get(this.apiUrl + 'bookings/'+ userId, { headers });
+    }
+
+    //Call api user
+    editUser(userId: number, address: string, email: string, phoneNumber: string, role: string): Observable<any> {
+        const body = {
+          address: address,
+          email: email,
+          phoneNumber: phoneNumber,
+          role: role
+        };
+        const headers = this.config.getHttpHeaders();
+        return this.http.put(this.apiUrl + 'users/' + userId, body, { headers });
+      }
+
+      changePassword(userId: number, currentPassword: string, newPassword: string, confirmPassword: string ): Observable<any> {
+        const body = {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword
+        };
+        const headers = this.config.getHttpHeaders();
+        return this.http.put(this.apiUrl + 'users/changePassword/' + userId, body, { headers });
+      }
 }

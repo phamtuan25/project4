@@ -11,6 +11,5 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   constructor(private client: ClientService,private router: Router) { }
   ngOnInit(): void {
-    
   }
 }

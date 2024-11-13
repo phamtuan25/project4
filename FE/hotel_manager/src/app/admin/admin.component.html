@@ -2,6 +2,7 @@
     <img src="../../../../images/avatar.jpg" alt="Avatar">
     <h5>{{userLogin?.fullName}}</h5>
     <hr>
+    <a (click)="goToHomePage()" class="active"><i class="fas fa-home"></i> Home Page</a>
     <a [routerLink]="'/admin/booking-manager'" class="active"><i class="fas fa-calendar-alt"></i> Booking</a>
     <a [routerLink]="'/admin/user-manager'" class="active"><i class="fas fa-user"></i> User</a>
     <a [routerLink]="'/admin/provision-manager'" class="active"><i class="fas fa-box"></i> Service</a>

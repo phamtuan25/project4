@@ -26,19 +26,39 @@
                     <a class="nav-link" [routerLink]="'/contact'">CONTACT</a>
                 </li>
                 <div class="userLogin">
-                    <li *ngIf="userLogin" class="nav-item dropdown">
+                    <li *ngIf="userLogin; else loginLink" class="nav-item dropdown">
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="avatar-circle me-2">
                                     {{ getInitial(userLogin?.fullName) }}
-                                  </div>
+                                </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg-end">
-                                <li><a class="dropdown-item" [routerLink]="'/user-profile'">View Profile</a></li>
-                                <li><a class="dropdown-item logout" (click)="signOut()"><i class="fas fa-sign-out-alt"></i> SIGN OUT</a></li>
+                                <div class="username">{{ userLogin.fullName }}</div>
+
+                                <li *ngIf="userLogin.role !=='CUSTOMER'">
+                                    <a class="dropdown-item" [routerLink]="'/admin/booking-manager'">
+                                        <i class="fas fa-users-cog"></i> Manager Page
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" [routerLink]="'/user-profile'">
+                                        <i class="fas fa-user-circle"></i> View Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item logout" (click)="signOut()">
+                                        <i class="fas fa-sign-out-alt"></i> SIGN OUT
+                                    </a>
+                                </li>
                             </ul>
-                          </div>
-                      </li>
+                        </div>
+                    </li>
+                    <ng-template #loginLink>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="'/login'">Sign In</a>
+                        </li>
+                    </ng-template>
                 </div>
             </ul>
         </div>

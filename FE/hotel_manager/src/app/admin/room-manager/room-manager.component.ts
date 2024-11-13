@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import Modal from 'bootstrap/js/dist/modal';
 @Component({
   selector: 'app-room-manager',
   templateUrl: './room-manager.component.html',
@@ -24,8 +25,6 @@ export class RoomManagerComponent implements OnInit {
   files: File[] | null = [];
   errors: any[] = [];
   imagePaths: ImagePaths[] = [];
-  isShowAddPopup: Boolean = false;
-  isShowEditPopup: Boolean = false;
   deleteFiles: string[] = [];
   imageOrigin: string[] = [];
   totalRooms: number = 0;
@@ -33,12 +32,24 @@ export class RoomManagerComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   selectedRoom: any;
+  editModal!: Modal;
+  createModal!: Modal;
   constructor(public admin: AdminComponent, private adminService: AdminService, private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Room Management';
     this.getRooms(this.currentPage , this.pageSize, this.keyword);
   }
 
+  ngAfterViewInit() {
+    this.editModal = new Modal('#editModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+    this.createModal = new Modal('#createModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+  }
 
   //get list Room
   getRooms(page: number, size: number, keyword: string) {
@@ -139,8 +150,7 @@ export class RoomManagerComponent implements OnInit {
 
   openAddRoom() {
     this.resetFormData();
-    this.isShowAddPopup = true;
-    this.openPopup();
+    this.createModal.show();
   }
 
   // gán giá trị Room edit
@@ -163,8 +173,7 @@ export class RoomManagerComponent implements OnInit {
         console.error('Error converting image:', error);
       });
     })
-    this.isShowEditPopup = true;
-    this.openPopup();
+    this.editModal.show();
   }
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
@@ -189,9 +198,8 @@ export class RoomManagerComponent implements OnInit {
     this.files = null;
     this.errors = [];
     this.imagePaths = [];
-    this.isShowAddPopup = false;
-    this.isShowEditPopup = false;
-    this.closePopup();
+    this.createModal.hide();
+    this.editModal.hide();
   }
   removeImage(image: ImagePaths, index: number) {
     this.imagePaths.splice(index, 1);
@@ -213,15 +221,6 @@ export class RoomManagerComponent implements OnInit {
         observer.error(error);
       });
     });
-  }
-  openPopup() {
-    document.body.style.paddingRight = '17px'
-    document.body.classList.add('modal-open')
-
-  }
-  closePopup() {
-    document.body.style.paddingRight = '';
-    document.body.classList.remove('modal-open')
   }
 }
 

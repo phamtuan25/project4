@@ -40,10 +40,9 @@
         </tbody>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="contacts.length === 0">Data not found</div>
-    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
 
     <!-- Modal Sửa Người Dùng -->
-    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal fadew" id="editModal">
         <div class="modal-dialog" role="document">
             <form id="editContactForm" #editContactForm="ngForm" (ngSubmit)="onSubmitEdit(editContactForm)"
                 method="PUT">

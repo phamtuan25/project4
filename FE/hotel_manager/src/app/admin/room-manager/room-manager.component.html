@@ -49,9 +49,8 @@
         </ng-container>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="rooms.length == 0">Data not found</div>
-    <div *ngIf="isShowEditPopup || isShowAddPopup" class="modal-backdrop" (click)="resetFormData()"></div>
     <!-- Modal Thêm Phòng -->
-    <div class="modal fade show custom-show" *ngIf="isShowAddPopup" >
+    <div class="modal fade" id="createModal" >
         <div class="modal-dialog" role="document">
             <form id="" method="POST" (ngSubmit)="onSubmitAdd()">
                 <div class="modal-content">
@@ -121,7 +120,7 @@
         </div>
     </div>
     <!-- Modal Sửa Phòng -->
-    <div class="modal fade show custom-show" *ngIf="isShowEditPopup">
+    <div class="modal fade" id="editModal">
     <div class="modal-dialog" role="document">
         <form id="editRoomForm" #editRoomForm="ngForm" (ngSubmit)="onSubmitEdit(editRoomForm)" method="PUT">
             <div class="modal-content">

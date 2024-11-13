@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import Modal from 'bootstrap/js/dist/modal';
 @Component({
   selector: 'app-provision-manager',
   templateUrl: './provision-manager.component.html',
@@ -23,8 +24,6 @@ export class ProvisionManagerComponent implements OnInit {
   files: File[] | null = [];
   errors: any[] = [];
   imagePaths: ImagePaths[] = [];
-  isShowAddPopup: Boolean = false;
-  isShowEditPopup: Boolean = false;
   deleteFiles: string[] = [];
   imageOrigin: string[] = [];
   keyword: string = '';
@@ -33,10 +32,23 @@ export class ProvisionManagerComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   selectedProvision: any;
+  editModal!: Modal;
+  createModal!: Modal;
   constructor(public admin: AdminComponent, private adminService: AdminService,private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Provision Management';
     this.getProvisions(this.currentPage , this.pageSize, this.keyword);
+  }
+
+  ngAfterViewInit() {
+    this.editModal = new Modal('#editModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+    this.createModal = new Modal('#createModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
   }
 
   //get list Provision   
@@ -136,8 +148,7 @@ export class ProvisionManagerComponent implements OnInit {
 
   openAddProvision() {
     this.resetFormData();
-    this.isShowAddPopup = true;
-    this.openPopup();
+    this.createModal.show();
   }
   // gán giá trị Room edit
   openEditProvision(provision: Provision) {
@@ -158,8 +169,7 @@ export class ProvisionManagerComponent implements OnInit {
         console.error('Error converting image:', error);
       });
   })
-    this.isShowEditPopup = true;
-    this.openPopup();
+    this.editModal.show();
   }
   // submit room đã edit
   onSubmitEdit(form: NgForm) {
@@ -183,9 +193,8 @@ export class ProvisionManagerComponent implements OnInit {
     this.files = null;
     this.errors = [];
     this.imagePaths = [];
-    this.isShowAddPopup = false;
-    this.isShowEditPopup = false;
-    this.closePopup();
+    this.createModal.hide();
+    this.editModal.hide();
   }
   removeImage(image: ImagePaths, index: number) {
     this.imagePaths.splice(index, 1);
@@ -207,15 +216,6 @@ export class ProvisionManagerComponent implements OnInit {
         observer.error(error);
       });
     });
-  }
-  openPopup() {
-    document.body.style.paddingRight = '17px'
-    document.body.classList.add('modal-open')
-      
-  }
-  closePopup() {
-    document.body.style.paddingRight = '';
-    document.body.classList.remove('modal-open')
   }
 }
 

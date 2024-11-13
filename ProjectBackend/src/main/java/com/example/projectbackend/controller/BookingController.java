@@ -23,9 +23,9 @@ public class BookingController {
         return bookingService.getAllBookings(pageable,keyword);
     }
 
-    @GetMapping("/{bookingId}")
-    public BookingResponse getDetailBooking(@PathVariable Long bookingId) {
-        return bookingService.getDetailBooking(bookingId);
+    @GetMapping("/{userId}")
+    public List<BookingResponse> getBookingByUser(@PathVariable Long userId) {
+        return bookingService.getBookingsByUserId(userId);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")

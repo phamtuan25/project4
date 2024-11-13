@@ -9,7 +9,7 @@ body {
     height: 100vh;
     position: fixed;
     padding-top: 20px;
-    text-align: center; /* Giữ tên và avatar ở giữa */
+    text-align: center; 
 }
 
 .sidebar img {
@@ -20,14 +20,14 @@ body {
 }
 
 .sidebar h5 {
-    margin: 20px 0; /* Khoảng cách cho tên */
+    margin: 20px 0; 
 }
 
 .sidebar hr {
     border: 0;
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.2); /* Màu kẻ ngang */
-    margin: 20px 0; /* Khoảng cách cho đường kẻ */
+    background-color: rgba(255, 255, 255, 0.2); 
+    margin: 20px 0; 
 }
 
 .sidebar a {
@@ -35,7 +35,7 @@ body {
     text-decoration: none;
     color: white;
     display: block;
-    text-align: left; /* Căn trái các liên kết */
+    text-align: left;
     border-radius: 5px;
     margin: 15px;
 }
@@ -57,18 +57,18 @@ body {
 }
 
 td{
-    white-space: nowrap; /* Giữ văn bản trên một dòng*/
-    overflow: hidden; /* Ẩn văn bản vượt quá giới hạn*/
-    text-overflow: ellipsis; /* Hiển thị dấu "..." khi văn bản vượt quá */
-    max-width: 200px; /* Đặt chiều rộng tối da cho ô văn bản*/
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 200px; 
 }
 
 .table img {
-    max-width: 40%;  /* Giới hạn chiều rộng tối đa */
-    max-height: 40%; /* Giới hạn chiều cao tối đa */
-    object-fit: contain; /* Đảm bảo ảnh không bị biến dạng */
-    display: block; /* Đảm bảo không có khoảng cách phía dưới ảnh */
-    margin: auto 0; /* Căn giữa ảnh trong ô */
+    max-width: 40%; 
+    max-height: 40%; 
+    object-fit: contain; 
+    display: block; 
+    margin: auto 0;
 }
 
 @media (max-width: 768px) {

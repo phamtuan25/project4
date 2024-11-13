@@ -44,13 +44,17 @@ import java.util.stream.Collectors;
 
 
     @Override
-    public BookingResponse getDetailBooking(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId).orElse(null);
-        if(Objects.isNull(booking)){
-            throw new NotFoundException("BookingNotFound","Not found Booking with " + bookingId);
+    public List<BookingResponse> getBookingsByUserId(Long userId) {
+        List<Booking> bookings = bookingRepository.findByUser_UserId(userId);
+
+        if (bookings.isEmpty()) {
+            throw new NotFoundException("BookingNotFound", "No bookings found for user with ID " + userId);
         }
-        BookingResponse bookResponse = BookingMapper.convertToResponse(booking);
-        return bookResponse;
+        List<BookingResponse> bookingResponses = bookings.stream()
+                .map(BookingMapper::convertToResponse)
+                .collect(Collectors.toList());
+
+        return bookingResponses;
     }
 
     @Override

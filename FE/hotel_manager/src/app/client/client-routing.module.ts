@@ -8,6 +8,7 @@ import { ProvisionComponent } from './provision/provision.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { RoomDetailComponent } from './room-detail/room-detail.component';
 import { ContactComponent } from './contact/contact.component';
+import { UserBookingComponent } from './user-booking/user-booking.component';
 
 const routes: Routes = [
     {
@@ -22,6 +23,7 @@ const routes: Routes = [
               { path: 'booking', component: BookingComponent },
               { path: 'provision', component: ProvisionComponent },
               { path: 'user-profile', component: UserProfileComponent },
+              { path: 'user-booking', component: UserBookingComponent },
               { path: 'contact', component: ContactComponent },
               { path: 'room-detail/:roomId', component: RoomDetailComponent},
               { path: '', redirectTo: '/room', pathMatch: 'full' },

@@ -5,6 +5,7 @@ import 'bootstrap';
 import { AdminService } from '../admin.service';
 import { Booking } from '../booking-manager/booking-manager.component';
 import { NgForm } from '@angular/forms';
+import Modal from 'bootstrap/js/dist/modal';
 @Component({
   selector: 'app-user-manager',
   templateUrl: './user-manager.component.html',
@@ -23,19 +24,31 @@ export class UserManagerComponent implements OnInit {
   role: string = "EMPLOYEE";
   password: string = "";
   fullName: string = "";
-  isShowAddPopup: Boolean = false;
-  isShowEditPopup: Boolean = false;
   totalUsers: number = 0;
   pageSize: number = 10;
   currentPage: number = 1;
   totalPages: number = 0;
   keyword: string = '';
+  editModal!: Modal;
+  createModal!: Modal;
   constructor(public admin: AdminComponent,private adminService: AdminService){}
   
   ngOnInit(): void {
     this.admin.pageTitle = 'User Management';
     this.getUsers(this.currentPage , this.pageSize, this.keyword);
   }
+
+  ngAfterViewInit() {
+    this.editModal = new Modal('#editModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+    this.createModal = new Modal('#createModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+  }
+
   //Get User list
   getUsers(page: number, size: number, keyword: string){
     this.adminService.getUser(page - 1, size, keyword).subscribe(
@@ -70,8 +83,7 @@ export class UserManagerComponent implements OnInit {
   }
   openAddUser() {
     this.resetFormData();
-    this.isShowAddPopup = true;
-    this.openPopup();
+    this.createModal.show();
   }
   // gán giá trị user edit
   openEditUser(user: User) {
@@ -81,8 +93,7 @@ export class UserManagerComponent implements OnInit {
     this.address = user.address
     this.phoneNumber = user.phoneNumber
     this.role = user.role
-    this.isShowEditPopup = true;
-    this.openPopup();
+    this.editModal.show();
   }
   // submit user đã edit
   onSubmitEdit(form: NgForm) {
@@ -130,21 +141,11 @@ export class UserManagerComponent implements OnInit {
     this.address = "";
     this.phoneNumber = "";
     this.password = "";
-    this.isShowAddPopup = false;
-    this.isShowEditPopup = false;
-    this.closePopup();
+    this.editModal.hide();
+    this.createModal.hide();
   }
   isObject(value: any) {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
-  }
-  openPopup() {
-    document.body.style.paddingRight = '17px'
-    document.body.classList.add('modal-open')
-      
-  }
-  closePopup() {
-    document.body.style.paddingRight = '';
-    document.body.classList.remove('modal-open')
   }
 }
 

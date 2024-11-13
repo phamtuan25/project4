@@ -5,6 +5,8 @@ import { Room } from '../room/room.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../../../config/config.service';
 import { User } from '../../admin/user-manager/user-manager.component';
+import { GlobalStateService } from '../../../config/global.stage.service';
+import { Subscription } from 'rxjs';
 
 declare var $: any;
 
@@ -21,13 +23,14 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   pricingOption: string = 'daily'; 
   bookingForm: FormGroup;
   userLogin: User | null = null
-
+  private userSubscription!: Subscription;
   constructor(
     private fb: FormBuilder, 
     private clientService: ClientService,
     private route: ActivatedRoute,
     private router: Router,
-    private config: ConfigService
+    private config: ConfigService,
+    private globalStageService: GlobalStateService
   ) {
    
     this.bookingForm = this.fb.group({
@@ -42,8 +45,9 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   ngOnInit(): void {
     this.roomId = +this.route.snapshot.paramMap.get('roomId')!;
     this.getRoomDetail(this.roomId);
-    const email = this.config.getEmail();
-    this.getUserLogin(email);
+    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
+      this.userLogin = user;
+    });
 
     this.route.queryParams.subscribe(params => {
       const page = params['page'];
@@ -54,6 +58,12 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
 
     this.updatePrice();
   }
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
 
   ngAfterContentInit(): void {
     const myCarousel = document.querySelector('#roomCarousel');
@@ -95,8 +105,11 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   }
 
   addToBooking(): void {
-    console.log('aaa',this.bookingForm.valid)
     if (this.bookingForm.valid) {
+      if(!this.userLogin) {
+        this.router.navigate(['/login']);
+        return;
+      }
       const roomId = this.roomId;
       const formValues = this.bookingForm.value;
 
@@ -115,16 +128,6 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
     } else {
       this.errors.push('Please fill in both check-in and check-out fields.');
     }
-  }
-  getUserLogin(email: string | null){
-    this.clientService.getUserLogin(email).subscribe(
-      (response: any) => {
-        this.userLogin = response;
-      },
-      (error) => {
-        console.error("Error fetching users", error);
-      }
-    )
   }
 }
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AdminComponent } from '../admin.component';
 import { AdminService } from '../admin.service';
 import { NgForm } from '@angular/forms';
+import Modal from 'bootstrap/js/dist/modal';
 
 @Component({
   selector: 'app-contact-manager',
@@ -10,8 +11,6 @@ import { NgForm } from '@angular/forms';
 })
 export class ContactManagerComponent {
   contacts : Contact[]= [];
-  isShowAddPopup: Boolean = false;
-  isShowEditPopup: Boolean = false;
   contactId: number = 0;
   email: string = "";
   fullName: string = "";
@@ -22,12 +21,20 @@ export class ContactManagerComponent {
   currentPage: number = 1;
   totalPages: number = 0;
   keyword: string = '';
-
+  editModal!: Modal;
   constructor(public admin: AdminComponent,private adminService: AdminService){}
   ngOnInit(): void {
     this.admin.pageTitle = 'Contact Management';
     this.getContacts(this.currentPage , this.pageSize, this.keyword);
   }
+
+  ngAfterViewInit() {
+    this.editModal = new Modal('#editModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+  }
+
   //Get Contact list
   getContacts(page: number, size: number, keyword: string) {
     this.adminService.getContact(page - 1, size, keyword).subscribe(
@@ -65,12 +72,10 @@ export class ContactManagerComponent {
     this.fullName = contact.userResponse.fullName
     this.message = contact.message
     this.status = contact.status
-    this.isShowEditPopup = true;
-    this.openPopup();
+    this.editModal.show();
   }
 
   onSubmitEdit(form: NgForm) {
-    console.log(form.valid)
     if (form.valid) {
       this.adminService.editContact(this.contactId, this.status).subscribe(
         response => {
@@ -84,22 +89,11 @@ export class ContactManagerComponent {
   resetFormData() {
     this.message = "";
     this.status = "";
-    this.isShowAddPopup = false;
-    this.isShowEditPopup = false;
-    this.closePopup();
+    this.editModal.hide();
   }
 
   isObject(value: any) {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
-  }
-  openPopup() {
-    document.body.style.paddingRight = '17px'
-    document.body.classList.add('modal-open')
-      
-  }
-  closePopup() {
-    document.body.style.paddingRight = '';
-    document.body.classList.remove('modal-open')
   }
 }
 

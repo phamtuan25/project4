@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ConfigService } from '../../config/config.service';
 import { ClientService } from './client.service';
 import { User } from '../admin/user-manager/user-manager.component';
+import { GlobalStateService } from '../../config/global.stage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-client',
@@ -12,9 +14,9 @@ import { User } from '../admin/user-manager/user-manager.component';
 export class ClientComponent {
   title = 'hotel_manager';
   pageTitle = 'Client Page';
-  isShowPopup: boolean = false;
-  constructor(private router: Router, private config: ConfigService,private clientService: ClientService){}
+  constructor(private router: Router, private config: ConfigService,private clientService: ClientService, private globalStageService: GlobalStateService){}
   userLogin: User | null = null
+  private userSubscription!: Subscription;
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {
       this.config.setToken(''); 
@@ -25,18 +27,14 @@ export class ClientComponent {
     }
   }
   ngOnInit(): void {
-    const email = this.config.getEmail();
-    this.getUserLogin(email);
+    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
+      this.userLogin = user;
+    });
   }
-  getUserLogin(email: string | null){
-    this.clientService.getUserLogin(email).subscribe(
-      (response: any) => {
-        this.userLogin = response;
-      },
-      (error) => {
-        console.error("Error fetching users", error);
-      }
-    )
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
   getInitial(fullName: string | null | undefined): string {
     if (!fullName) {

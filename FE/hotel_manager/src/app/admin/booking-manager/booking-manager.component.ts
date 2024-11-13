@@ -5,6 +5,7 @@ import 'bootstrap';
 import { AdminService } from '../admin.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import Modal from 'bootstrap/js/dist/modal';
 @Component({
   selector: 'app-booking-manager',
   templateUrl: './booking-manager.component.html',
@@ -19,18 +20,22 @@ export class BookingManagerComponent implements OnInit {
   deposit: number = 0;
   totalAmount: number = 0;
   totalBookings: number = 0;
-  isShowAddPopup: Boolean = false;
-  isShowEditPopup: Boolean = false;
   pageSize: number = 10;
   currentPage: number = 1;
   totalPages: number = 0;
   keyword: string = '';
+  editModal!: Modal;
   constructor(public admin: AdminComponent, private adminService: AdminService, private router: Router) { }
   ngOnInit(): void {
     this.admin.pageTitle = 'Booking Management';
     this.getBookings(this.currentPage, this.pageSize, this.keyword);
   }
-
+  ngAfterViewInit() {
+    this.editModal = new Modal('#editModal', {
+      keyboard: false,
+      backdrop: 'static'
+    });
+  }
   getBookings(page: number, size: number, keyword: string) {
     this.adminService.getBooking(page - 1, size, keyword).subscribe(
       (response: any) => {
@@ -74,8 +79,7 @@ export class BookingManagerComponent implements OnInit {
     this.status = booking.status
     this.deposit = booking.deposit
     this.totalAmount = booking.totalAmount
-    this.isShowEditPopup = true;
-    this.openPopup();
+    this.editModal.show();
   }
   // submit booking đã edit
   onSubmitEdit(form: NgForm) {
@@ -93,21 +97,10 @@ export class BookingManagerComponent implements OnInit {
     this.status = "";
     this.deposit = 0;
     this.totalAmount = 0;
-    this.isShowAddPopup = false;
-    this.isShowEditPopup = false;
-    this.closePopup();
+    this.editModal.hide();
   }
   isObject(value: any) {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
-  }
-  openPopup() {
-    document.body.style.paddingRight = '17px'
-    document.body.classList.add('modal-open')
-      
-  }
-  closePopup() {
-    document.body.style.paddingRight = '';
-    document.body.classList.remove('modal-open')
   }
 
 }

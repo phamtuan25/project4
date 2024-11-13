@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ConfigService } from '../../config/config.service';
 import { User } from './user-manager/user-manager.component';
 import { AdminService } from './admin.service';
+import { GlobalStateService } from '../../config/global.stage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -12,7 +14,8 @@ import { AdminService } from './admin.service';
 export class AdminComponent implements OnInit{
   title = 'hotel_manager';
   pageTitle = 'Management Page';
-  constructor(private router: Router, private config: ConfigService, private adminService: AdminService){}
+  private userSubscription!: Subscription;
+  constructor(private router: Router, private config: ConfigService, private adminService: AdminService, private globalStageService: GlobalStateService){}
   userLogin: User | null = null
   signOut(): void {
     if (confirm("Are you sure you want to log out?")) {
@@ -22,19 +25,28 @@ export class AdminComponent implements OnInit{
     }
   }
   ngOnInit(): void {
-    const email = this.config.getEmail();
-    console.log(email)
-    this.getUserLogin(email);
+    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
+      this.userLogin = user;
+    });
+    const token = this.config.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
+    if(token && this.userLogin?.role == 'CUSTOMER'){
+      this.router.navigate(['/']).then(() => {
+        window.location.reload(); 
+      });
+    }
   }
-  getUserLogin(email: string | null){
-    this.adminService.getUserLogin(email).subscribe(
-      (response: any) => {
-        this.userLogin = response;
-      },
-      (error) => {
-        console.error("Error fetching users", error);
-      }
-    )
+  goToHomePage(){
+    this.router.navigate(['/']).then(() => {
+      window.location.reload();
+    });
+  }
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 }
 
