@@ -94,18 +94,25 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
     @Override
     public BookingDetail updateBookingDetail(Long bookingDetailId, BookingDetail bookingDetail) {
+        // Find the existing BookingDetail by ID
         BookingDetail bookingDetailUpdate = bookingDetailRepository.findById(bookingDetailId)
                 .orElseThrow(() -> new NotFoundException("BookingDetailNotFound", "Booking Detail not found with ID: " + bookingDetailId));
 
+        // Set updated values to the existing BookingDetail
         setBookingDetail(bookingDetailUpdate, bookingDetail);
 
-        // Optionally, set the status to PENDING during an update
-        if (bookingDetailUpdate.getStatus() == null) {
-            bookingDetailUpdate.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set status to PENDING if not already set
+        // Check if the status is changed to CANCELED
+        if (bookingDetailUpdate.getStatus() == BookingDetail.BookingDetailStatus.CANCELED) {
+            // If status is CANCELED, update the status of the associated Room to AVAILABLE
+            Room room = bookingDetailUpdate.getRoom();
+            room.setStatus(Room.RoomStatus.AVAILABLE);
+            roomRepository.save(room);  // Persist the room status change
         }
 
+        // Save the updated BookingDetail
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
+
 
 
     @Override

@@ -4,13 +4,9 @@ import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.request.BookingRequest;
 import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.entity.*;
-import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingMapper;
-import com.example.projectbackend.repository.BookingDetailRepository;
-import com.example.projectbackend.repository.BookingRepository;
-import com.example.projectbackend.repository.RoomRepository;
-import com.example.projectbackend.repository.UserRepository;
+import com.example.projectbackend.repository.*;
 import com.example.projectbackend.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +27,7 @@ import java.util.stream.Collectors;
     private final BookingDetailRepository bookingDetailRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final RelProvisionBookingDetailRepository relProvisionBookingDetailRepository;  // Thêm phụ thuộc vào RelProvisionBookingDetailRepository
     @Override
     public Page<BookingResponse> getAllBookings(@PageableDefault(size = 10, page = 0) Pageable pageable,
                                                 @RequestParam(required = false) String keyword) {
@@ -166,14 +163,49 @@ import java.util.stream.Collectors;
 
 
 
-
-
-
     @Override
     public Booking updateBooking(Long bookingId, Booking booking) {
         // Tìm kiếm booking theo bookingId
         Booking bookingUpdate = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
+
+        // Kiểm tra nếu trạng thái booking được cập nhật thành FAILED
+        if (booking.getStatus() == Booking.BookingStatus.FAILED) {
+            // Cập nhật trạng thái của tất cả các bookingDetail liên quan thành CANCELED
+            for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
+                bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CANCELED);
+
+                // Cập nhật trạng thái của tất cả các RelProvisionBookingDetail liên quan thành UNUSED
+                if (bookingDetail.getRelProvisionBookingDetails() != null) {
+                    for (RelProvisionBookingDetail relProvisionBookingDetail : bookingDetail.getRelProvisionBookingDetails()) {
+                        relProvisionBookingDetail.setStatus(RelProvisionBookingDetail.RelProvisionBookingDetailStatus.UNUSED);
+                    }
+
+                    // Lưu lại các thay đổi của RelProvisionBookingDetail
+                    relProvisionBookingDetailRepository.saveAll(bookingDetail.getRelProvisionBookingDetails());
+                }
+
+                // Cập nhật trạng thái của phòng liên quan thành AVAILABLE
+                Room room = bookingDetail.getRoom();
+                if (room != null && room.getStatus() != Room.RoomStatus.AVAILABLE) {
+                    room.setStatus(Room.RoomStatus.AVAILABLE);
+                    roomRepository.save(room); // Lưu lại phòng sau khi cập nhật trạng thái
+                }
+            }
+        }
+
+        // Kiểm tra nếu trạng thái booking được cập nhật thành COMPLETED
+        if (booking.getStatus() == Booking.BookingStatus.COMPLETED) {
+            // Cập nhật trạng thái của tất cả các bookingDetail liên quan thành CONFIRMED
+            for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
+                // Chỉ cập nhật nếu trạng thái hiện tại không phải là CANCELED hoặc CONFIRMED
+                if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED &&
+                        bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CONFIRMED) {
+                    bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
+                    bookingDetailRepository.save(bookingDetail); // Lưu lại booking detail sau khi cập nhật trạng thái
+                }
+            }
+        }
 
         // Cập nhật thông tin booking
         setBooking(bookingUpdate, booking);
@@ -184,6 +216,9 @@ import java.util.stream.Collectors;
         // Lưu booking đã cập nhật vào cơ sở dữ liệu
         return bookingRepository.save(bookingUpdate);
     }
+
+
+
 
 
     @Override
