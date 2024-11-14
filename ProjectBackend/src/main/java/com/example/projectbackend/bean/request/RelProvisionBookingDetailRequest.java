@@ -18,13 +18,6 @@ public class RelProvisionBookingDetailRequest {
     @NotNull(message = "Booking Detail ID is required")
     private Long bookingDetailId;
 
-    @NotNull(message = "Price is required")
-    @Positive(message = "Price must be positive")
-    private Double price;
-
-    @NotNull(message = "Booking ID is required")
-    private Long bookingId;
-
     @NotNull(message = "Status is required")
     private RelProvisionBookingDetail.RelProvisionBookingDetailStatus status;
 }

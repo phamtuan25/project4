@@ -94,24 +94,37 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
     @Override
     public BookingDetail updateBookingDetail(Long bookingDetailId, BookingDetail bookingDetail) {
-        // Find the existing BookingDetail by ID
+        // Tìm kiếm BookingDetail theo ID
         BookingDetail bookingDetailUpdate = bookingDetailRepository.findById(bookingDetailId)
                 .orElseThrow(() -> new NotFoundException("BookingDetailNotFound", "Booking Detail not found with ID: " + bookingDetailId));
 
-        // Set updated values to the existing BookingDetail
+        // Set các giá trị được cập nhật vào BookingDetail hiện tại
         setBookingDetail(bookingDetailUpdate, bookingDetail);
 
-        // Check if the status is changed to CANCELED
+        // Kiểm tra nếu trạng thái được cập nhật thành CONFIRMED
+        if (bookingDetailUpdate.getStatus() == BookingDetail.BookingDetailStatus.CONFIRMED) {
+            // Nếu trạng thái là CONFIRMED, cập nhật trạng thái phòng thành AVAILABLE
+            Room room = bookingDetailUpdate.getRoom();
+
+            // Kiểm tra nếu phòng không phải là trạng thái AVAILABLE (đảm bảo không thay đổi trạng thái của phòng đã có sẵn)
+            if (room.getStatus() != Room.RoomStatus.AVAILABLE) {
+                room.setStatus(Room.RoomStatus.AVAILABLE); // Đặt trạng thái phòng thành AVAILABLE
+                roomRepository.save(room);  // Lưu trạng thái phòng mới
+            }
+        }
+
+        // Kiểm tra nếu trạng thái được cập nhật thành CANCELED
         if (bookingDetailUpdate.getStatus() == BookingDetail.BookingDetailStatus.CANCELED) {
-            // If status is CANCELED, update the status of the associated Room to AVAILABLE
+            // Nếu trạng thái là CANCELED, cập nhật trạng thái của phòng thành AVAILABLE
             Room room = bookingDetailUpdate.getRoom();
             room.setStatus(Room.RoomStatus.AVAILABLE);
             roomRepository.save(room);  // Persist the room status change
         }
 
-        // Save the updated BookingDetail
+        // Lưu BookingDetail đã được cập nhật
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
+
 
 
 
