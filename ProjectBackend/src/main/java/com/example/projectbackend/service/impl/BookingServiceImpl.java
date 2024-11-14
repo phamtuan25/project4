@@ -204,6 +204,13 @@ import java.util.stream.Collectors;
                     bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
                     bookingDetailRepository.save(bookingDetail); // Lưu lại booking detail sau khi cập nhật trạng thái
                 }
+
+                // Cập nhật trạng thái của phòng liên quan thành AVAILABLE
+                Room room = bookingDetail.getRoom();
+                if (room != null && room.getStatus() != Room.RoomStatus.AVAILABLE) {
+                    room.setStatus(Room.RoomStatus.AVAILABLE);
+                    roomRepository.save(room); // Lưu lại phòng sau khi cập nhật trạng thái
+                }
             }
         }
 
