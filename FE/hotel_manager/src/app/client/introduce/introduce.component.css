@@ -1,0 +1,209 @@
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Title styles */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #004d40; 
+    font-size: 36px; 
+    font-weight: bold; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    background: linear-gradient(to right, #ffd700, #ff5722); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    margin: 20px 0; 
+    padding: 10px; 
+    border-bottom: 2px solid #ffd700; /
+}
+
+h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+/* About Us section */
+.about-us {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.about-us-info {
+    flex: 1;
+    padding: 20px;
+}
+
+.about-us-info h2 {
+    color: #ffd700;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: left; 
+}
+
+.about-us-info p {
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.about-us-image {
+    flex: 1;
+    padding: 10px;
+}
+
+.about-us-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styles for About Us section */
+@media (max-width: 767px) {
+    .about-us {
+        flex-direction: column;
+    }
+
+    .about-us-info, .about-us-image {
+        flex-basis: auto;
+        padding: 10px;
+    }
+
+    .about-us-info h2 {
+        font-size: 24px; 
+    }
+
+    .about-us-info p {
+        font-size: 14px;
+    }
+}
+
+/* Location section */
+.location {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.location-info {
+    flex: 1;
+    padding: 20px;
+}
+
+.location-info h2 {
+    color: #ffd700;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: left; 
+}
+
+.location-info p {
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.location-map {
+    flex: 1;
+    padding: 10px;
+}
+
+.location-map img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styles for Location section */
+@media (max-width: 767px) {
+    .location {
+        flex-direction: column;
+    }
+
+    .location-info, .location-map {
+        flex-basis: auto;
+        padding: 10px;
+    }
+
+    .location-info h2 {
+        font-size: 24px; 
+    }
+
+    .location-info p {
+        font-size: 14px; 
+    }
+}
+
+/* Food & Beverage section */
+.food-beverage {
+    background-color: #004d40;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 8px;
+    color: #fff;
+    margin-bottom: 40px;
+}
+
+.food-beverage h2 {
+    color: #ffd700;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.food-beverage p {
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.food-beverage img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Responsive styles for Food & Beverage section */
+@media (max-width: 767px) {
+    .food-beverage {
+        padding: 20px;
+    }
+
+    .food-beverage h2 {
+        font-size: 22px;
+    }
+
+    .food-beverage p {
+        font-size: 14px;
+    }
+}
+
+

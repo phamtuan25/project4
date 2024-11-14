@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterContentInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; 
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ClientService } from '../client.service';
 import { Room } from '../room/room.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,35 +20,39 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   errors: any[] = [];
   roomId: number = 0;
   currentPage: number = 1;
-  pricingOption: string = 'daily'; 
+  pricingOption: string = 'daily';
   bookingForm: FormGroup;
   userLogin: User | null = null
+  availableProvisions: { provisionName: string, price: number }[] = [];;
+  selectedProvision: string[] = [];
   private userSubscription!: Subscription;
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private clientService: ClientService,
     private route: ActivatedRoute,
     private router: Router,
     private config: ConfigService,
     private globalStageService: GlobalStateService
   ) {
-   
+
     this.bookingForm = this.fb.group({
       checkIn: ['', Validators.required],
       checkOut: ['', Validators.required],
-      pricingOption: ['daily', Validators.required], 
+      pricingOption: ['daily', Validators.required],
       specialRequests: ['', Validators.required],
-      price: [{ value: '', disabled: true }, Validators.required]  
+      price: [{ value: '', disabled: true }, Validators.required],
+      provisions: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
+    this.loadAvailableProvisons();
     this.roomId = +this.route.snapshot.paramMap.get('roomId')!;
     this.getRoomDetail(this.roomId);
     this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
       this.userLogin = user;
     });
-
+    console.log(this.availableProvisions);
     this.route.queryParams.subscribe(params => {
       const page = params['page'];
       if (page) {
@@ -68,7 +72,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   ngAfterContentInit(): void {
     const myCarousel = document.querySelector('#roomCarousel');
     if (myCarousel) {
-      $(myCarousel).carousel(); 
+      $(myCarousel).carousel();
     }
   }
 
@@ -76,7 +80,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
     this.clientService.getRoomDetail(roomId).subscribe(
       (response: Room) => {
         this.roomDetail = response;
-        this.updatePrice(); 
+        this.updatePrice();
       },
       (error) => {
         console.error("Error fetching room details", error);
@@ -88,7 +92,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
   updatePrice(): void {
     if (this.roomDetail) {
       const price = this.pricingOption === 'hourly' ? this.roomDetail.hourPrice : this.roomDetail.dayPrice;
-      this.bookingForm.patchValue({ price }); 
+      this.bookingForm.patchValue({ price });
     }
   }
 
@@ -104,9 +108,58 @@ export class RoomDetailComponent implements OnInit, AfterContentInit {
     });
   }
 
+
+  get provisions(): FormArray {
+    return this.bookingForm.get('provisions') as FormArray;
+  }
+
+  loadAvailableProvisons(): void {
+    this.clientService.getProvisionBooking().subscribe(
+      (response: any) => {
+        this.availableProvisions = response.content;
+      },
+      (error) => {
+        console.error('Error fetching services', error);
+      }
+    );
+  }
+
+  onProvisionChange(provisionName: string, event: any): void {
+    if (event.target.checked) {
+      if (!this.selectedProvision.includes(provisionName)) {
+        this.selectedProvision.push(provisionName);
+      }
+    } else {
+      const index = this.selectedProvision.indexOf(provisionName);
+      if (index !== -1) {
+        this.selectedProvision.splice(index, 1);
+      }
+    }
+
+    this.updateFormArray();
+  }
+
+  updateFormArray(): void {
+    this.provisions.clear();
+
+    this.selectedProvision.forEach((provisionName: string) => {
+      if (!this.isProvisionAlreadyAdded(provisionName)) {
+        this.provisions.push(this.fb.control(provisionName));
+      }
+    });
+  }
+  isProvisionAlreadyAdded(provisionName: string): boolean {
+    return this.provisions.controls.some(control => control.value === provisionName);
+  }
+  removeProvision(index: number): void {
+    this.provisions.removeAt(index);
+  }
+
+
   addToBooking(): void {
     if (this.bookingForm.valid) {
-      if(!this.userLogin) {
+      if (!this.userLogin) {
+        alert('You need to log in to your account to book');
         this.router.navigate(['/login']);
         return;
       }

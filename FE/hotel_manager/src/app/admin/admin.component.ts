@@ -28,6 +28,12 @@ export class AdminComponent implements OnInit{
       (response: any) => {
         this.userLogin = response;
         this.globalStageService.setUserStage(response);
+        if(this.config.getToken() && response?.role == 'CUSTOMER'){
+      
+          this.router.navigate(['/']).then(() => {
+            window.location.reload(); 
+          });
+        }
       },
       (error) => {
         console.error("Error fetching users", error);
@@ -40,11 +46,6 @@ export class AdminComponent implements OnInit{
     const token = this.config.getToken();
     if(!token) {
       this.router.navigate(['/login']);
-    }
-    if(token && this.userLogin?.role == 'CUSTOMER'){
-      this.router.navigate(['/']).then(() => {
-        window.location.reload(); 
-      });
     }
   }
   goToHomePage(){

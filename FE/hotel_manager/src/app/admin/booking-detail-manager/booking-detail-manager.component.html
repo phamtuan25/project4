@@ -89,7 +89,7 @@
                         <div class="form-group">
                             <label for="editSpecialRequests">Special Requests</label>
                             <input type="text" class="form-control" [(ngModel)]="specialRequests" id="editSpecialRequests"
-                                name="specialRequests" required>
+                                name="specialRequests" readonly>
                             <div
                                 *ngIf="editBookingDetailForm.controls['specialRequests']?.invalid && (editBookingDetailForm.controls['specialRequests']?.touched || editBookingDetailForm.submitted)">
                                 <small class="text-danger">Special Requests is required.</small>
@@ -98,7 +98,7 @@
                         <div class="form-group">
                             <label for="editPrice">Price</label>
                             <input type="number" class="form-control" [(ngModel)]="price" id="editPrice"
-                                name="price" required>
+                                name="price" readonly>
                             <div
                                 *ngIf="editBookingDetailForm.controls['price']?.invalid && (editBookingDetailForm.controls['price']?.touched || editBookingDetailForm.submitted)">
                                 <small class="text-danger">Price is required.</small>

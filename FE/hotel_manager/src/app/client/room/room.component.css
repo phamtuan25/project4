@@ -1,63 +1,75 @@
-/* content */
-
-main {
-    padding: 20px;
+.main-building {
     background-color: #f8f9fa;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    padding: 3rem 1rem;
 }
 
-.price-red {
-    color: #e74c3c;         
-    font-weight: bold;  
-    font-size: 1em;   
+.main-title {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #ffffff; 
+    margin-bottom: 2rem; 
+    text-align: center; 
+    background-color: #343a40; 
+    padding: 1rem; 
+    border-radius: 0.2rem; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+    letter-spacing: 1px;
+    margin-left: 4.5rem; 
+    margin-right: 4.5rem; 
 }
-a.active {
-    background-color:  #b95c47; 
-    color: white;
-    border-color: #b95c47 !important;
+
+.row {
+    margin-left: 4.5rem; 
+    margin-right: 4.5rem; 
 }
+
+.room-card {
+    margin-bottom: 2rem;
+}
+
 .card {
-    margin-bottom: 10px;
     border: none;
-    border-radius: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 .card-img-top {
     height: 200px;
     object-fit: cover;
-    filter: brightness(0.10);
 }
 
 .card-body {
-    padding: 10px;
+    padding: 1.5rem;
+    background-color: #fff;
 }
 
 .card-title {
-    font-size: 1.5rem;
-    color: #333;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #343a40;
 }
 
-.card-text {
-    font-size: 1rem;
-    color: #666;
+.room-prices {
+    text-align: right;
+}
+
+.room-prices p {
+    margin: 5px 0;
+}
+
+.price-red {
+    color: #f50404;
+    font-weight: bold;
 }
 
 .btn-primary {
     background-color: white;
-    border: solid 1px black;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: background-color 0.1s;
-    color: black;
+    border: solid 1px #b95c47;
+    color: #b95c47;
+    font-weight: 400;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-primary:hover {
@@ -65,17 +77,13 @@ a.active {
     color: white;
     border: 0;
 }
-.btn-primary:active {
-    background-color: #b95c47 !important;
+
+.active {
+    background-color: #b95c47;
+    color: #fff;
     border-color: #b95c47 !important;
-    
-}
-.btn-primary:focus{
-    box-shadow: none !important;
 }
 .page-link{
-    color:  #b95c47;
-}
-.text-color{
-    color:  #b95c47;
+    background-color: #fff;
+    color: #b95c47;
 }

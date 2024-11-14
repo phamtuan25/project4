@@ -1,102 +1,126 @@
 <div class="container" *ngIf="roomDetail">
+  <h2 class="room-title text-center">Room Information & Book</h2>
   <div class="row full-height">
-    <div class="col-md-7">
-      <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <ol class="carousel-indicators">
-            <li *ngFor="let image of roomDetail.images; let i = index" [attr.data-bs-target]="'#roomCarousel'"
-                [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
-          </ol>
-          <div class="carousel-inner">
-            <div *ngFor="let image of roomDetail.images; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
-              <img [src]="'http://localhost:8080/upload_images/' + image" alt="Room Image" class="d-block w-100" style="height: 400px; object-fit: cover;" />
-            </div>
+      <div class="col-md-7">
+          <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+              <ol class="carousel-indicators">
+                  <li *ngFor="let image of roomDetail.images; let i = index" 
+                      [attr.data-bs-target]="'#roomCarousel'"
+                      [attr.data-bs-slide-to]="i" 
+                      [class.active]="i === 0"></li>
+              </ol>
+              <div class="carousel-inner">
+                  <div *ngFor="let image of roomDetail.images; let i = index" 
+                       class="carousel-item" 
+                       [ngClass]="{'active': i === 0}">
+                      <img [src]="'http://localhost:8080/upload_images/' + image" 
+                           alt="Room Image" 
+                           class="room-image" />
+                  </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+              </button>
           </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+
+          <!-- Room Details -->
+          <div class="details mt-4">
+              <h3>Room Name: <span>{{ roomDetail.roomNumber }}</span></h3>
+              <p><strong>Room Type:</strong> {{ roomDetail.roomType }}</p>
+              <h5>Daily Price: <span class="price-red">{{ roomDetail.dayPrice | currency: '$' }}</span></h5>
+              <h5>Hourly Price: <span class="price-red">{{ roomDetail.hourPrice | currency: '$' }}</span></h5>
+          </div>
+          <!-- Back to Room List Button -->
+          <button class="btn btn-primary" (click)="goBack()">
+            <i class="bi bi-arrow-left"></i> Back to Room List
         </button>
       </div>
-    </div>
 
-    <div class="col-md-5 booking-section">
-      <h2>Book Your Room</h2>
-      <form [formGroup]="bookingForm" (ngSubmit)="addToBooking()">
-        <input type="hidden" name="roomId" [value]="roomDetail.roomId">
+      <div class="col-md-5 booking-section">
+          <h2>Book Your Room</h2>
+          <form [formGroup]="bookingForm" (ngSubmit)="addToBooking()">
+              <input type="hidden" name="roomId" [value]="roomDetail.roomId">
 
-        <!-- Pricing Option Selector -->
-        <div class="form-group">
-          <label for="pricingOption">Pricing Option</label>
-          <select class="form-control" id="pricingOption" formControlName="pricingOption" (change)="onPricingOptionChange($event)">
-            <option value="hourly">Hourly</option>
-            <option value="daily">Daily</option>
-          </select>
-        </div>
+              <!-- Pricing Option Selector -->
+              <div class="form-group">
+                  <label for="pricingOption">Pricing Option (Hourly/Daily)</label>
+                  <select class="form-control" id="pricingOption" formControlName="pricingOption"
+                      (change)="onPricingOptionChange($event)">
+                      <option value="hourly">Hourly</option>
+                      <option value="daily">Daily</option>
+                  </select>
+              </div>
 
-        <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-          <label for="checkin" class="form-label">Check-in</label>
-          <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
-        </div>
-        
-        <div class="mb-3" *ngIf="pricingOption === 'daily'">
-          <label for="checkin" class="form-label">Check-in</label>
-          <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
-        </div>
+              <div class="mb-3" *ngIf="pricingOption === 'hourly'">
+                  <label for="checkin" class="form-label">Check-in</label>
+                  <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
+              </div>
 
-        <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-          <label for="checkout" class="form-label">Check-out</label>
-          <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
-        </div>
+              <div class="mb-3" *ngIf="pricingOption === 'daily'">
+                  <label for="checkin" class="form-label">Check-in</label>
+                  <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
+              </div>
 
-        <div class="mb-3" *ngIf="pricingOption === 'daily'">
-          <label for="checkout" class="form-label">Check-out</label>
-          <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
-        </div>
-        <div class="mb-3">
-          <label for="specialRequests">Special Requests</label>
-          <textarea class="form-control" id="specialRequests" formControlName="specialRequests"></textarea>
-        </div>
-      
-        <div class="mb-3">
-          <label for="price">Price</label>
-          <input type="text" class="form-control" id="price" [value]="bookingForm.get('price')?.value | currency: 'USD':true" readonly>
-        </div>
-        <!-- <div class="mb-3">
-          <label for="roomType" class="form-label">Room Type</label>
-          <select class="form-select" id="roomType" formControlName="roomType" required>
-            <option value="" disabled selected>Choose...</option>
-            <option value="standard">Standard</option>
-            <option value="deluxe">Deluxe</option>
-            <option value="suite">Suite</option>
-          </select>
-        </div>
+              <div class="mb-3" *ngIf="pricingOption === 'hourly'">
+                  <label for="checkout" class="form-label">Check-out</label>
+                  <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
+              </div>
 
-        <div class="mb-3">
-          <label for="service" class="form-label">Service (Optional)</label>
-          <select class="form-select" id="service" formControlName="service">
-            <option value="" disabled selected>Choose...</option>
-            <option value="breakfast">Breakfast</option>
-            <option value="spa">Spa</option>
-            <option value="transport">Transport</option>
-          </select>
-        </div> -->
+              <div class="mb-3" *ngIf="pricingOption === 'daily'">
+                  <label for="checkout" class="form-label">Check-out</label>
+                  <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
+              </div>
 
-        <button type="submit" class="btn btn-success w-100">Add To Booking</button>
-      </form>
-    </div>
+              <div class="mb-3">
+                  <label for="provision" class="form-label">Services</label>
+                  <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                          Available Services
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <li class="dropdown-header">Select Services</li>
+                          <li *ngFor="let provision of availableProvisions" class="dropdown-item">
+                              <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" [id]="provision.provisionName" 
+                                         [value]="provision.provisionName" (change)="onProvisionChange(provision.provisionName, $event)" 
+                                         [checked]="selectedProvision.includes(provision.provisionName)" />
+                                  <label class="form-check-label" [for]="provision.provisionName">
+                                      {{ provision.provisionName }} - ${{ provision.price }}
+                                  </label>
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+                  
+                  <div class="selected-provisions">
+                      <h5>Selected Services</h5>
+                      <div formArrayName="provisions">
+                          <div *ngFor="let provision of provisions.controls; let i = index">
+                              <div [formGroupName]="i" class="selected-provision-item">
+                                  <span>{{ provision.value }}</span>
+                                  <button class="btn btn-danger btn-sm" (click)="removeProvision(i)">Remove</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="mb-3">
+                  <label for="specialRequests">Special Requests</label>
+                  <textarea class="form-control" id="specialRequests" formControlName="specialRequests"></textarea>
+              </div>
+
+              <div class="mb-3">
+                  <label for="price">Price Room</label>
+                  <input type="text" class="form-control" id="price"
+                         [value]="bookingForm.get('price')?.value | currency: 'USD':true" readonly>
+              </div>
+
+              <button type="submit" class="btn btn-success w-100">BOOK</button>
+          </form>
+      </div>
   </div>
-
-  <!-- Room Details -->
-  <div class="details mt-4">
-    <h3>Room Name: <span class="text-primary">{{ roomDetail.roomNumber }}</span></h3>
-    <p><strong>Room Type:</strong> {{ roomDetail.roomType }}</p>
-    <h5>Daily Price: <span class="price-red">{{ roomDetail.dayPrice | currency: '$' }}</span></h5>
-    <h5>Hourly Price: <span class="price-red">{{ roomDetail.hourPrice | currency: '$' }}</span></h5>
-  </div>
-
-  <!-- Back to Room List Button -->
-  <button class="btn btn-primary mt-3" (click)="goBack()">Back to List Room</button>
 </div>

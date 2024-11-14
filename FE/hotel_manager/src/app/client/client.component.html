@@ -14,7 +14,7 @@
                     <a class="nav-link" [routerLink]="''">HOME</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">INTRODUCE</a>
+                    <a class="nav-link" [routerLink]="'/introduce'">INTRODUCE</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="'/room'">ROOM</a>
@@ -72,44 +72,44 @@
     <div class="container mt-5" style="margin-top: 0;">
         <div class="footer-top">
             <div class="footer-column">
-                <h3>Amazing Hotel</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Thành phố XYZ</p>
+                <h3>Hotel Master</h3>
+                <p><i class="fas fa-map-marker-alt"></i> No. 16, Le Thanh Nghi, Hai Ba Trung, Hanoi</p>
                 <p><i class="fas fa-phone-alt"></i> 0987653231</p>
             </div>
             <div class="footer-column">
-                <h3>Thông tin</h3>
+                <h3>Information</h3>
                 <ul class="nuss-list">
-                    <li class="item"><a class="link" href="#">Giới thiệu</a></li>
-                    <li class="item"><a class="link" href="#">Dịch vụ</a></li>
-                    <li class="item"><a class="link" href="#">Liên hệ</a></li>
+                    <li class="item"><a class="link" [routerLink]="'/introduce'">Introduce</a></li>
+                    <li class="item"><a class="link" [routerLink]="'/provision'">Service</a></li>
+                    <li class="item"><a class="link" [routerLink]="'/contact'">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h3>Kết nối với Amazing</h3>
+                <h3>Connect with Hotel Master</h3>
                 <ul class="nuss-list">
-                    <li class="item"><a class="link" href="#">Facebook</a></li>
-                    <li class="item"><a class="link" href="#">Instagram</a></li>
+                    <li class="item"><a class="link" href="https://www.facebook.com/profile.php?id=100049345187328">Facebook</a></li>
+                    <li class="item"><a class="link" href="https://www.instagram.com/quocuong__/">Instagram</a></li>
                     <li class="item"><a class="link" href="#">Twitter</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h3>Thanh toán</h3>
+                <h3>Pay</h3>
                 <div class="payment-icons">
                     <div class="icon">
-                        <img src="/images/american.png" alt="Ngân hàng Maestro">
+                        <img src="/images/american.png" alt="Bank Maestro">
                     </div>
                     <div class="icon">
-                        <img src="/images/JBC.png" alt="Ngân hàng Discover">
+                        <img src="/images/JBC.png" alt="Bank Discover">
                     </div>
                     <div class="icon">
-                        <img src="/images/visa.png" alt="Ngân hàng Payoneer">
+                        <img src="/images/visa.png" alt="BankPayoneer">
                     </div>
                 </div>
             </div>
         </div>
         <div class="footer-divider"></div>
         <div class="footer_bottom">
-            <p>&copy; 2024 Hotel Master. Tất cả quyền được bảo lưu.</p>
+            <p>&copy; 2024 Hotel Master. All rights reserved.</p>
             <div class="nuss-social-networks">
                 <div class="nuss-social-networks">
                     <ul class="list">

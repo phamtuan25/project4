@@ -4,6 +4,7 @@ import { ConfigService } from '../../config/config.service';
 import { Room } from './room/room.component';
 import { Provision } from '../admin/provision-manager/provision-manager.component';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 @Injectable({
     providedIn: 'root'
 })
@@ -40,6 +41,11 @@ export class ClientService {
         }
         return this.http.get<Provision[]>(`${this.apiUrl}provisions?${params}`, { headers });
     }
+
+    getProvisionBooking(status?: string) {
+        const headers = this.config.getHttpHeaders();
+        return this.http.get<Provision[]>(`${this.apiUrl}provisions`, { headers});
+      }
 
     //Call Api Contact
     addContact(message: string, userId: number): Observable<any> {
