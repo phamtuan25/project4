@@ -33,7 +33,9 @@ export class LoginComponent {
         this.config.setToken(token);
         this.config.setEmail(response.message);
         console.log('Login successful:', response.message);
-        this.router.navigate(['/']);
+        this.router.navigate(['/']).then(() => {
+          window.location.reload(); 
+        });
       },
       error => {
         this.errors = [];
