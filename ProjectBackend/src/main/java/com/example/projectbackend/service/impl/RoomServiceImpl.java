@@ -166,7 +166,11 @@ public class RoomServiceImpl implements RoomService {
 
             // Kiểm tra nếu phòng có trạng thái BOOKED
             if (room.getStatus() == Room.RoomStatus.BOOKED) {
+                // Lấy danh sách BookingDetail của phòng và sắp xếp theo bookingDetailId giảm dần
                 List<BookingDetail> bookingDetails = bookingDetailRepository.findByRoom(room);
+                bookingDetails.sort((bd1, bd2) -> bd2.getBookingDetailId().compareTo(bd1.getBookingDetailId())); // Sắp xếp giảm dần theo bookingDetailId
+
+                // Kiểm tra booking mới nhất
                 for (BookingDetail bookingDetail : bookingDetails) {
                     if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED) {
                         // Nếu thời gian checkIn tìm kiếm sau thời gian checkOut của phòng và checkOut đã qua
@@ -179,7 +183,7 @@ public class RoomServiceImpl implements RoomService {
                             // Nếu checkIn sau checkOut nhưng thời gian checkOut chưa qua, vẫn hiển thị phòng như là BOOKED
                             availableRooms.add(room);  // Thêm vào danh sách dù trạng thái là BOOKED
                         }
-                        break;  // Chỉ cần kiểm tra booking đầu tiên
+                        break;  // Chỉ cần kiểm tra booking đầu tiên (mới nhất)
                     }
                 }
             }
@@ -187,6 +191,9 @@ public class RoomServiceImpl implements RoomService {
 
         return availableRooms;  // Trả về danh sách phòng trống hoặc phòng đang được đặt nhưng vẫn có thể hiển thị
     }
+
+
+
 
 
 

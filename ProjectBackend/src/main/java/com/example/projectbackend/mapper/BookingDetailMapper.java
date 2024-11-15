@@ -3,6 +3,12 @@ package com.example.projectbackend.mapper;
 import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.response.BookingDetailResponse;
 import com.example.projectbackend.entity.BookingDetail;
+import com.example.projectbackend.entity.Provision;
+import com.example.projectbackend.entity.RelProvisionBookingDetail;
+import com.example.projectbackend.repository.ProvisionRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookingDetailMapper {
 
@@ -19,16 +25,42 @@ public class BookingDetailMapper {
         bookingDetailResponse.setSpecialRequests(bookingDetail.getSpecialRequests());
         bookingDetailResponse.setPrice(bookingDetail.getPrice());
         bookingDetailResponse.setRoomNumber(bookingDetail.getRoom().getRoomNumber());
+
+        // Nếu cần, trả về thông tin của provision (hoặc chỉ ID)
+        if (bookingDetail.getRelProvisionBookingDetails() != null) {
+            List<Long> provisionIds = bookingDetail.getRelProvisionBookingDetails().stream()
+                    .map(rel -> rel.getProvision().getProvisionId())
+                    .collect(Collectors.toList());
+            bookingDetailResponse.setProvisionIds(provisionIds);
+        }
+
         return bookingDetailResponse;
     }
 
-    public static BookingDetail convertFromRequest(BookingDetailRequest bookingDetailRequest) {
+    public static BookingDetail convertFromRequest(BookingDetailRequest bookingDetailRequest, ProvisionRepository provisionRepository) {
         BookingDetail bookingDetail = new BookingDetail();
         bookingDetail.setCheckIn(bookingDetailRequest.getCheckIn());
         bookingDetail.setCheckOut(bookingDetailRequest.getCheckOut());
         bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING);
         bookingDetail.setSpecialRequests(bookingDetailRequest.getSpecialRequests());
         bookingDetail.setPrice(bookingDetailRequest.getPrice());
+
+        // Thêm logic để liên kết các Provision vào BookingDetail
+        if (bookingDetailRequest.getProvisionIds() != null && !bookingDetailRequest.getProvisionIds().isEmpty()) {
+            List<Provision> provisions = provisionRepository.findAllByProvisionIdIn(bookingDetailRequest.getProvisionIds());
+            List<RelProvisionBookingDetail> relProvisionBookingDetails = bookingDetail.getRelProvisionBookingDetails();
+            for (Provision provision : provisions) {
+                RelProvisionBookingDetail relProvisionBookingDetail = new RelProvisionBookingDetail();
+                relProvisionBookingDetail.setProvision(provision);
+                relProvisionBookingDetail.setBookingDetail(bookingDetail);
+                relProvisionBookingDetail.setPrice(provision.getPrice().doubleValue()); // Lưu giá của proviiosn
+
+                // Gắn các RelProvisionBookingDetail vào bookingDetail
+                relProvisionBookingDetails.add(relProvisionBookingDetail);
+            }
+            bookingDetail.setRelProvisionBookingDetails(relProvisionBookingDetails);
+        }
+
         return bookingDetail;
     }
 }

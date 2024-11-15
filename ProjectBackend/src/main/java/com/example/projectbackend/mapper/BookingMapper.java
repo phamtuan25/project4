@@ -33,37 +33,6 @@ public class BookingMapper {
         return bookingResponse;
     }
 
-    public static Booking convertFromRequest(BookingRequest bookingRequest, RoomRepository roomRepository) {
-        if (bookingRequest == null) {
-            throw new IllegalArgumentException("BookingRequest cannot be null");
-        }
-
-        Booking booking = new Booking();
-
-        // Kiểm tra nếu user là null
-        if (bookingRequest.getUser() == null) {
-            throw new IllegalArgumentException("User in booking request cannot be null");
-        }
-
-        booking.setUser(bookingRequest.getUser());
-
-        // Kiểm tra nếu danh sách BookingDetails là null
-        if (bookingRequest.getBookingDetailRequests() == null) {
-            throw new IllegalArgumentException("BookingDetailRequests cannot be null");
-        }
-
-        // Chuyển đổi các BookingDetailRequest thành BookingDetail entity
-        List<BookingDetail> bookingDetails = bookingRequest.getBookingDetailRequests().stream()
-                .map(detailRequest -> convertFromRequestDetail(detailRequest, booking, roomRepository))
-                .collect(Collectors.toList());
-
-        booking.setBookingDetails(bookingDetails);
-
-        // Tính toán totalAmount sau khi đã có bookingDetails
-        booking.calculateTotalAmount();
-
-        return booking;
-    }
 
     // Phương thức chuyển đổi BookingDetailRequest thành BookingDetail
     private static BookingDetail convertFromRequestDetail(BookingDetailRequest detailRequest, Booking booking, RoomRepository roomRepository) {

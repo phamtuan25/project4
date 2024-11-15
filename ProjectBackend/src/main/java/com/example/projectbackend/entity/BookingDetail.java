@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,8 +33,8 @@ public class BookingDetail {
     private Room room;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "bookingDetail")
-    private List<RelProvisionBookingDetail> relProvisionBookingDetails;
+    @OneToMany(mappedBy = "bookingDetail", cascade = CascadeType.ALL)
+    private List<RelProvisionBookingDetail> relProvisionBookingDetails = new ArrayList<>();
 
     @Column(name = "check_in")
     private LocalDateTime checkIn;
@@ -56,6 +57,7 @@ public class BookingDetail {
 
     @Column(name = "price")
     private Double price;
+
 
     @PrePersist
     public void prePersist() {
