@@ -1,15 +1,23 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.PaymentRequest;
+import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.PaymentResponse;
+import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.Payment;
 import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
+import com.example.projectbackend.mapper.BookingMapper;
 import com.example.projectbackend.mapper.PaymentMapper;
 import com.example.projectbackend.repository.PaymentRepository;
 import com.example.projectbackend.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,11 +31,14 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public List<PaymentResponse> getAllPayments() {
-        if(paymentRepository.findAll().isEmpty()) {
-            throw new EmptyListException("Payment","This list Payment is empty");
-        }
-        return paymentRepository.findAll().stream().map(PaymentMapper::convertToResponse).collect(Collectors.toList());
+    public Page<PaymentResponse> getAllPayments(@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                @RequestParam(required = false) String keyword) {
+        Specification<Payment> spec = searchByKeyword(keyword);
+        Page<Payment> paymentPage = paymentRepository.findAll(spec, pageable);
+        return paymentPage.map(payment -> {
+            PaymentResponse paymentResponse = PaymentMapper.convertToResponse(payment);
+            return paymentResponse;
+        });
     }
 
     @Override
@@ -69,5 +80,16 @@ public class PaymentServiceImpl implements PaymentService {
         paymentUpdate.setStatus(paymentInput.getStatus());
     }
 
-
+    public static Specification<Payment> searchByKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            String likePattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("paymentMethod").as(String.class)), likePattern)
+            );
+        };
+    }
 }

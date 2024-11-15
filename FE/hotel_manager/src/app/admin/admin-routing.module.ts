@@ -7,6 +7,7 @@ import { ProvisionManagerComponent } from './provision-manager/provision-manager
 import { UserManagerComponent } from './user-manager/user-manager.component';
 import { BookingDetailManagerComponent } from './booking-detail-manager/booking-detail-manager.component';
 import { ContactManagerComponent } from './contact-manager/contact-manager.component';
+import { PaymentManagerComponent } from './payment-manager/payment-manager.component';
 
 const routes: Routes = [
     {
@@ -18,6 +19,7 @@ const routes: Routes = [
             { path: 'provision-manager', component: ProvisionManagerComponent },
             { path: 'user-manager', component: UserManagerComponent },
             { path: 'contact-manager', component: ContactManagerComponent },
+            { path: 'payment-manager', component: PaymentManagerComponent },
             { path: 'booking-detail-manager/:bookingId', component: BookingDetailManagerComponent },
             { path: '', redirectTo: '/booking-manager', pathMatch: 'full' }
         ]

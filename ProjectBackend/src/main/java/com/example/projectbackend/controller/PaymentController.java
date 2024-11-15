@@ -7,6 +7,8 @@ import com.example.projectbackend.entity.Payment;
 import com.example.projectbackend.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping
-    public List<PaymentResponse> getAllPayments() {
-        return paymentService.getAllPayments();
+    public Page<PaymentResponse> getAllPayments(Pageable pageable, @RequestParam(required = false) String keyword) {
+        return paymentService.getAllPayments(pageable, keyword);
     }
 
     @GetMapping("/{paymentId}")

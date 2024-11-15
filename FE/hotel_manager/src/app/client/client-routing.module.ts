@@ -9,6 +9,7 @@ import { RoomDetailComponent } from './room-detail/room-detail.component';
 import { ContactComponent } from './contact/contact.component';
 import { UserBookingComponent } from './user-booking/user-booking.component';
 import { IntroduceComponent } from './introduce/introduce.component';
+import { PaymentComponent } from './payment/payment.component';
 
 const routes: Routes = [
     {
@@ -25,6 +26,7 @@ const routes: Routes = [
               { path: 'user-booking', component: UserBookingComponent },
               { path: 'contact', component: ContactComponent },
               { path: 'introduce', component: IntroduceComponent },
+              { path: 'payment', component: PaymentComponent },
               { path: 'room-detail/:roomId', component: RoomDetailComponent},
               { path: '', redirectTo: '/room', pathMatch: 'full' },
         ]

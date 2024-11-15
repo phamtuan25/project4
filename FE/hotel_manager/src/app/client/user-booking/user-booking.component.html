@@ -19,7 +19,7 @@
                             <p><strong>Status:</strong> {{ booking.status }}</p>
                             <p><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
                             <p><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
-                            <button class="button">Payment for Booking</button>
+                            <button class="button" (click)="goToPayment()">Payment for Booking</button>
                         </div>
                         <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId"
                             class="booking-details-container">

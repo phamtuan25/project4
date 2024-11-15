@@ -57,4 +57,8 @@ export class UserBookingComponent {
       this.selectedBookingDetail = this.bookings.find(booking => booking.bookingId === bookingId);
     }
   }
+
+  goToPayment(){
+    this.router.navigate(['/payment'])
+  }
 }

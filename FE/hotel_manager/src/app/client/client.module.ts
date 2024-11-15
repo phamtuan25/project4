@@ -11,7 +11,8 @@ import { ClientComponent } from './client.component';
 import { ContactComponent } from './contact/contact.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IntroduceComponent } from './introduce/introduce.component';  
+import { IntroduceComponent } from './introduce/introduce.component';
+import { PaymentComponent } from './payment/payment.component';  
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { IntroduceComponent } from './introduce/introduce.component';
     UserProfileComponent,
     UserBookingComponent,
     ContactComponent,
-    IntroduceComponent
+    IntroduceComponent,
+    PaymentComponent
   ],
   imports: [
     CommonModule,

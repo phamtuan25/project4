@@ -9,6 +9,7 @@ import { SrvRecord } from 'dns';
 import { Booking } from './booking-manager/booking-manager.component';
 import { BookingDetail } from './booking-detail-manager/booking-detail-manager.component';
 import { Contact } from './contact-manager/contact-manager.component';
+import { Payment } from './payment-manager/payment-manager.component';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +204,12 @@ export class AdminService {
     };
     const headers = this.config.getHttpHeaders();
     return this.http.put(this.apiUrl + 'contacts/' + contactId, body, { headers });
+  }
+
+  //Call api payment
+  getPayment(page: number, size: number, keyword: string) {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<Payment[]>(`${this.apiUrl}payments?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 }
 

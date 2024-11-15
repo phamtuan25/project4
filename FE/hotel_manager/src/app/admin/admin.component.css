@@ -10,6 +10,7 @@ body {
     position: fixed;
     padding-top: 20px;
     text-align: center; 
+    overflow-y: auto;
 }
 
 .sidebar img {

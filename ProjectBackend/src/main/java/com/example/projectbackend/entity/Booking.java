@@ -48,6 +48,9 @@ public class Booking {
     @Column(name = "total_amount")
     private Double totalAmount;
 
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    private Payment payment;
+
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {

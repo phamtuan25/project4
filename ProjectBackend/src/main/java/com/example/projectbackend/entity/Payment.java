@@ -14,7 +14,9 @@ public class Payment {
     public enum PaymentMethod {
         CREDIT_CARD,
         PAYPAL,
-        CASH
+        CASH,
+        BANK_TRANSFER,
+        MOBILE_PAYMENT
     }
 
     public enum PaymentStatus {
