@@ -2,46 +2,59 @@ import { Component, OnInit } from '@angular/core';
 import { ClientComponent } from '../client.component';
 import { ClientService } from '../client.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Room } from '../room/room.component';
 declare var $: any
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   checkin: string = '';
   checkout: string = '';
   roomType: string = '';
-  rooms: any[] = [];
-  totalPages: number = 0;
-  currentPage: number = 1;
+  rooms: Room[] = [];
+  errors: any[] = []; 
+  totalRooms: number = 0;
 
-  roomTypes: string[] = ['Single Room', 'Double Room', 'Suite']; // Các loại phòng có sẵn
+  constructor(public client: ClientComponent, private clientService: ClientService, private router: Router) {}
+ ngOnInit(): void {
+  this.client.pageTitle = 'Home Page';
 
-  constructor(private clientService: ClientService, private router: Router) {}
+  const roomType = 'FAMILY';
+  const pageSize = 4;
 
-  // Hàm kiểm tra phòng có sẵn
-  checkAvailability() {
-    if (!this.checkin || !this.checkout || !this.roomType) {
-      alert('Please fill out all fields');
-      return;
+  this.getRoomsHome(pageSize, roomType);
+}
+
+
+goToDetail(roomId: number): void {
+  this.router.navigate(['/room-detail', roomId], {
+    state: { fromPage: this.router.url } 
+  });
+}
+getRoomsHome(size: number, roomType: string): void {
+  this.clientService.getRoomsHome(0, size, '', 'AVAILABLE', roomType).subscribe(
+    (response: any) => {
+      console.log('API response:', response);
+
+      if (Array.isArray(response.content)) {
+        console.log('Response is an array');
+      } else {
+        console.error('Response is not an array!');
+      }
+      this.rooms = response.content.filter((room: any) => room.roomType.toUpperCase() === roomType.toUpperCase());
+      console.log('Filtered rooms:', this.rooms);
+      if (this.rooms.length === 0) {
+        console.log('There are no FAMILY rooms available.');
+      }
+    },
+    (error) => {
+      console.error("Error fetching rooms", error);
+      this.rooms = [];
+      this.errors.push(error);
     }
+  );
+}
 
-    // Gọi API để lấy phòng có sẵn từ ClientService
-    this.clientService.getAvailableRooms(this.checkin, this.checkout, this.roomType, this.currentPage)
-      .subscribe(response => {
-        this.rooms = response.rooms; // Dữ liệu phòng trả về từ API
-        this.totalPages = response.totalPages; // Tổng số trang để phân trang
-      }, error => {
-        console.error('Error fetching room availability', error);
-      });
-  }
-
-  // Chuyển trang khi người dùng chọn phân trang
-  goToPage(page: number) {
-    if (page > 0 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.checkAvailability();
-    }
-  }
 }

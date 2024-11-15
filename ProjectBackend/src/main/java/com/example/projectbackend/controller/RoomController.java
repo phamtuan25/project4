@@ -35,8 +35,8 @@ public class RoomController {
     private final RoomService roomService;
     private final ImageService imageService;
     @GetMapping
-    public Page<RoomResponse> getAllRooms(Pageable pageable, @RequestParam(required = false) String keyword, String status) {
-        return roomService.getAllRooms(pageable, keyword, status);
+    public Page<RoomResponse> getAllRooms(Pageable pageable, @RequestParam(required = false) String keyword, String status, String roomType) {
+        return roomService.getAllRooms(pageable, keyword, status, roomType);
     }
 
     @GetMapping("/{roomId}")

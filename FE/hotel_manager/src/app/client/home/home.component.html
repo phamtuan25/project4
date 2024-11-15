@@ -1,4 +1,4 @@
-<div class="container mt-5 available">
+<!-- <div class="container mt-5 available">
     <div class="available-group">
         <form (ngSubmit)="checkAvailability()" class="availability-form">
             <div class="form-group">
@@ -23,37 +23,31 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->
 
 <div class="container mt-5">
-    <h1 class="text-center heading-title">Rooms and Room Classes</h1>
-    <p class="text-center">We have 82 rooms with different room types, from Superior City View Room to Deluxe Family
-        Room. Each room is fully equipped with amenities and has a private balcony. The hotel also has a restaurant,
-        bar, swimming pool, spa, gym and karaoke to serve the entertainment needs of visitors.</p>
+    <h1 class="text-center heading-title">Room And Room Type Family</h1>
+    <p class="text-center">
+        We have a variety of room types, from Superior City View Rooms to Deluxe Family Rooms. Each room is fully equipped with amenities and has a private balcony. The hotel also has a restaurant, bar, swimming pool, spa, gym and karaoke to serve the entertainment needs of guests.</p>
 </div>
 
 <div class="container-fluid main-building" *ngIf="rooms.length > 0">
-    <h2 class="main-title text-center">Available Rooms</h2>
     <div class="row">
-        <div class="col-md-4 mb-4 room-card" *ngFor="let room of rooms">
+        <div class="col-md-6 mb-4 room-card" *ngFor="let room of rooms">
             <div class="card">
-                <img [src]="'http://localhost:8080/upload_images/' + room.images[0]" alt="Room Image"
-                    class="card-img-top" />
+                <img [src]="'http://localhost:8080/upload_images/' + room.images[0]" alt="Room Image" class="card-img-top" />
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
                             <span class="text-color">{{ room.roomNumber }}</span> - {{ room.roomType }}
                         </h5>
                         <div class="room-prices">
-                            <p><strong>Daily Price:</strong> <span class="price-red">{{ room.dayPrice | currency: '$'
-                                    }}</span></p>
-                            <p><strong>Hourly Price:</strong> <span class="price-red">{{ room.hourPrice | currency: '$'
-                                    }}</span></p>
+                            <p><strong>Daily Price:</strong> <span class="price-red">{{ room.dayPrice | currency: '$' }}</span></p>
+                            <p><strong>Hourly Price:</strong> <span class="price-red">{{ room.hourPrice | currency: '$' }}</span></p>
                         </div>
                     </div>
                     <div class="d-grid gap-2 mt-3">
-                        <a [routerLink]="['/room-detail', room.roomId]" class="btn btn-primary">More Information &
-                            Book</a>
+                        <button (click)="goToDetail(room.roomId)" class="btn btn-primary">More Information & Book</button>
                     </div>
                 </div>
             </div>
@@ -61,29 +55,6 @@
     </div>
 </div>
 
-<!-- Phân trang -->
-<nav aria-label="Page navigation" *ngIf="totalPages > 1">
-    <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)"
-                [attr.aria-disabled]="currentPage === 1">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index">
-            <a class="page-link" (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1"
-                [attr.aria-current]="currentPage === i + 1 ? 'page' : null">
-                {{ i + 1 }}
-            </a>
-        </li>
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)"
-                [attr.aria-disabled]="currentPage === totalPages">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
 <div class="text-center container mt-5">
     <h3 class="heading-title">Reasons to choose us</h3>
     <p>Do you want to relax in a comfortable, quiet place close to nature? Do you want to be served by a team of
@@ -94,7 +65,7 @@
 <div class="information">
     <div class="container mt-5">
         <div class="info-row">
-            <img src="../../../../../hotel_manager/public/images/vitri.jpg" alt="Info Image 1">
+            <img src="/images/vitri.jpg" alt="Info Image 1">
             <div class="info-text">
                 <h3>Convenient location</h3>
                 <p>The hotel has 82 rooms with various room types, from Superior room with city view to Pen house room.
@@ -113,11 +84,11 @@
                     safe and private bathroom. Each room has a private balcony, allowing you to admire the beautiful
                     scenery of Sapa.</p>
             </div>
-            <img src="../../../../../hotel_manager/public/images/lydo.jpg" alt="Info Image 2">
+            <img src="/images/lydo.jpg" alt="Info Image 2">
         </div>
 
         <div class="info-row">
-            <img src="../../../../../hotel_manager/public/images/điaiem.jpg" alt="Info Image 3">
+            <img src="/images/điaiem.jpg" alt="Info Image 3">
             <div class="info-text">
                 <h3>Ideal location</h3>
                 <p>The hotel is located right in the center of Ho Tay town, only 200 meters from the Stone Church, 500

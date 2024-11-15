@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public interface RoomService {
-    public Page<RoomResponse> getAllRooms(Pageable pageable, String keyword, String status);
+    public Page<RoomResponse> getAllRooms(Pageable pageable, String keyword, String status, String roomType);
     public RoomResponse getDetailRoom(Long roomId);
     public Room createRoom(RoomRequest roomRequest);
     public Room updateRoom(Long roomId, RoomRequest roomRequest);

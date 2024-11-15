@@ -35,13 +35,20 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Page<RoomResponse> getAllRooms(@PageableDefault(size = 10, page = 0) Pageable pageable,
                                           @RequestParam(required = false) String keyword,
-                                          @RequestParam(required = false) String status) {
-        Specification<Room> spec = searchByKeywordAndStatus(keyword, status);
+                                          @RequestParam(required = false) String status,
+                                          @RequestParam(required = false) String roomType) {
+
+        // Tạo Specification với các tham số lọc (status, roomType, keyword)
+        Specification<Room> spec = searchByKeywordStatusAndRoomType(keyword, status, roomType);
+
+        // Lấy danh sách phòng với phân trang
         Page<Room> roomsPage = roomRepository.findAll(spec, pageable);
 
+        // Chuyển đổi danh sách phòng thành danh sách RoomResponse
         return roomsPage.map(room -> {
             RoomResponse roomResponse = RoomMapper.convertToResponse(room);
 
+            // Lấy danh sách hình ảnh cho từng phòng
             List<String> images = imageRepository.findAllByNameAndReferenceId("ROOM", room.getRoomId())
                     .stream()
                     .map(ImageMapper::convertToResponse)
@@ -52,6 +59,7 @@ public class RoomServiceImpl implements RoomService {
             return roomResponse;
         });
     }
+
 
     @Override
     public RoomResponse getDetailRoom(Long roomId) {
@@ -112,7 +120,7 @@ public class RoomServiceImpl implements RoomService {
         roomUpdate.setDayPrice(roomInput.getDayPrice());
     }
 
-    public static Specification<Room> searchByKeywordAndStatus(String keyword, String status) {
+    public static Specification<Room> searchByKeywordStatusAndRoomType(String keyword, String status, String roomType) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -128,7 +136,9 @@ public class RoomServiceImpl implements RoomService {
             if (status != null && !status.isEmpty()) {
                 predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("status")), status.toLowerCase()));
             }
-
+            if (roomType != null) {
+                predicates.add(criteriaBuilder.equal(root.get("roomType"), roomType));
+            }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

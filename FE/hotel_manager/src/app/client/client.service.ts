@@ -27,6 +27,19 @@ export class ClientService {
         return this.http.get<Room[]>(`${this.apiUrl}rooms?${params}`, { headers });
     }
 
+    getRoomsHome(page: number, size: number, keyword: string, status?: string, roomType?: string) {
+        const headers = this.config.getHttpHeaders();
+        let params = `page=${page}&size=${size}&keyword=${keyword}`;
+        if (status) {
+            params += `&status=${status}`;
+        }
+        if (roomType) {
+            params += `&roomType=${roomType}`;
+        }
+    
+        return this.http.get<Room[]>(`${this.apiUrl}rooms?${params}`, { headers });
+    }
+
     getRoomDetail(roomId: number) {
         const headers = this.config.getHttpHeaders();
         return this.http.get<Room>(`${this.apiUrl}rooms/${roomId}`, { headers });
@@ -41,7 +54,8 @@ export class ClientService {
         }
         return this.http.get<Provision[]>(`${this.apiUrl}provisions?${params}`, { headers });
     }
-
+    
+    
     getProvisionBooking(status?: string) {
         const headers = this.config.getHttpHeaders();
         return this.http.get<Provision[]>(`${this.apiUrl}provisions`, { headers });

@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="d-grid gap-2 mt-3">
-                        <a [routerLink]="['/room-detail', room.roomId]" [queryParams]="{ page: currentPage }" class="btn btn-primary">More Information & Book</a>
+                        <button (click)="goToDetail(room.roomId)" class="btn btn-primary">More Information & Book</button>
                     </div>
                 </div>
             </div>
