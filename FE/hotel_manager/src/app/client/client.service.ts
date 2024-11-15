@@ -112,15 +112,16 @@ export class ClientService {
         return this.http.put(this.apiUrl + 'users/changePassword/' + userId, body, { headers });
     }
 
-    //Call api Home
+    //Call check room
 
-    getAvailableRooms(checkin: string, checkout: string, roomType: string, page: number): Observable<any> {
-        const params = new HttpParams()
-            .set('checkin', checkin)
-            .set('checkout', checkout)
-            .set('roomType', roomType)
-            .set('page', page.toString());
+    getAvailableRooms(checkin: string, checkout: string, roomType: string): Observable<any> {
+        const body = {
+            checkIn: checkin,
+            checkOut: checkout,
+            roomType: roomType
+          };
 
-        return this.http.get<any>(this.apiUrl, { params });
+          const headers = this.config.getHttpHeaders();
+          return this.http.post(this.apiUrl + 'rooms/available', body, { headers });
     }
 }

@@ -12,7 +12,8 @@ import { ContactComponent } from './contact/contact.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IntroduceComponent } from './introduce/introduce.component';
-import { PaymentComponent } from './payment/payment.component';  
+import { PaymentComponent } from './payment/payment.component';
+import { RoomAvailabilityComponent } from './room-availability/room-availability.component';  
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { PaymentComponent } from './payment/payment.component';
     UserBookingComponent,
     ContactComponent,
     IntroduceComponent,
-    PaymentComponent
+    PaymentComponent,
+    RoomAvailabilityComponent
   ],
   imports: [
     CommonModule,

@@ -28,7 +28,6 @@ public class BookingController {
         return bookingService.getBookingsByUserId(userId);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE', 'MANAGER')")
     @PostMapping
     public Booking createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return bookingService.createBooking(bookingRequest);

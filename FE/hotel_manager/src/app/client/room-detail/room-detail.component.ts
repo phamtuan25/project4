@@ -23,7 +23,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
   pricingOption: string = 'daily';
   bookingForm: FormGroup;
   userLogin: User | null = null;
-  availableProvisions: { provisionName: string, price: number }[] = [];
+  availableProvisions: { provisionId: number, provisionName: string, price: number }[] = [];
   selectedProvision: string[] = [];
   private userSubscription!: Subscription;
 
@@ -105,17 +105,20 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
   goBack(): void {
     const previousPage = history.state.fromPage || '/';
     const previousPageNum = history.state.page || 1;
-
-    if (previousPage === '/') {
-      this.router.navigate(['/']);
-    } else if (previousPage.includes('/room')) {
+    if (previousPage === 'room-availability') {
+      this.router.navigate(['/room-availability'], {
+        queryParams: { page: previousPageNum},
+        state: {params: history.state.params}
+      });
+    } else if (previousPage === 'room') {
       this.router.navigate(['/room'], {
-        queryParams: { page: previousPageNum } 
+        queryParams: { page: previousPageNum }
       });
     } else {
       this.router.navigate(['/']);
     }
   }
+  
 
   get provisions(): FormArray {
     return this.bookingForm.get('provisions') as FormArray;
@@ -164,6 +167,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     this.provisions.removeAt(index);
   }
 
+
   addToBooking(): void {
     if (this.bookingForm.valid) {
       if (!this.userLogin) {
@@ -171,22 +175,45 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
         this.router.navigate(['/login']);
         return;
       }
-      const roomId = this.roomId;
+  
+      const roomId = this.roomDetail?.roomId || this.bookingForm.get('roomId')?.value;
       const formValues = this.bookingForm.value;
-
-      const { pricingOption, ...formWithoutRoomType } = formValues;
-
-      const requestData = { ...formWithoutRoomType, roomId };
+      const { pricingOption, provisions, ...formWithoutRoomType } = formValues;
+  
+      const provisionIds = this.selectedProvision.map(provisionName => {
+        const provision = this.availableProvisions.find(p => p.provisionName === provisionName);
+        return provision ? provision.provisionId : null; 
+      }).filter(id => id !== null);
+  
+      const requestData = {
+        bookingDetailRequests: [{
+          roomId,
+          provisionIds,
+          checkIn: formWithoutRoomType.checkIn,
+          checkOut: formWithoutRoomType.checkOut,
+          specialRequests: formWithoutRoomType.specialRequests
+        }],
+        user: { userId: this.userLogin?.userId }
+      };
+  
+      console.log('Request Data:', requestData);  
+  
       this.clientService.addBooking(this.userLogin?.userId, requestData).subscribe(
         (response: any) => {
-          alert('Add room success');
+          console.log('API Response:', response);
+          alert('Room booked successfully');
+          this.router.navigate(['/booking-success']);
         },
         (error) => {
-          alert(error.error.message);
+          console.error('API Error:', error);  
+          alert(error?.error?.message || 'An error occurred while booking the room.');
         }
       );
     } else {
       this.errors.push('Please fill in both check-in and check-out fields.');
     }
   }
+  
+  
+  
 }

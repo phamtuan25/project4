@@ -115,14 +115,14 @@ public class RoomController {
     }
 
 
-    @GetMapping("/available")
-    public ResponseEntity<List<Room>> findAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
+    @PostMapping("/available")
+    public ResponseEntity<List<RoomResponse>> findAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
         LocalDateTime checkIn = request.getCheckIn();
         LocalDateTime checkOut = request.getCheckOut();
         Room.RoomType roomType = request.getRoomType();  // Lấy roomType kiểu Room.RoomType từ request
 
         // Gọi service để lấy các phòng có sẵn
-        List<Room> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, roomType); // Truyền roomType vào
+        List<RoomResponse> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, roomType); // Truyền roomType vào
 
         if (availableRooms.isEmpty()) {
             return ResponseEntity.noContent().build();  // Nếu không có phòng trống, trả về mã 204

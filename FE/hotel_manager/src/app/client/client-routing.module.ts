@@ -10,6 +10,7 @@ import { ContactComponent } from './contact/contact.component';
 import { UserBookingComponent } from './user-booking/user-booking.component';
 import { IntroduceComponent } from './introduce/introduce.component';
 import { PaymentComponent } from './payment/payment.component';
+import { RoomAvailabilityComponent } from './room-availability/room-availability.component';
 
 const routes: Routes = [
     {
@@ -27,6 +28,7 @@ const routes: Routes = [
               { path: 'contact', component: ContactComponent },
               { path: 'introduce', component: IntroduceComponent },
               { path: 'payment', component: PaymentComponent },
+              { path: 'room-availability', component: RoomAvailabilityComponent },
               { path: 'room-detail/:roomId', component: RoomDetailComponent},
               { path: '', redirectTo: '/room', pathMatch: 'full' },
         ]

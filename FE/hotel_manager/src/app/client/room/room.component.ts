@@ -37,7 +37,7 @@ export class RoomComponent implements OnInit {
 
   goToDetail(roomId: number): void {
     this.router.navigate(['/room-detail', roomId], {
-      state: { fromPage: this.router.url ,page: this.currentPage } 
+      state: { fromPage: 'room' ,page: this.currentPage } 
     });
   }
   getRooms(page: number, size: number, keyword: string): void {

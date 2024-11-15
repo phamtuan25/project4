@@ -1,11 +1,32 @@
 h2 {
     margin-bottom: 30px;
-    color: #2c3e50;
+    color: #004d40;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, #ffd700, #ff5722);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 20px 0;
+    padding: 10px;
+    border-bottom: 2px solid #ffd700;
 }
 
 h1 {
-    color: #343a40;
-    margin-bottom: 30px;
+    color: #004d40;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, #ffd700, #ff5722);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 20px 0;
+    padding: 10px;
+    border-bottom: 2px solid #ffd700;
 }
 
 .main-building {
@@ -121,7 +142,7 @@ h1 {
     font-size: 42px;
     font-weight: 700;
     line-height: 1.29em;
-    color: #1A1A1A;
+    color: #004d40;
     margin-bottom: 0px;
 }
 
@@ -133,11 +154,19 @@ h1 {
 }
 
 .heading-title {
+    text-align: center;
     font-size: 42px;
     font-weight: 700;
     line-height: 1.29em;
-    color: #1A1A1A;
-    margin-bottom: 0px;
+    color: #004d40;
+    margin-bottom: 40px;
+    background: linear-gradient(to right, #ffd700, #ff5722);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 10px;
+    border-bottom: 2px solid #ffd700;
 }
 
 p {
@@ -152,16 +181,12 @@ p {
     padding: 30px 0;
 }
 
-
-
 /* check available */
 .available {
     justify-content: center;
     align-items: center;
     display: flex;
-    /* Sử dụng flex để căn chỉnh form và nút */
     align-items: stretch;
-    /* Để các phần tử con chiếm hết chiều cao */
 }
 
 .available-group {
@@ -176,7 +201,6 @@ p {
     padding: 20px;
     max-width: 800px;
     flex: 1;
-    /* Để form chiếm không gian còn lại */
     display: flex;
     gap: 10px;
 }
@@ -184,9 +208,7 @@ p {
 .form-group {
     display: flex;
     flex-direction: column;
-    /* Để các nhãn nằm trên các trường nhập liệu */
     flex: 1;
-    /* Cho phép form-group chiếm không gian còn lại */
 }
 
 .form-group label {
@@ -198,10 +220,8 @@ input[type="datetime-local"],
 select {
     padding: 10px;
     border: none;
-    /* Bỏ viền */
     background-color: #fff;
     flex: 1;
-    /* Để các trường chiếm không gian còn lại */
     height: 100%;
     box-shadow: none;
     outline: none;
@@ -210,13 +230,11 @@ select {
 input[type="datetime-local"]:focus,
 select:focus {
     outline: none;
-    /* Bỏ outline khi trường được chọn */
 }
 
 .submit-container {
     display: flex;
     align-items: stretch;
-    /* Để nút có cùng chiều cao với thẻ form */
 }
 
 input[type="submit"] {

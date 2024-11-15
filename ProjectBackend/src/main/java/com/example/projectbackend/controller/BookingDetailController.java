@@ -36,7 +36,6 @@ public class BookingDetailController {
     public BookingDetailResponse getBookingDetailById(@PathVariable Long bookingDetailId){
         return bookingDetailService.getDetailBookingDetail(bookingDetailId);
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @PostMapping("/{bookingId}")
     public BookingDetail createBookingDetail(@PathVariable Long bookingId, @Valid @RequestBody BookingDetailRequest bookingDetailRequest){
         return bookingDetailService.createBookingDetail(bookingDetailRequest, bookingId);
