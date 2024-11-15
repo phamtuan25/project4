@@ -8,20 +8,20 @@ declare var $: any
   templateUrl: './provision.component.html',
   styleUrl: './provision.component.css'
 })
-export class ProvisionComponent implements OnInit{
+export class ProvisionComponent implements OnInit {
   provisions: Provison[] = [];
   keyword: string = '';
-  errors: any[] = []; 
+  errors: any[] = [];
   totalProvisions: number = 0;
-  pageSize: number = 4; 
+  pageSize: number = 4;
   currentPage: number = 1;
   totalPages: number = 0;
 
   constructor(
-    public client: ClientComponent, 
-    private clientService: ClientService, 
-    private router: Router,        
-    private route: ActivatedRoute  
+    public client: ClientComponent,
+    private clientService: ClientService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +32,7 @@ export class ProvisionComponent implements OnInit{
       if (page) {
         this.currentPage = +page;
       }
-      this.getProvisions(this.currentPage, this.pageSize, this.keyword); 
+      this.getProvisions(this.currentPage, this.pageSize, this.keyword);
     });
   }
 
@@ -65,7 +65,7 @@ export class ProvisionComponent implements OnInit{
       queryParamsHandling: 'merge',
     });
   }
-  }
+}
 
 export interface Provison {
   provisonId: number;

@@ -15,8 +15,8 @@ export class ClientService {
 
     getUserLogin(email: string | null) {
         const headers = this.config.getHttpHeaders();
-        return this.http.post(this.apiUrl + 'users/userLogin', email,{headers})
-      }
+        return this.http.post(this.apiUrl + 'users/userLogin', email, { headers })
+    }
     //Call Api Room
     getRooms(page: number, size: number, keyword: string, status?: string) {
         const headers = this.config.getHttpHeaders();
@@ -32,8 +32,8 @@ export class ClientService {
         return this.http.get<Room>(`${this.apiUrl}rooms/${roomId}`, { headers });
     }
 
-     //Call Api Provision
-     getProvision(page: number, size: number, keyword: string, status?: string) {
+    //Call Api Provision
+    getProvision(page: number, size: number, keyword: string, status?: string) {
         const headers = this.config.getHttpHeaders();
         var params = `page=${page}&size=${size}&keyword=${keyword}`;
         if (status) {
@@ -44,8 +44,8 @@ export class ClientService {
 
     getProvisionBooking(status?: string) {
         const headers = this.config.getHttpHeaders();
-        return this.http.get<Provision[]>(`${this.apiUrl}provisions`, { headers});
-      }
+        return this.http.get<Provision[]>(`${this.apiUrl}provisions`, { headers });
+    }
 
     //Call Api Contact
     addContact(message: string, userId: number): Observable<any> {
@@ -55,40 +55,40 @@ export class ClientService {
         };
         const headers = this.config.getHttpHeaders();
         return this.http.post(this.apiUrl + 'contacts', body, { headers });
-      }
+    }
     //Call api booking
-    addBooking( userId: number | undefined, bookingDetailResquest: any): Observable<any> {
-    
-    const body = {
-        bookingDetailRequests: [bookingDetailResquest],
-        user: {
-            userId: userId
-        }
-    };
-    
-    const headers = this.config.getHttpHeaders();
-    console.log('body',body)
-    return this.http.post('http://localhost:8080/api/bookings', body, { headers });
+    addBooking(userId: number | undefined, bookingDetailResquest: any): Observable<any> {
+
+        const body = {
+            bookingDetailRequests: [bookingDetailResquest],
+            user: {
+                userId: userId
+            }
+        };
+
+        const headers = this.config.getHttpHeaders();
+        console.log('body', body)
+        return this.http.post('http://localhost:8080/api/bookings', body, { headers });
     }
 
-    getBookingByUser(userId: number | undefined): Observable<any>{
+    getBookingByUser(userId: number | undefined): Observable<any> {
         const headers = this.config.getHttpHeaders();
-        return this.http.get(this.apiUrl + 'bookings/'+ userId, { headers });
+        return this.http.get(this.apiUrl + 'bookings/' + userId, { headers });
     }
 
     //Call api user
     editUser(userId: number, address: string, email: string, phoneNumber: string, role: string): Observable<any> {
         const body = {
-          address: address,
-          email: email,
-          phoneNumber: phoneNumber,
-          role: role
+            address: address,
+            email: email,
+            phoneNumber: phoneNumber,
+            role: role
         };
         const headers = this.config.getHttpHeaders();
         return this.http.put(this.apiUrl + 'users/' + userId, body, { headers });
-      }
+    }
 
-      changePassword(userId: number, currentPassword: string, newPassword: string, confirmPassword: string ): Observable<any> {
+    changePassword(userId: number, currentPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
         const body = {
             currentPassword: currentPassword,
             newPassword: newPassword,
@@ -96,5 +96,17 @@ export class ClientService {
         };
         const headers = this.config.getHttpHeaders();
         return this.http.put(this.apiUrl + 'users/changePassword/' + userId, body, { headers });
-      }
+    }
+
+    //Call api Home
+
+    getAvailableRooms(checkin: string, checkout: string, roomType: string, page: number): Observable<any> {
+        const params = new HttpParams()
+            .set('checkin', checkin)
+            .set('checkout', checkout)
+            .set('roomType', roomType)
+            .set('page', page.toString());
+
+        return this.http.get<any>(this.apiUrl, { params });
+    }
 }
