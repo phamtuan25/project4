@@ -1,26 +1,28 @@
 <div class="container mt-5 available">
     <div class="available-group">
         <div class="availability-form">
-            <div class="form-group">
-                <label for="checkin">Ngày Giờ Nhận Phòng:</label>
-                <input type="datetime-local" id="checkin" name="checkin" required>
-            </div>
-            <div class="form-group">
-                <label for="checkout">Ngày Giờ Trả Phòng:</label>
-                <input type="datetime-local" id="checkout" name="checkout" required>
-            </div>
-            <div class="form-group">
-                <label for="room-type">Loại Phòng:</label>
-                <select id="room-type" name="room-type" required>
-                    <option value="">Chọn loại phòng</option>
-                    <option value="single">Phòng Đơn</option>
-                    <option value="double">Phòng Đôi</option>
-                    <option value="suite">Phòng Suite</option>
-                </select>
-            </div>
-        </div>
-        <div class="submit-container">
-            <input type="submit" value="Kiểm Tra">
+            <form (ngSubmit)="checkAvailability()">
+                <div class="form-group">
+                    <label for="checkin">Ngày Giờ Nhận Phòng:</label>
+                    <input type="datetime-local" id="checkin" [(ngModel)]="checkin" name="checkin" required
+                        class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="checkout">Ngày Giờ Trả Phòng:</label>
+                    <input type="datetime-local" id="checkout" [(ngModel)]="checkout" name="checkout" required
+                        class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="room-type">Loại Phòng:</label>
+                    <select id="room-type" [(ngModel)]="roomType" name="roomType" required class="form-control">
+                        <option value="">Chọn loại phòng</option>
+                        <option *ngFor="let type of roomTypes" [value]="type.id">{{ type.name }}</option>
+                    </select>
+                </div>
+                <div class="submit-container">
+                    <button type="submit" class="btn btn-primary">Kiểm Tra</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -31,38 +33,45 @@
         cho đến phòng Deluxe Family. Mỗi phòng đều được trang bị đầy đủ tiện nghi và có ban công riêng. Khách sạn
         còn có nhà hàng, bar, hồ bơi, spa, gym và karaoke để phục vụ nhu cầu giải trí của du khách.</p>
 </div>
-<div class="room-list">
-    <div class="container mt-5">
-        <div class="row mt-5">
-            <!-- Card Phòng 1 -->
-            <div class="col-md-6">
+<div class="room-list mt-5">
+    <div class="container">
+        <div class="row" *ngIf="availableRooms.length > 0">
+            <div class="col-md-6" *ngFor="let room of availableRooms">
                 <div class="card">
-                    <img src="hotel2.jpg" class="card-img-top" alt="Room 1">
-                    <div class="card-body">
-                        <h3 class="card-title">Superior Room</h3>
-                        <p class="card-text">Nếu bạn muốn có một phòng ngủ ấm cúng, tiện nghi và hợp túi tiền, phòng
-                            Superior Room là sự</p>
-                        <button class="btn btn-custom">Book</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Phòng 2 -->
-            <div class="col-md-6">
-                <div class="card">
-                    <img src="hotel3.jpg" class="card-img-top" alt="Room 2">
-                    <div class="card-body">
-                        <h3 class="card-title">Connecting Room</h3>
-                        <p class="card-text">A cozy room perfect for a relaxing stay with all essential amenities.
-                        </p>
-                        <button class="btn btn-custom">Book</button>
+                    <img [src]="'http://localhost:8080/upload_images/' + room.images[0]" alt="Room Image" class="card-img-top" />                    <div class="card-body">
+                        <h3 class="card-title">{{ room.name }}</h3>
+                        <p class="card-text">{{ room.description }}</p>
+                        <p><strong>Giá: </strong>{{ room.price | currency }}</p>
+                        <div class="d-grid gap-2 mt-3">
+                            <a [routerLink]="['/room-detail', room.roomId]" [queryParams]="{ page: currentPage }" class="btn btn-primary">More Information & Book</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div *ngIf="availableRooms.length === 0">
+            <p>Không có phòng trống cho lựa chọn của bạn.</p>
+        </div>
+
+        <!-- Phân trang -->
+        <div class="pagination mt-4">
+            <button class="btn btn-secondary" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Trang
+                Trước</button>
+
+            <span>Trang {{ currentPage }} / {{ totalPages }}</span>
+
+            <button class="btn btn-secondary" (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages">Trang Sau</button>
+
+            <div class="page-buttons">
+                <button *ngFor="let page of [].constructor(totalPages); let i = index" class="btn btn-outline-primary"
+                    [class.active]="currentPage === (i + 1)" (click)="goToPage(i + 1)">
+                    {{ i + 1 }}
+                </button>
+            </div>
+        </div>
     </div>
 </div>
-
 <div class="text-center container mt-5">
     <h3 class="heading-title">Lý do để bạn chọn chúng tôi</h3>
     <p>Bạn muốn nghỉ dưỡng tại một nơi thoải mái, yên tĩnh và gần gũi với thiên nhiên? Bạn muốn được phục vụ bởi
