@@ -98,22 +98,15 @@ export class ClientService {
         return this.http.put(this.apiUrl + 'users/changePassword/' + userId, body, { headers });
     }
 
-
     //Call api Home
 
-    getRoomTypes(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/get-room-types`);
-    }
-
-    // API lấy danh sách phòng có sẵn với phân trang
-    getRoomsWithHomePage(page: number, size: number, checkin: string, checkout: string, roomType: string): Observable<any> {
-        let params = new HttpParams()
-            .set('page', page.toString())
-            .set('size', size.toString())
+    getAvailableRooms(checkin: string, checkout: string, roomType: string, page: number): Observable<any> {
+        const params = new HttpParams()
             .set('checkin', checkin)
             .set('checkout', checkout)
-            .set('roomType', roomType);
+            .set('roomType', roomType)
+            .set('page', page.toString());
 
-        return this.http.get<any>(`${this.apiUrl}/get-available-rooms`, { params });
+        return this.http.get<any>(this.apiUrl, { params });
     }
 }
