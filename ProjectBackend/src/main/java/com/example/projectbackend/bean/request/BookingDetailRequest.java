@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,4 +32,6 @@ public class BookingDetailRequest {
     private String specialRequests;
 
     private Double price;
+
+    private List<Long> provisionIds;
 }

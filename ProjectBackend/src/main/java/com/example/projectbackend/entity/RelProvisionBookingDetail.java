@@ -1,6 +1,7 @@
 package com.example.projectbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -26,9 +27,6 @@ public class RelProvisionBookingDetail {
     @ManyToOne
     @JoinColumn(name = "booking_detail_id")
     private BookingDetail bookingDetail;
-
-    @Column(name = "booking_id")
-    private Long bookingId;
 
     @Column(name = "price")
     private Double price;

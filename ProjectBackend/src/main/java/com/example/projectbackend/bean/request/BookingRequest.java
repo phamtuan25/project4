@@ -17,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequest {
-    @NotEmpty(message = "Room numbers are required")
-    private List<BookingDetailRequest> bookingDetailRequests;
+    @NotNull(message = "Room numbers are required")
+    private BookingDetailRequest bookingDetailRequests;
 
     @NotNull(message = "User is required")
     private User user;

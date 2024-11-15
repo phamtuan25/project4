@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +23,6 @@ public class BookingDetailResponse {
     private LocalDateTime updatedAt;
     private BookingDetail.BookingDetailStatus status;
     private String specialRequests;
+    private List<Long> provisionIds;
     private Double price;
 }

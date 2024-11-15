@@ -2,15 +2,10 @@ package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.response.BookingDetailResponse;
-import com.example.projectbackend.entity.Booking;
-import com.example.projectbackend.entity.BookingDetail;
-import com.example.projectbackend.entity.Room;
+import com.example.projectbackend.entity.*;
 import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingDetailMapper;
-import com.example.projectbackend.repository.BookingDetailRepository;
-import com.example.projectbackend.repository.BookingRepository;
-import com.example.projectbackend.repository.ProvisionRepository;
-import com.example.projectbackend.repository.RoomRepository;
+import com.example.projectbackend.repository.*;
 import com.example.projectbackend.service.BookingDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +27,8 @@ public class BookingDetailServiceImpl implements BookingDetailService {
     private final BookingDetailRepository bookingDetailRepository;
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
+    private final ProvisionRepository provisionRepository;
+    private final RelProvisionBookingDetailRepository relProvisionBookingDetailRepository;  // Thêm phụ thuộc vào RelProvisionBookingDetailRepository
 
     @Override
     public Page<BookingDetailResponse> getAllBookingDetails(Pageable pageable, String keyword, Long bookingId) {
@@ -55,7 +52,7 @@ public class BookingDetailServiceImpl implements BookingDetailService {
     @Override
     public BookingDetail createBookingDetail(BookingDetailRequest bookingDetailRequest, Long bookingId) {
         // Chuyển đổi từ request thành entity
-        BookingDetail bookingDetail = BookingDetailMapper.convertFromRequest(bookingDetailRequest);
+        BookingDetail bookingDetail = BookingDetailMapper.convertFromRequest(bookingDetailRequest, provisionRepository);
 
         // Tìm booking
         Booking booking = bookingRepository.findById(bookingId)
@@ -67,7 +64,7 @@ public class BookingDetailServiceImpl implements BookingDetailService {
                 .orElseThrow(() -> new NotFoundException("RoomNotFound", "Phòng không tìm thấy với ID: " + bookingDetailRequest.getRoomId()));
         bookingDetail.setRoom(room);
 
-        // Kiểm tra nếu phòng có sẵn trong khoảng thời gian đặt
+        // Kiểm tra phòng có sẵn không
         boolean isRoomAvailable = checkRoomAvailability(room, bookingDetailRequest.getCheckIn(), bookingDetailRequest.getCheckOut());
         if (!isRoomAvailable) {
             throw new IllegalArgumentException("Phòng đã được đặt trong khoảng thời gian bạn yêu cầu");
@@ -77,20 +74,23 @@ public class BookingDetailServiceImpl implements BookingDetailService {
         room.setStatus(Room.RoomStatus.BOOKED);
         roomRepository.save(room);
 
-        // Set the status to PENDING when creating the BookingDetail
-        bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set BookingDetail status to PENDING
+        // Set trạng thái bookingDetail là PENDING
+        bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING);
 
-        return bookingDetailRepository.save(bookingDetail);
+        // Lưu BookingDetail và lấy ID
+        bookingDetail = bookingDetailRepository.save(bookingDetail);
+
+        // Lưu RelProvisionBookingDetail vào cơ sở dữ liệu
+        relProvisionBookingDetailRepository.saveAll(bookingDetail.getRelProvisionBookingDetails());
+
+        return bookingDetail;
     }
-
 
     private boolean checkRoomAvailability(Room room, LocalDateTime checkIn, LocalDateTime checkOut) {
         // Kiểm tra nếu phòng đã có booking trong khoảng thời gian này
         List<BookingDetail> overlappingBookings = bookingDetailRepository.findOverlappingBookings(room.getRoomId(), checkIn, checkOut);
         return overlappingBookings.isEmpty();
     }
-
-
 
     @Override
     public BookingDetail updateBookingDetail(Long bookingDetailId, BookingDetail bookingDetail) {
@@ -124,9 +124,6 @@ public class BookingDetailServiceImpl implements BookingDetailService {
         // Lưu BookingDetail đã được cập nhật
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
-
-
-
 
     @Override
     public void deleteBookingDetail(Long bookingDetailId) {
