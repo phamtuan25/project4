@@ -128,6 +128,8 @@ import java.util.stream.Collectors;
                 relProvisionBookingDetail.setProvision(provision);
                 relProvisionBookingDetail.setBookingDetail(bookingDetail);
                 relProvisionBookingDetail.setPrice(provision.getPrice().doubleValue()); // Lưu giá của proviiosn
+                relProvisionBookingDetail.setCreatedAt(LocalDateTime.now());  // Gán thời gian hiện tại cho createdAt
+                relProvisionBookingDetail.setStatus(RelProvisionBookingDetail.RelProvisionBookingDetailStatus.UNUSED);
                 // Gắn các RelProvisionBookingDetail vào bookingDetail
                 relProvisionBookingDetailRepository.save(relProvisionBookingDetail);
             }
@@ -156,11 +158,9 @@ import java.util.stream.Collectors;
 
         // Kiểm tra nếu trạng thái booking được cập nhật thành FAILED
         if (booking.getStatus() == Booking.BookingStatus.FAILED) {
-            // Cập nhật trạng thái của tất cả các bookingDetail liên quan thành CANCELED
             for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
                 bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CANCELED);
 
-                // Cập nhật trạng thái của tất cả các RelProvisionBookingDetail liên quan thành UNUSED
                 if (bookingDetail.getRelProvisionBookingDetails() != null) {
                     for (RelProvisionBookingDetail relProvisionBookingDetail : bookingDetail.getRelProvisionBookingDetails()) {
                         relProvisionBookingDetail.setStatus(RelProvisionBookingDetail.RelProvisionBookingDetailStatus.UNUSED);
@@ -170,7 +170,6 @@ import java.util.stream.Collectors;
                     relProvisionBookingDetailRepository.saveAll(bookingDetail.getRelProvisionBookingDetails());
                 }
 
-                // Cập nhật trạng thái của phòng liên quan thành AVAILABLE
                 Room room = bookingDetail.getRoom();
                 if (room != null && room.getStatus() != Room.RoomStatus.AVAILABLE) {
                     room.setStatus(Room.RoomStatus.AVAILABLE);
@@ -181,16 +180,13 @@ import java.util.stream.Collectors;
 
         // Kiểm tra nếu trạng thái booking được cập nhật thành COMPLETED
         if (booking.getStatus() == Booking.BookingStatus.COMPLETED) {
-            // Cập nhật trạng thái của tất cả các bookingDetail liên quan thành CONFIRMED
             for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
-                // Chỉ cập nhật nếu trạng thái hiện tại không phải là CANCELED hoặc CONFIRMED
                 if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED &&
                         bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CONFIRMED) {
                     bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
-                    bookingDetailRepository.save(bookingDetail); // Lưu lại booking detail sau khi cập nhật trạng thái
+                    bookingDetailRepository.save(bookingDetail);
                 }
 
-                // Cập nhật trạng thái của phòng liên quan thành AVAILABLE
                 Room room = bookingDetail.getRoom();
                 if (room != null && room.getStatus() != Room.RoomStatus.AVAILABLE) {
                     room.setStatus(Room.RoomStatus.AVAILABLE);
@@ -208,6 +204,7 @@ import java.util.stream.Collectors;
         // Lưu booking đã cập nhật vào cơ sở dữ liệu
         return bookingRepository.save(bookingUpdate);
     }
+
 
 
 

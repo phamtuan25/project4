@@ -92,10 +92,9 @@ public class Booking {
 
     public void calculateTotalAmount() {
         double totalAmount = 0;
-        // Duyệt qua từng BookingDetail để tính tổng giá trị
+
         // Duyệt qua từng BookingDetail để tính tổng giá trị
         for (BookingDetail bookingDetail : bookingDetails) {
-            // Tính giá của từng bookingDetail = giá phòng + các provision liên quan
             double roomPrice = calculateRoomPrice(bookingDetail);
 
             // Gán giá phòng vào thuộc tính price của bookingDetail
@@ -106,7 +105,10 @@ public class Booking {
             // Tính tổng giá trị của provisions liên quan đến bookingDetail
             if (bookingDetail.getRelProvisionBookingDetails() != null) {
                 for (RelProvisionBookingDetail rel : bookingDetail.getRelProvisionBookingDetails()) {
-                    provisionsPrice += rel.getProvision().getPrice().doubleValue();
+                    // Chỉ cộng price nếu status không phải UNUSED
+                    if (rel.getStatus() != RelProvisionBookingDetail.RelProvisionBookingDetailStatus.UNUSED) {
+                        provisionsPrice += rel.getProvision().getPrice().doubleValue();
+                    }
                 }
             }
 
@@ -120,6 +122,7 @@ public class Booking {
         // Tính deposit (10% của tổng số tiền)
         this.deposit = totalAmount * 0.10;
     }
+
 
 
 }

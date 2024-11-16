@@ -9,6 +9,7 @@ import com.example.projectbackend.exception.NotFoundException;
 import com.example.projectbackend.mapper.BookingMapper;
 import com.example.projectbackend.mapper.RelProvisionBookingDetailMapper;
 import com.example.projectbackend.repository.BookingDetailRepository;
+import com.example.projectbackend.repository.BookingRepository;
 import com.example.projectbackend.repository.ProvisionRepository;
 import com.example.projectbackend.repository.RelProvisionBookingDetailRepository;
 import com.example.projectbackend.service.RelProvisionBookingDetailService;
@@ -31,6 +32,7 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
     private final RelProvisionBookingDetailRepository relProvisionBookingDetailRepository;
     private final BookingDetailRepository bookingDetailRepository;
     private final ProvisionRepository provisionRepository;
+    private final BookingRepository bookingRepository;
     @Override
     public Page<RelProvisionBookingDetailResponse> getAllRel(@PageableDefault(size = 10, page = 0) Pageable pageable,
                                                              @RequestParam(required = false) String keyword) {
@@ -75,12 +77,50 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
 
     @Override
     public RelProvisionBookingDetail updateRel(Long relId, RelProvisionBookingDetail relProvisionBookingDetail) {
+        // Tìm đối tượng RelProvisionBookingDetail hiện tại từ database
         RelProvisionBookingDetail relProvisionBookingDetailUpdate = relProvisionBookingDetailRepository.findById(relId).orElse(null);
-        if(relProvisionBookingDetailUpdate != null){
-            setRelProvisionBookingDetail(relProvisionBookingDetailUpdate, relProvisionBookingDetail);
+
+        // Kiểm tra nếu không tìm thấy đối tượng
+        if (relProvisionBookingDetailUpdate == null) {
+            throw new NotFoundException("RelProvisionBookingDetailNotFound", "Không tìm thấy RelProvisionBookingDetail với id " + relId);
         }
-        return relProvisionBookingDetailRepository.save(relProvisionBookingDetail);
+
+        // Cập nhật chỉ trường status
+        relProvisionBookingDetailUpdate.setStatus(relProvisionBookingDetail.getStatus());
+
+        // Nếu status là USED, cập nhật lại giá trị price và tổng amount của BookingDetail
+        if (relProvisionBookingDetailUpdate.getStatus() == RelProvisionBookingDetail.RelProvisionBookingDetailStatus.USED) {
+            // Lấy giá trị price của RelProvisionBookingDetail (nếu có)
+            Double provisionPrice = relProvisionBookingDetailUpdate.getPrice(); // Giá trị đã được gán từ trước
+
+            // Lấy BookingDetail liên quan
+            BookingDetail bookingDetail = relProvisionBookingDetailUpdate.getBookingDetail();
+            if (bookingDetail != null) {
+                // Lấy giá hiện tại của BookingDetail
+                Double currentPrice = bookingDetail.getPrice();
+
+                // Cộng giá trị price của RelProvisionBookingDetail vào giá trị price của BookingDetail
+                Double newPrice = currentPrice + provisionPrice;
+                bookingDetail.setPrice(newPrice);
+
+                // Tính lại totalAmount của Booking liên quan
+                Booking booking = bookingDetail.getBooking();
+                if (booking != null) {
+                    // Tính lại totalAmount và deposit cho Booking
+                    booking.calculateTotalAmount();
+
+                    // Lưu lại BookingDetail và Booking sau khi cập nhật
+                    bookingDetailRepository.save(bookingDetail);
+                    bookingRepository.save(booking);
+                }
+            }
+        }
+
+        // Lưu lại đối tượng RelProvisionBookingDetail đã được cập nhật
+        return relProvisionBookingDetailRepository.save(relProvisionBookingDetailUpdate);
     }
+
+
 
     @Override
     public void deleteRel(Long relId) {
@@ -91,8 +131,5 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
         relProvisionBookingDetailRepository.deleteById(relId);
     }
 
-    private void setRelProvisionBookingDetail(RelProvisionBookingDetail relProvisionBookingDetailUpdate, RelProvisionBookingDetail relProvisionBookingDetailInput){
-        relProvisionBookingDetailUpdate.setStatus(relProvisionBookingDetailInput.getStatus());
-        relProvisionBookingDetailUpdate.setPrice(relProvisionBookingDetailInput.getPrice());
-    }
+
 }
