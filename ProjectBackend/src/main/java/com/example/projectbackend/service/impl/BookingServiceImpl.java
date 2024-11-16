@@ -114,11 +114,10 @@ import java.util.stream.Collectors;
         bookingDetail.setRoom(room);
         bookingDetail.setBooking(booking);
         bookingDetail.setCreatedAt(LocalDateTime.now());
-        bookingDetail.setPrice(room.getPrice());
         bookingDetail.setCheckIn(bookingDetailRequest.getCheckIn());
         bookingDetail.setCheckOut(bookingDetailRequest.getCheckOut());
         bookingDetail.setSpecialRequests(bookingDetailRequest.getSpecialRequests());
-        bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING); // Set status là PENDING cho booking detail
+        bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING);// Set status là PENDING cho booking detail
 
         bookingDetailRepository.save(bookingDetail);
 

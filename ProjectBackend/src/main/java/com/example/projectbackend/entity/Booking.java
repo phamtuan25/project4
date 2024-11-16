@@ -66,47 +66,41 @@ public class Booking {
         LocalDateTime checkIn = bookingDetail.getCheckIn();
         LocalDateTime checkOut = bookingDetail.getCheckOut();
 
-        // Kiểm tra giá trị của isHourly, nếu là null thì mặc định là false (tính giá theo ngày)
-        Boolean isHourly = room.getIsHourly();
-        if (isHourly == null) {
-            isHourly = Boolean.FALSE;  // Giá trị mặc định là false (tính giá theo ngày)
-        }
+        // Tính tổng số phút giữa checkIn và checkOut
+        long minutes = Duration.between(checkIn, checkOut).toMinutes();
 
-        double roomPrice;
+        // Tính số giờ, làm tròn lên nếu có phần dư
+        long hours = (minutes + 59) / 60;  // Làm tròn lên theo giờ
 
-        // Nếu phòng tính giá theo giờ
-        if (isHourly) {
-            // Tính số phút giữa checkIn và checkOut
-            long minutes = Duration.between(checkIn, checkOut).toMinutes();
+        // Tính số ngày, làm tròn lên nếu có phần dư
+        long days = Duration.between(checkIn, checkOut).toDays();
+        days = Math.max(days, 1);  // Nếu số ngày < 1, tính luôn là 1 ngày
 
-            // Nếu số phút > 0, chúng ta cần làm tròn lên thành giờ tiếp theo
-            long hours = (minutes + 59) / 60;  // Làm tròn lên giờ tiếp theo nếu có phút dư
+        double roomPrice = 0;
 
-            // Tính giá phòng theo số giờ
+        // Nếu số giờ < 24 (thời gian ít hơn một ngày), tính giá theo giờ
+        if (hours < 24) {
             roomPrice = room.getHourPrice() * hours;
         } else {
-            // Nếu phòng tính giá theo ngày
-            // Tính số ngày giữa checkIn và checkOut
-            long days = Duration.between(checkIn, checkOut).toDays();
-
-            // Nếu số ngày < 1, tính 1 ngày
-            days = Math.max(days, 1);
-
-            // Tính giá phòng theo số ngày
+            // Nếu số ngày >= 1, tính giá theo ngày
             roomPrice = room.getDayPrice() * days;
         }
 
-        // Trả về giá phòng tính được
         return roomPrice;
     }
+
 
     public void calculateTotalAmount() {
         double totalAmount = 0;
 
         // Duyệt qua từng BookingDetail để tính tổng giá trị
+        // Duyệt qua từng BookingDetail để tính tổng giá trị
         for (BookingDetail bookingDetail : bookingDetails) {
             // Tính giá của từng bookingDetail = giá phòng + các provision liên quan
             double roomPrice = calculateRoomPrice(bookingDetail);
+
+            // Gán giá phòng vào thuộc tính price của bookingDetail
+            bookingDetail.setPrice(roomPrice); // Gắn giá phòng vào BookingDetail
 
             double provisionsPrice = 0;
 
