@@ -9,6 +9,8 @@ import com.example.projectbackend.service.RelProvisionBookingDetailService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class RelProvisionBookingDetailController {
     private final RelProvisionBookingDetailService relProvisionBookingDetailService;
 
     @GetMapping
-    public List<RelProvisionBookingDetailResponse> getAllRel(){
-        return relProvisionBookingDetailService.getAllRel();
+    public Page<RelProvisionBookingDetailResponse> getAllRel(Pageable pageable, @RequestParam(required = false) String keyword){
+        return relProvisionBookingDetailService.getAllRel(pageable, keyword);
     }
 
     @GetMapping("/{relId}")

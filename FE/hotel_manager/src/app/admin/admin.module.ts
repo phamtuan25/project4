@@ -10,6 +10,7 @@ import { ProvisionManagerComponent } from './provision-manager/provision-manager
 import { BookingDetailManagerComponent } from './booking-detail-manager/booking-detail-manager.component';
 import { ContactManagerComponent } from './contact-manager/contact-manager.component';
 import { PaymentManagerComponent } from './payment-manager/payment-manager.component';
+import { ProvisionBookingManagerComponent } from './provision-booking-manager/provision-booking-manager.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PaymentManagerComponent } from './payment-manager/payment-manager.compo
     UserManagerComponent,
     BookingDetailManagerComponent,
     ContactManagerComponent,
-    PaymentManagerComponent
+    PaymentManagerComponent,
+    ProvisionBookingManagerComponent
   ],
   imports: [
     CommonModule,

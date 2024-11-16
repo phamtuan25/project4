@@ -10,10 +10,14 @@ public class RelProvisionBookingDetailMapper {
     public static RelProvisionBookingDetailResponse convertToResponse(RelProvisionBookingDetail relProvisionBookingDetail){
         RelProvisionBookingDetailResponse relProvisionBookingDetailResponse = new RelProvisionBookingDetailResponse();
         relProvisionBookingDetailResponse.setRelId(relProvisionBookingDetail.getRelId());
-        relProvisionBookingDetailResponse.setProvisionId(relProvisionBookingDetailResponse.getProvisionId());
-        relProvisionBookingDetailResponse.setBookingDetailId(relProvisionBookingDetailResponse.getBookingDetailId());
+        relProvisionBookingDetailResponse.setProvisionId(relProvisionBookingDetail.getProvision().getProvisionId());
+        relProvisionBookingDetailResponse.setBookingDetailId(relProvisionBookingDetail.getBookingDetail().getBookingDetailId());
+        relProvisionBookingDetailResponse.setRoomNumber(relProvisionBookingDetail.getBookingDetail().getRoom().getRoomNumber());
+        relProvisionBookingDetailResponse.setProvisionName(relProvisionBookingDetail.getProvision().getProvisionName());
         relProvisionBookingDetailResponse.setStatus(relProvisionBookingDetail.getStatus());
         relProvisionBookingDetailResponse.setPrice(relProvisionBookingDetail.getPrice());
+        relProvisionBookingDetailResponse.setCreatedAt(relProvisionBookingDetail.getCreatedAt());
+        relProvisionBookingDetailResponse.setUpdatedAt(relProvisionBookingDetail.getUpdatedAt());
         return relProvisionBookingDetailResponse;
     }
 

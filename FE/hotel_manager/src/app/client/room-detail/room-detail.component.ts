@@ -172,7 +172,9 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     if (this.bookingForm.valid) {
       if (!this.userLogin) {
         alert('You need to log in to your account to book');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload(); 
+        });
         return;
       }
   
@@ -180,26 +182,25 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       const formValues = this.bookingForm.value;
       const { pricingOption, provisions, ...formWithoutRoomType } = formValues;
   
-      const provisionIds = this.selectedProvision.map(provisionName => {
-        const provision = this.availableProvisions.find(p => p.provisionName === provisionName);
-        return provision ? provision.provisionId : null; 
-      }).filter(id => id !== null);
-  
+      const provisionIds =  this.selectedProvision
+      .map(provisionName => {
+        const obj = this.availableProvisions.find(item => item.provisionName === provisionName);
+        return obj ? obj.provisionId : null;
+      })
+      .filter(id => id !== null);
       const requestData = {
-        bookingDetailRequests: [{
           roomId,
           provisionIds,
           checkIn: formWithoutRoomType.checkIn,
           checkOut: formWithoutRoomType.checkOut,
           specialRequests: formWithoutRoomType.specialRequests
-        }],
-        user: { userId: this.userLogin?.userId }
-      };
+        };
   
       this.clientService.addBooking(this.userLogin?.userId, requestData).subscribe(
         (response: any) => {
-          console.log('API Response:', response);
-          this.router.navigate(['/booking-success']);
+          alert('Booking successful');
+          this.router.navigate(['/room']);
+          
         },
         (error) => {
           alert(error?.error?.message || 'An error occurred while booking the room.');

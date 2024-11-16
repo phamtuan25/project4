@@ -92,7 +92,6 @@ public class Booking {
 
     public void calculateTotalAmount() {
         double totalAmount = 0;
-
         // Duyệt qua từng BookingDetail để tính tổng giá trị
         // Duyệt qua từng BookingDetail để tính tổng giá trị
         for (BookingDetail bookingDetail : bookingDetails) {

@@ -14,8 +14,10 @@ public class RelProvisionBookingDetailResponse {
     private Long relId;
     private Long provisionId;
     private Long bookingDetailId;
-    private Long bookingId;
+    private String roomNumber;
+    private String provisionName;
     private Double price;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private RelProvisionBookingDetail.RelProvisionBookingDetailStatus status;
 }

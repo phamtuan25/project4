@@ -10,6 +10,7 @@ import { Booking } from './booking-manager/booking-manager.component';
 import { BookingDetail } from './booking-detail-manager/booking-detail-manager.component';
 import { Contact } from './contact-manager/contact-manager.component';
 import { Payment } from './payment-manager/payment-manager.component';
+import { ProvisionBooking } from './provision-booking-manager/provision-booking-manager.component';
 
 @Injectable({
   providedIn: 'root'
@@ -210,6 +211,12 @@ export class AdminService {
   getPayment(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
     return this.http.get<Payment[]>(`${this.apiUrl}payments?page=${page}&size=${size}&keyword=${keyword}`, { headers });
+  }
+
+  //Call Api Provision Booking
+  getProvisionBooking(page: number, size: number, keyword: string) {
+    const headers = this.config.getHttpHeaders();
+    return this.http.get<ProvisionBooking[]>(`${this.apiUrl}relProBook?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 }
 

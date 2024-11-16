@@ -74,7 +74,7 @@ export class ClientService {
     addBooking(userId: number | undefined, bookingDetailResquest: any): Observable<any> {
 
         const body = {
-            bookingDetailRequests: [bookingDetailResquest],
+            bookingDetailRequests: bookingDetailResquest,
             user: {
                 userId: userId
             }

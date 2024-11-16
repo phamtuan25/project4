@@ -101,7 +101,7 @@
                           <div *ngFor="let provision of provisions.controls; let i = index">
                               <div [formGroupName]="i" class="selected-provision-item">
                                   <span>{{ provision.value }}</span>
-                                  <button class="btn btn-danger btn-sm" (click)="removeProvision(i)">Remove</button>
+                                  <button type="button" class="btn btn-danger btn-sm" (click)="removeProvision(i)">Remove</button>
                               </div>
                           </div>
                       </div>
