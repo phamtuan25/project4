@@ -196,16 +196,12 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
         user: { userId: this.userLogin?.userId }
       };
   
-      console.log('Request Data:', requestData);  
-  
       this.clientService.addBooking(this.userLogin?.userId, requestData).subscribe(
         (response: any) => {
           console.log('API Response:', response);
-          alert('Room booked successfully');
           this.router.navigate(['/booking-success']);
         },
         (error) => {
-          console.error('API Error:', error);  
           alert(error?.error?.message || 'An error occurred while booking the room.');
         }
       );
@@ -213,7 +209,5 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       this.errors.push('Please fill in both check-in and check-out fields.');
     }
   }
-  
-  
   
 }

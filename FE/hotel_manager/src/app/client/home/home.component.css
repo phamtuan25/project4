@@ -160,13 +160,13 @@ h1 {
     line-height: 1.29em;
     color: #004d40;
     margin-bottom: 40px;
-    background: linear-gradient(to right, #ffd700, #ff5722);
+    background: linear-gradient(to right, #8B4513, #A0522D);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-transform: uppercase;
     letter-spacing: 2px;
     padding: 10px;
-    border-bottom: 2px solid #ffd700;
+    border-bottom: 2px solid  #A0522D;
 }
 
 p {
