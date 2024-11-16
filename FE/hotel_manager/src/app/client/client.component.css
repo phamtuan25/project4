@@ -261,9 +261,10 @@ nav {
 
 
 /* hien thi user */
-.dropdown-toggle::after{
+.dropdown-toggle::after {
     display: none;
 }
+
 .userLogin {
     position: relative;
     margin-left: 280px;
@@ -275,10 +276,10 @@ nav {
 }
 
 .avatar-circle {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    background-color:  #2c3e50;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #2c3e50;
     color: #fff;
     display: flex;
     align-items: center;
@@ -287,47 +288,47 @@ nav {
 }
 
 .dropdown-menu {
-    background-color: #ffffff; 
-    border: none; 
+    background-color: #ffffff;
+    border: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 8px; 
+    border-radius: 8px;
     margin-top: 10px;
 }
 
 .username {
-    padding: 10px 15px; 
-    font-weight: bold; 
-    text-align: center; 
-    color: #2c3e50; 
-    border-bottom: 1px solid #eaeaea; 
+    padding: 10px 15px;
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    border-bottom: 1px solid #eaeaea;
 }
 
 .dropdown-item {
-    padding: 10px 15px; 
-    color: #34495e; 
-    transition: background 0.3s; 
-    list-style-type: none; 
+    padding: 10px 15px;
+    color: #34495e;
+    transition: background 0.3s;
+    list-style-type: none;
 }
 
 .dropdown-item:hover {
-    background-color: #f1f1f1; 
+    background-color: #f1f1f1;
 }
 
 .logout {
-    color: #e74c3c; 
+    color: #e74c3c;
 }
 
 .logout:hover {
-    background-color: #fce4e4; 
+    background-color: #fce4e4;
 }
 
 .nav-link {
-    color: #34495e; 
-    font-weight: bold; 
+    color: #34495e;
+    font-weight: bold;
 }
 
 .nav-link:hover {
-    color: #2980b9; 
+    color: #2980b9;
 }
 
 /* scroll top */
