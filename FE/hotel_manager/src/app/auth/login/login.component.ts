@@ -21,7 +21,7 @@ export class LoginComponent {
     email: '',
     password: ''
   }
-  
+  showPassword: boolean = false;
 
   errors:any= [];
 
@@ -54,4 +54,8 @@ export class LoginComponent {
   findErrors(key:string){
     return this.errors.find((error:any)=>error.key==key)?.message;
   }
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
 }
+

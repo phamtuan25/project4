@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
+
+
 export class RegisterComponent {
   firstName: string = '';
   lastName: string = '';
@@ -14,8 +16,9 @@ export class RegisterComponent {
   email: string = '';
   phoneNumber: string = '';
   password: string = '';
-
+  showPassword: boolean = false;
   errors:any=[];
+
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -43,5 +46,8 @@ export class RegisterComponent {
   }
   findErrors(key:string){
     return this.errors.find((error:any)=>error.key==key)?.message;
+  }
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

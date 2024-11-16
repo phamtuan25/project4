@@ -109,8 +109,7 @@ export class ClientComponent {
       }
     }
   }
-
-  scrollToTop(): void {
+  OnScrollTop() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'

@@ -1,7 +1,10 @@
 body {
     display: flex;
 }
-
+.btn-danger{
+    background-color:  #343a40;
+    border-color:  #343a40;
+}
 .sidebar {
     width: 250px;
     background-color: #343a40;

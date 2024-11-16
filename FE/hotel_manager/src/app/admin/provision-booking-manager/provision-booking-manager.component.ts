@@ -3,6 +3,7 @@ import { AdminComponent } from '../admin.component';
 import { AdminService } from '../admin.service';
 import { Router } from '@angular/router';
 import Modal from 'bootstrap/js/dist/modal';
+import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-provision-booking-manager',
   templateUrl: './provision-booking-manager.component.html',
@@ -11,6 +12,11 @@ import Modal from 'bootstrap/js/dist/modal';
 export class ProvisionBookingManagerComponent implements OnInit{
   provisionBookings: ProvisionBooking[] = [];
   errors: any[] = [];
+  relId: number = 0;
+  status: string = 'UNUSED';
+  roomNumber: string = '';
+  provisionName: string = '';
+  price: number = 0;
   totalProvisionBookings: number = 0;
   pageSize: number = 10;
   currentPage: number = 1;
@@ -20,7 +26,7 @@ export class ProvisionBookingManagerComponent implements OnInit{
 
   constructor(public admin: AdminComponent, private adminService: AdminService, private router: Router) { }
   ngOnInit(): void {
-    this.admin.pageTitle = 'Booking Management';
+    this.admin.pageTitle = 'Service Booking Management';
     this.getProvisionBookings(this.currentPage, this.pageSize, this.keyword);
   }
 
@@ -61,6 +67,34 @@ export class ProvisionBookingManagerComponent implements OnInit{
     if (event.key === 'Enter') {
       this.searchProvisionBookings();
     }
+  }
+
+  openEditProvisionBooking(provisionBooking : ProvisionBooking){
+    this.relId = provisionBooking.relId
+    this.status = provisionBooking.status
+    this.roomNumber = provisionBooking.roomNumber
+    this.provisionName = provisionBooking.provisionName
+    this.price = provisionBooking.price
+    this.editModal.show();
+  }
+
+  onSubmitEdit(form: NgForm) {
+    if(form.valid) {
+      this.adminService.editProvisionBooking(this.relId, this.status).subscribe(
+        response => {
+          alert("Edit Success!");
+          this.getProvisionBookings(this.currentPage , this.pageSize, this.keyword);
+          this.resetFormData();
+        },
+      );
+    }
+  }
+  resetFormData() {
+    this.status = "";
+    this.editModal.hide();
+  }
+  isObject(value: any) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 }
 export interface ProvisionBooking {

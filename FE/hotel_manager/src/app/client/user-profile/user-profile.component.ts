@@ -6,6 +6,7 @@ import { NgForm } from '@angular/forms';
 import Modal from 'bootstrap/js/dist/modal';
 import { GlobalStateService } from '../../../config/global.stage.service';
 import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,6 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent implements OnInit {
+  editUserForm!: FormGroup;
   userLogin: User | null = null;
   users: User[] = [];
   errors:any=[];
@@ -28,11 +30,25 @@ export class UserProfileComponent implements OnInit {
   editModal!: Modal;
   changePasswordModal!: Modal;
   private userSubscription!: Subscription;
-  constructor(private router: Router, private config: ConfigService, private clientService: ClientService, private globalStageService: GlobalStateService) { }
+  
+  constructor(private router: Router, private config: ConfigService, private clientService: ClientService, private globalStageService: GlobalStateService,private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
       this.userLogin = user;
+    });
+    this.editUserForm = this.fb.group({
+      phoneNumber: [
+        '', 
+        [
+          Validators.required, // Trường bắt buộc
+          Validators.pattern(/^(\+84|0)[0-9]{9,10}$/) // Regex kiểm tra định dạng số điện thoại
+        ]
+      ],
+      address: [
+        '',
+        [Validators.required]
+      ]
     });
   }
   ngOnDestroy() {
@@ -61,8 +77,8 @@ export class UserProfileComponent implements OnInit {
     }
   }
   // submit user đã edit
-  onSubmitEdit(form: NgForm) {
-    if (form.valid) {
+  onSubmitEdit() {
+    if (this.editUserForm.valid) {
       this.role = "CUSTOMER";  
       this.clientService.editUser(this.userId, this.address, this.email, this.phoneNumber, this.role).subscribe(
         response => {

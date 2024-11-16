@@ -164,3 +164,9 @@ aside ul li a:hover {
     font-weight: bold;
     color: #2c3e50; 
 }
+.btn-primary{
+    background-color:  #e74c3c;
+    border-color: #e74c3c;
+    --bs-btn-active-bg: #e74c3c;
+    --bs-btn-active-border-color: #e74c3c;
+}

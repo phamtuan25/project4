@@ -22,6 +22,9 @@
     height: 400px; 
     object-fit: cover;
 }
+.carousel-item {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
 .details {
     margin-top: 20px;

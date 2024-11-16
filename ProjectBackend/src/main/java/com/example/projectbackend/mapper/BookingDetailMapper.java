@@ -2,6 +2,7 @@ package com.example.projectbackend.mapper;
 
 import com.example.projectbackend.bean.request.BookingDetailRequest;
 import com.example.projectbackend.bean.response.BookingDetailResponse;
+import com.example.projectbackend.bean.response.RelProvisionBookingDetailResponse;
 import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.Provision;
 import com.example.projectbackend.entity.RelProvisionBookingDetail;
@@ -25,8 +26,10 @@ public class BookingDetailMapper {
         bookingDetailResponse.setSpecialRequests(bookingDetail.getSpecialRequests());
         bookingDetailResponse.setPrice(bookingDetail.getPrice());
         bookingDetailResponse.setRoomNumber(bookingDetail.getRoom().getRoomNumber());
-
-        // Nếu cần, trả về thông tin của provision (hoặc chỉ ID)
+        List<RelProvisionBookingDetailResponse> provisionBookingResponse = bookingDetail.getRelProvisionBookingDetails().stream()
+                .map(RelProvisionBookingDetailMapper::convertToResponse)
+                .collect(Collectors.toList());
+        bookingDetailResponse.setProvisionBookingResponse(provisionBookingResponse);
         if (bookingDetail.getRelProvisionBookingDetails() != null) {
             List<Long> provisionIds = bookingDetail.getRelProvisionBookingDetails().stream()
                     .map(rel -> rel.getProvision().getProvisionId())

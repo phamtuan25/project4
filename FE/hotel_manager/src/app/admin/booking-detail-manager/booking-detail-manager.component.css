@@ -1,7 +1,3 @@
-a.active {
-    background-color: #007bff; /* Màu nền khi active */
-    color: white; /* Màu chữ khi active */
-}
 
 input.ng-invalid {
     border: 2px solid red;
@@ -12,4 +8,18 @@ span {
     font-size: 12px;
     margin-top: 5px;
     display: block;
+}
+.page-link.active{
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: #fff;
+}
+a.page-link{
+    color: #e74c3c;
+}
+.btn-primary{
+    background-color:  #e74c3c;
+    border-color: #e74c3c;
+    --bs-btn-active-bg: #e74c3c;
+    --bs-btn-active-border-color: #e74c3c;
 }

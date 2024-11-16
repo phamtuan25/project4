@@ -36,7 +36,7 @@ export class ProvisionManagerComponent implements OnInit {
   createModal!: Modal;
   constructor(public admin: AdminComponent, private adminService: AdminService,private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
-    this.admin.pageTitle = 'Provision Management';
+    this.admin.pageTitle = 'Service Management';
     this.getProvisions(this.currentPage , this.pageSize, this.keyword);
   }
 

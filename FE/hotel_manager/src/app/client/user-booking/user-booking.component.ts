@@ -5,6 +5,7 @@ import { ConfigService } from '../../../config/config.service';
 import { ClientService } from '../client.service';
 import { GlobalStateService } from '../../../config/global.stage.service';
 import { Subscription } from 'rxjs';
+import { ClientComponent } from '../client.component';
 
 @Component({
   selector: 'app-user-booking',
@@ -16,13 +17,22 @@ export class UserBookingComponent {
   selectedBookingDetail: any = null;
   userLogin: User | null = null;
   private userSubscription!: Subscription;
-  constructor(private router: Router, private config: ConfigService, private clientService: ClientService, private globalStageService: GlobalStateService) {}
+  constructor(private router: Router, private config: ConfigService, private clientService: ClientService, private client: ClientComponent) {}
 
-  ngOnInit(): void {
-    this.userSubscription = this.globalStageService.getUserStage().subscribe(user => {
-      this.userLogin = user;
-    });
-    this.getBookings(this.userLogin?.userId);
+  ngOnInit() {
+    this.getUserLogin(this.config.getEmail());
+  }
+  getUserLogin(email: string | null) {
+    this.clientService.getUserLogin(email).subscribe(
+      (response: any) => {
+        console.log(response)
+        this.userLogin = response;
+        this.getBookings(response.userId);
+      },
+      (error) => {
+        console.error("Error fetching users", error);
+      }
+    )
   }
   ngOnDestroy() {
     if (this.userSubscription) {
@@ -46,7 +56,6 @@ export class UserBookingComponent {
     const booking = this.bookings.find(b => b.bookingId === bookingId);
     if (booking) {
       this.selectedBookingDetail = booking; 
-      console.log('Booking detail:', this.selectedBookingDetail);
     }
   }
 

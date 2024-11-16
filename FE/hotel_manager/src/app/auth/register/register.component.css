@@ -355,4 +355,21 @@ display-flex, .display-flex, .display-flex-center {
       padding: 50px 20px; } }
   
   /*# sourceMappingURL=style.css.map */
+  .form-group {
+    position: relative;
+  }
   
+  .form-input {
+    width: 100%;
+    padding-right: 40px;
+  }
+  
+  .btn-link {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+  }

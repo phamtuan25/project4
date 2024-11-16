@@ -218,6 +218,14 @@ export class AdminService {
     const headers = this.config.getHttpHeaders();
     return this.http.get<ProvisionBooking[]>(`${this.apiUrl}relProBook?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
+
+  editProvisionBooking(relId: number, status: string): Observable<any> {
+    const body = {
+      status: status,
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.put(this.apiUrl + 'relProBook/' + relId, body, { headers });
+  }
 }
 
 export interface Images {

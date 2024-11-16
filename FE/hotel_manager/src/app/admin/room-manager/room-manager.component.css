@@ -37,4 +37,17 @@ span {
     background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
     z-index: 1040; /* Đảm bảo backdrop ở phía dưới modal */
   }
-  
+  .btn-primary{
+    background-color:  #e74c3c;
+    border-color: #e74c3c;
+    --bs-btn-active-bg: #e74c3c;
+    --bs-btn-active-border-color: #e74c3c;
+}
+.page-link.active{
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    color: #fff;
+}
+a.page-link{
+    color: #e74c3c;
+}

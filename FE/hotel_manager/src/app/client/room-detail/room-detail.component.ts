@@ -163,8 +163,9 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     return this.provisions.controls.some(control => control.value === provisionName);
   }
 
-  removeProvision(index: number): void {
+  removeProvision(index: number , provisionName: string): void {
     this.provisions.removeAt(index);
+    this.selectedProvision = this.selectedProvision.filter(provision => provision != provisionName) || []
   }
 
 
@@ -172,9 +173,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     if (this.bookingForm.valid) {
       if (!this.userLogin) {
         alert('You need to log in to your account to book');
-        this.router.navigate(['/login']).then(() => {
-          window.location.reload(); 
-        });
+        this.router.navigate(['/login']);
         return;
       }
   
@@ -199,7 +198,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       this.clientService.addBooking(this.userLogin?.userId, requestData).subscribe(
         (response: any) => {
           alert('Booking successful');
-          this.router.navigate(['/room']);
+          this.router.navigate(['/user-booking']);
           
         },
         (error) => {

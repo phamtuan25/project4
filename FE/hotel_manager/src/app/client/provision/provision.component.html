@@ -14,48 +14,46 @@
       <div *ngFor="let provision of provisions; let i = index" 
            class="row align-items-center service" 
            [ngClass]="{'odd': i % 2 === 0, 'even': i % 2 !== 0}">
-        
-        <!-- Cột hình ảnh -->
-        <div id="roomCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
-            <ol class="carousel-indicators">
-              <li *ngFor="let image of provision.images; let i = index" [attr.data-bs-target]="'#roomCarousel'"
-                  [attr.data-bs-slide-to]="i" [class.active]="i === 0"></li>
-            </ol>
           
-            <div class="carousel-inner">
-              <div *ngFor="let image of provision.images; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}">
-                <img [src]="'http://localhost:8080/upload_images/' + image" 
-                     alt="{{provision.provisionName}}" 
-                     class="d-block w-100" style="height: 400px; object-fit: cover;" />
+          <!-- Cột hình ảnh -->
+          <div [id]="'roomCarousel' + i" class="carousel slide" data-bs-ride="carousel">
+              <ol class="carousel-indicators">
+                  <li *ngFor="let image of provision.images; let j = index" 
+                      [attr.data-bs-target]="'#roomCarousel' + i"
+                      [attr.data-bs-slide-to]="j" 
+                      [class.active]="j === 0"></li>
+              </ol>
+              <div class="carousel-inner">
+                  <div *ngFor="let image of provision.images; let j = index" 
+                       class="carousel-item" 
+                       [ngClass]="{'active': j === 0}">
+                      <img [src]="'http://localhost:8080/upload_images/' + image" 
+                           alt="Service Image" 
+                           class="service-image" />
+                  </div>
               </div>
-            </div>
-          
-            <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-            </button>
+              <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#roomCarousel' + i" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#roomCarousel' + i" data-bs-slide="next">
+                  <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+              </button>
           </div>
-    
-        <!-- Cột mô tả dịch vụ -->
-        <div class="col-md-6" [ngClass]="{'order-md-1': i % 2 === 0, 'order-md-2': i % 2 !== 0}">
-          <h1>{{provision.provisionName}}</h1>
-          <p>{{provision.description}}</p>
-          <p><span class="price-red">Price: {{provision.price | currency:'$'}}</span></p>
-          <!-- <button class="btn btn-custom" (click)="viewDetails(provision.provisonId)">Tìm Hiểu Thêm</button> -->
-        </div>
+      
+          <!-- Cột mô tả dịch vụ -->
+          <div class="col-md-6" [ngClass]="{'order-md-1': i % 2 === 0, 'order-md-2': i % 2 !== 0}">
+              <h1>{{ provision.provisionName }}</h1>
+              <p>{{ provision.description }}</p>
+              <p><span class="price-red">Price: {{ provision.price | currency:'$' }}</span></p>
+          </div>
       </div>
-    </div>
   </div>
   
-  
-    <ng-template #noServices>
+  <ng-template #noServices>
       <div class="alert alert-warning" role="alert">
-        Không có dịch vụ nào để hiển thị.
+         There are no services to display.
       </div>
-    </ng-template>
-
+  </ng-template>
     <!-- Phân trang -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">

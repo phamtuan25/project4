@@ -9,42 +9,49 @@
     </div>
     <div class="content">
         <div class="header">
-            <div class="section" id="booking">
-                <h2>Booking Information</h2>
-                <div *ngIf="bookings.length > 0">
-                    <div *ngFor="let booking of bookings" class="booking-card">
-                        <div (click)="toggleBookingDetail(booking.bookingId)" style="cursor: pointer;">
-                            <p><strong>Booking Person:</strong> {{ booking.userBookingResponse.fullName }}</p>
-                            <p><strong>Booking Date:</strong> {{ booking.createdAt }}</p>
-                            <p><strong>Status:</strong> {{ booking.status }}</p>
-                            <p><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
-                            <p><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
-                            <button class="button" (click)="goToPayment()">Payment for Booking</button>
-                        </div>
-                        <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId"
-                            class="booking-details-container">
-                            <h3>Booking Details</h3>
-                            <div *ngFor="let detail of selectedBookingDetail.bookingDetailResponses"
-                                class="booking-detail-card">
-                                <p><strong>Room Number:</strong> {{ detail.roomNumber }}</p>
-                                <p><strong>Check-In:</strong> {{ detail.checkIn | date: 'fullDate' }} at {{
-                                    detail.checkIn | date: 'shortTime' }}</p>
-                                <p><strong>Check-Out:</strong> {{ detail.checkOut | date: 'fullDate' }} at {{
-                                    detail.checkOut | date: 'shortTime' }}</p>
-                                <p><strong>Price:</strong> {{ detail.price | currency }}</p>
-                                <p><strong>Special Requests:</strong> {{ detail.specialRequests || 'Không có' }}</p>
-                                <p><strong>Status Booking Detail:</strong> {{ detail.status }}</p>
+            <h2>Booking Information</h2>
+            <div *ngIf="bookings.length > 0">
+                <div *ngFor="let booking of bookings" class="booking-card">
+                    <div (click)="toggleBookingDetail(booking.bookingId)" class="booking-summary">
+                        <p><strong>Booking Person:</strong> {{ booking.userBookingResponse.fullName }}</p>
+                        <p><strong>Booking Date:</strong> {{ booking.createdAt}}</p>
+                        <p class="status {{ booking.status.toLowerCase() }}">
+                            <strong>Status:</strong> {{ booking.status }}
+                        </p>
+                        <p><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
+                        <p><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
+                        <button class="button" (click)="goToPayment()">Payment for Booking</button>
+                    </div>
+                    <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId" class="booking-details-container">
+                        <h3>Booking Details</h3>
+                        <div *ngFor="let detail of selectedBookingDetail.bookingDetailResponses" class="booking-detail-card">
+                            <p><strong>Room Number:</strong> {{ detail.roomNumber }}</p>
+                            <p><strong>Check-In:</strong> {{ detail.checkIn | date: 'fullDate' }} at {{ detail.checkIn | date: 'shortTime' }}</p>
+                            <p><strong>Check-Out:</strong> {{ detail.checkOut | date: 'fullDate' }} at {{ detail.checkOut | date: 'shortTime' }}</p>
+                            <p><strong>Price:</strong> {{ detail.price | currency }}</p>
+                            <p><strong>Special Requests:</strong> {{ detail.specialRequests || 'None' }}</p>
+                            <p><strong>Status:</strong> {{ detail.status }}</p>
+                            <div *ngIf="detail.provisionBookingResponse.length > 0; else noService" class="provision-box">
+                                <h4>Services Included:</h4>
+                                <div *ngFor="let provisionBooking of detail.provisionBookingResponse" class="provision-item">
+                                    <span class="provision-name">{{ provisionBooking.provisionName }}</span>
+                                    <span class="provision-price">{{ provisionBooking.price | currency }}</span>
+                                    <span class="provision-status">{{ provisionBooking.status === 'USED' ? 'USED' : 'UNUSED' }}</span>
+                                </div>
                             </div>
+                            <ng-template #noService>
+                                <span class="no-service">No Services Included</span>
+                            </ng-template>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="bookings.length === 0">
-                    <p style="text-align: center; color: #e74c3c;">No booking information yet.</p>
-                </div>
             </div>
-            <div class="footer">
-                <p>© 2024 My Account</p>
+            <div *ngIf="bookings.length === 0">
+                <p class="no-booking">No booking information yet.</p>
             </div>
+        </div>
+        <div class="footer">
+            <p>© 2024 My Account</p>
         </div>
     </div>
 </div>

@@ -24,5 +24,6 @@ public class BookingDetailResponse {
     private BookingDetail.BookingDetailStatus status;
     private String specialRequests;
     private List<Long> provisionIds;
+    private List<RelProvisionBookingDetailResponse> provisionBookingResponse;
     private Double price;
 }

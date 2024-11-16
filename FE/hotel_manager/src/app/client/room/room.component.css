@@ -79,12 +79,9 @@
     border: 0;
 }
 
-.active {
-    background-color: #b95c47;
-    color: #fff;
-    border-color: #b95c47 !important;
-}
-.page-link{
-    background-color: #fff;
-    color: #b95c47;
+.active>.page-link, .page-link.active {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background-color:  #b95c47;
+    border-color: #b95c47;
 }
