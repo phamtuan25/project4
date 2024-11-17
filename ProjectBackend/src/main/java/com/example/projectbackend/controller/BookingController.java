@@ -23,6 +23,12 @@ public class BookingController {
         return bookingService.getAllBookings(pageable,keyword);
     }
 
+    @GetMapping("/bookingDetail/{bookingId}")
+    public BookingResponse getBookingById(@PathVariable Long bookingId) {
+        return bookingService.getBookingById(bookingId);
+    }
+
+
     @GetMapping("/{userId}")
     public List<BookingResponse> getBookingByUser(@PathVariable Long userId) {
         return bookingService.getBookingsByUserId(userId);

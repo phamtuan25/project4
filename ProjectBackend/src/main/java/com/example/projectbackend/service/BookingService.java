@@ -13,6 +13,7 @@ import java.util.List;
 public interface BookingService {
     public Page<BookingResponse> getAllBookings(Pageable pageable, String keyword);
     public List<BookingResponse> getBookingsByUserId(Long userId);
+    BookingResponse getBookingById(Long bookingId);
     public Booking createBooking(BookingRequest bookingRequest);
     public Booking updateBooking(Long bookingId, Booking booking);
     public void deleteBooking(Long bookingId);

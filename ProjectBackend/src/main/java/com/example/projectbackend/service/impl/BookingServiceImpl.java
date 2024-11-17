@@ -41,6 +41,13 @@ import java.util.stream.Collectors;
         });
     }
 
+    @Override
+    public BookingResponse getBookingById(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
+
+        return BookingMapper.convertToResponse(booking); // Chuyển đổi Booking thành BookingResponse
+    }
 
     @Override
     public List<BookingResponse> getBookingsByUserId(Long userId) {
