@@ -1,8 +1,11 @@
-/* Cấu trúc chính */
 .container_main {
+    max-width: 1200px;
+    margin: auto;
     display: flex;
-    justify-content: center;
-    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
 }
 .content {
     width: 80%;
@@ -13,6 +16,7 @@
 
 .sidebar {
     margin-top: 100px;
+    margin-right: 30px;
     width: 250px;
     background-color: #2c3e50; 
     color: #ecf0f1; 
@@ -68,9 +72,8 @@ h2 {
     text-align: center;
 }
 
-/* Booking Card */
 .booking-card {
-    background: #f9f9f9; /* Light gray for booking card */
+    background: #f9f9f9; 
     margin: 15px 0;
     padding: 20px;
     border-radius: 8px;
@@ -80,37 +83,35 @@ h2 {
 
 .booking-card:hover {
     transform: translateY(-5px);
-    background: #e0e0e0; /* Slightly darker gray on hover */
+    background: #e0e0e0; 
 }
 
 .booking-summary {
     cursor: pointer;
 }
 
-/* Status Highlighting */
 .status {
     font-weight: bold;
 }
 
 .status.confirmed {
-    color: #2ecc71; /* Green for confirmed status */
+    color: #2ecc71; 
 }
 
 .status.pending {
-    color: #f39c12; /* Yellow for pending status */
+    color: #f39c12; 
 }
 
 .status.cancelled {
-    color: #e74c3c; /* Red for cancelled status */
+    color: #e74c3c; 
 }
 
-/* Booking Details */
 .booking-details-container {
     margin-top: 15px;
 }
 
 .booking-detail-card {
-    background: #ffffff; /* White background for booking detail card */
+    background: #ffffff; 
     margin: 10px 0;
     padding: 15px;
     border-radius: 8px;
@@ -122,7 +123,6 @@ h2 {
     color: #2c3e50;
 }
 
-/* Buttons */
 .button {
     display: inline-block;
     padding: 10px 20px;
@@ -140,17 +140,15 @@ h2 {
     background-color: #c0392b;
 }
 
-/* No Booking Message */
 .no-booking {
     text-align: center;
     color: #e74c3c;
     font-size: 1.2em;
 }
 
-/* Provision Box */
 .provision-box {
     padding: 16px;
-    background-color: #f0f8ff; /* Light blue for better readability */
+    background-color: #f0f8ff; 
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     margin: 16px 0;
@@ -207,4 +205,47 @@ h2 {
     .provision-name, .provision-price, .provision-status {
         margin: 4px 0;
     }
+}
+.highlighted-request {
+    background-color: #f9f9f9; 
+    border-left: 4px solid #3c4de7; 
+    padding: 10px;
+    font-size: 16px; 
+    color: #333;
+    font-family: 'Arial', sans-serif; 
+    margin: 20px 0; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.highlighted-request strong {
+    color: #3c4de7;
+}
+.info-highlight {
+    background-color: #f0f8ff; 
+    border-left: 4px solid #28a745; 
+    padding: 10px; 
+    font-size: 16px; 
+    color: #333;
+    font-family: 'Arial', sans-serif; 
+    margin: 10px 0; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.info-highlight strong {
+    color: #28a745; 
+}
+.price-highlight {
+    background-color: #fff3f3;
+    border: 1px solid #ffcccc; 
+    padding: 10px;
+    font-size: 18px;
+    color: #dd0f08;
+    font-family: 'Arial', sans-serif; 
+    margin: 10px 0; 
+    border-radius: 5px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+.price-highlight {
+    color: #dd0f08; 
+    font-weight: bold;
 }

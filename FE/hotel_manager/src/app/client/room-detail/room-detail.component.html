@@ -28,7 +28,7 @@
 
           <!-- Room Details -->
           <div class="details mt-4">
-              <h3>Room Name: <span>{{ roomDetail.roomNumber }}</span></h3>
+              <h3>Room Number: <span>{{ roomDetail.roomNumber }}</span></h3>
               <p><strong>Room Type:</strong> {{ roomDetail.roomType }}</p>
               <h5>Daily Price: <span class="price-red">{{ roomDetail.dayPrice | currency: '$' }}</span></h5>
               <h5>Hourly Price: <span class="price-red">{{ roomDetail.hourPrice | currency: '$' }}</span></h5>
@@ -55,24 +55,51 @@
               </div>
 
               <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-                  <label for="checkin" class="form-label">Check-in</label>
-                  <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
+                <label for="checkin" class="form-label">Check-in</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  id="checkin" 
+                  formControlName="checkIn" 
+                  required 
+                  [min]="minCheckInDate"  
+                  (change)="onCheckinChange($event)">
               </div>
-
+              
               <div class="mb-3" *ngIf="pricingOption === 'daily'">
-                  <label for="checkin" class="form-label">Check-in</label>
-                  <input type="datetime-local" class="form-control" id="checkin" formControlName="checkIn" required>
+                <label for="checkin" class="form-label">Check-in</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  id="checkin" 
+                  formControlName="checkIn" 
+                  required 
+                  [min]="minCheckInDate" 
+                  (change)="onCheckinChange($event)">
               </div>
-
+              
               <div class="mb-3" *ngIf="pricingOption === 'hourly'">
-                  <label for="checkout" class="form-label">Check-out</label>
-                  <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
+                <label for="checkout" class="form-label">Check-out</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  id="checkout" 
+                  formControlName="checkOut" 
+                  required 
+                  [min]="minCheckOutDate">
               </div>
-
+              
               <div class="mb-3" *ngIf="pricingOption === 'daily'">
-                  <label for="checkout" class="form-label">Check-out</label>
-                  <input type="datetime-local" class="form-control" id="checkout" formControlName="checkOut" required>
+                <label for="checkout" class="form-label">Check-out</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  id="checkout" 
+                  formControlName="checkOut" 
+                  required 
+                  [min]="minCheckOutDate">
               </div>
+              
 
               <div class="mb-3">
                   <label for="provision" class="form-label">Services</label>

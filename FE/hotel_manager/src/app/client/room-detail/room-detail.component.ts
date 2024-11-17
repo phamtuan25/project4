@@ -19,13 +19,16 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
   roomDetail: Room | null = null;
   errors: any[] = [];
   roomId: number = 0;
-  currentPage: number = 1; 
+  currentPage: number = 1;
   pricingOption: string = 'daily';
   bookingForm: FormGroup;
   userLogin: User | null = null;
   availableProvisions: { provisionId: number, provisionName: string, price: number }[] = [];
   selectedProvision: string[] = [];
   private userSubscription!: Subscription;
+  minCheckInDate: string = '';
+  minCheckOutDate: string = '';
+  checkin: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +42,7 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       checkIn: ['', Validators.required],
       checkOut: ['', Validators.required],
       pricingOption: ['daily', Validators.required],
-      specialRequests: ['', Validators.required],
+      specialRequests: [''],
       price: [{ value: '', disabled: true }, Validators.required],
       provisions: this.fb.array([]),
     });
@@ -56,11 +59,12 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     this.route.queryParams.subscribe(params => {
       const page = params['page'];
       if (page) {
-        this.currentPage = +page; 
+        this.currentPage = +page;
       }
     });
 
     this.updatePrice();
+    this.setMinDateTimes();  
   }
 
   ngOnDestroy() {
@@ -102,13 +106,32 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     this.updatePrice();
   }
 
+  setMinDateTimes(): void {
+    const currentDate = new Date();
+    this.minCheckInDate = currentDate.toISOString().slice(0, 16);
+    if (this.checkin) {
+      this.setMinCheckoutDate();
+    }
+  }
+
+  setMinCheckoutDate() {
+    if (this.checkin) {
+      this.minCheckOutDate = this.checkin;
+    }
+  }
+
+  onCheckinChange(event: any): void {
+    this.checkin = event.target.value;
+    this.setMinCheckoutDate();  
+  }
+
   goBack(): void {
     const previousPage = history.state.fromPage || '/';
     const previousPageNum = history.state.page || 1;
     if (previousPage === 'room-availability') {
       this.router.navigate(['/room-availability'], {
-        queryParams: { page: previousPageNum},
-        state: {params: history.state.params}
+        queryParams: { page: previousPageNum },
+        state: { params: history.state.params }
       });
     } else if (previousPage === 'room') {
       this.router.navigate(['/room'], {
@@ -118,8 +141,8 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       this.router.navigate(['/']);
     }
   }
-  
 
+  // Helper functions for provision management
   get provisions(): FormArray {
     return this.bookingForm.get('provisions') as FormArray;
   }
@@ -163,11 +186,10 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     return this.provisions.controls.some(control => control.value === provisionName);
   }
 
-  removeProvision(index: number , provisionName: string): void {
+  removeProvision(index: number, provisionName: string): void {
     this.provisions.removeAt(index);
     this.selectedProvision = this.selectedProvision.filter(provision => provision != provisionName) || []
   }
-
 
   addToBooking(): void {
     if (this.bookingForm.valid) {
@@ -176,30 +198,29 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
         this.router.navigate(['/login']);
         return;
       }
-  
+
       const roomId = this.roomDetail?.roomId || this.bookingForm.get('roomId')?.value;
       const formValues = this.bookingForm.value;
       const { pricingOption, provisions, ...formWithoutRoomType } = formValues;
-  
-      const provisionIds =  this.selectedProvision
-      .map(provisionName => {
-        const obj = this.availableProvisions.find(item => item.provisionName === provisionName);
-        return obj ? obj.provisionId : null;
-      })
-      .filter(id => id !== null);
+
+      const provisionIds = this.selectedProvision
+        .map(provisionName => {
+          const obj = this.availableProvisions.find(item => item.provisionName === provisionName);
+          return obj ? obj.provisionId : null;
+        })
+        .filter(id => id !== null);
       const requestData = {
-          roomId,
-          provisionIds,
-          checkIn: formWithoutRoomType.checkIn,
-          checkOut: formWithoutRoomType.checkOut,
-          specialRequests: formWithoutRoomType.specialRequests
-        };
-  
+        roomId,
+        provisionIds,
+        checkIn: formWithoutRoomType.checkIn,
+        checkOut: formWithoutRoomType.checkOut,
+        specialRequests: formWithoutRoomType.specialRequests
+      };
+
       this.clientService.addBooking(this.userLogin?.userId, requestData).subscribe(
         (response: any) => {
           alert('Booking successful');
           this.router.navigate(['/user-booking']);
-          
         },
         (error) => {
           alert(error?.error?.message || 'An error occurred while booking the room.');
@@ -209,5 +230,4 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
       this.errors.push('Please fill in both check-in and check-out fields.');
     }
   }
-  
 }

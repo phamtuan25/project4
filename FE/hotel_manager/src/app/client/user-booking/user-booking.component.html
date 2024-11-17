@@ -18,18 +18,20 @@
                         <p class="status {{ booking.status.toLowerCase() }}">
                             <strong>Status:</strong> {{ booking.status }}
                         </p>
-                        <p><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
-                        <p><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
+                        <p class="price-highlight"><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
+                        <p class="price-highlight"><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
                         <button class="button" (click)="goToPayment()">Payment for Booking</button>
                     </div>
                     <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId" class="booking-details-container">
                         <h3>Booking Details</h3>
                         <div *ngFor="let detail of selectedBookingDetail.bookingDetailResponses" class="booking-detail-card">
-                            <p><strong>Room Number:</strong> {{ detail.roomNumber }}</p>
-                            <p><strong>Check-In:</strong> {{ detail.checkIn | date: 'fullDate' }} at {{ detail.checkIn | date: 'shortTime' }}</p>
-                            <p><strong>Check-Out:</strong> {{ detail.checkOut | date: 'fullDate' }} at {{ detail.checkOut | date: 'shortTime' }}</p>
-                            <p><strong>Price:</strong> {{ detail.price | currency }}</p>
-                            <p><strong>Special Requests:</strong> {{ detail.specialRequests || 'None' }}</p>
+                            <p class="info-highlight"><strong>Room Number:</strong> {{ detail.roomNumber }}</p>
+                            <p class="info-highlight"><strong>Check-In:</strong> {{ detail.checkIn | date: 'fullDate' }} at {{ detail.checkIn | date: 'shortTime' }}</p>
+                            <p class="info-highlight"><strong>Check-Out:</strong> {{ detail.checkOut | date: 'fullDate' }} at {{ detail.checkOut | date: 'shortTime' }}</p>
+                            <p class="info-highlight"><strong>Price:</strong> <span class="price-highlight">{{ detail.price | currency }}</span></p>
+                            <p class="highlighted-request">
+                                <strong>Special Requests:</strong> {{ detail.specialRequests || 'There are no special requirements' }}
+                            </p>
                             <p><strong>Status:</strong> {{ detail.status }}</p>
                             <div *ngIf="detail.provisionBookingResponse.length > 0; else noService" class="provision-box">
                                 <h4>Services Included:</h4>
