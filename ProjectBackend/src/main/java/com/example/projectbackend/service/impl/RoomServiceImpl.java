@@ -82,19 +82,28 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room updateRoom(Long roomId, RoomRequest roomRequest) {
-        // Find the existing room by ID and update its fields
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
-        room.setRoomNumber(roomRequest.getRoomNumber());
-        room.setRoomType(roomRequest.getRoomType());
-        room.setStatus(roomRequest.getStatus());
-        room.setDescription(roomRequest.getDescription());
-        // Cập nhật các trường khác...
+        // Tìm phòng cũ theo ID và chỉ cập nhật các trường cho phép
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Phòng không tồn tại"));
 
-        // Kiểm tra và cập nhật trạng thái phòng nếu cần thiết
-        updateRoomStatusIfNecessary(room, LocalDateTime.now()); // Hoặc dùng thời gian check-in cụ thể nếu cần
+        // Cập nhật chỉ các trường cho phép: status, description, dayPrice, hourPrice
+        if (roomRequest.getStatus() != null) {
+            room.setStatus(roomRequest.getStatus());
+        }
+        if (roomRequest.getDescription() != null) {
+            room.setDescription(roomRequest.getDescription());
+        }
+        if (roomRequest.getDayPrice() != null) {
+            room.setDayPrice(roomRequest.getDayPrice());
+        }
+        if (roomRequest.getHourPrice() != null) {
+            room.setHourPrice(roomRequest.getHourPrice());
+        }
+
+        // Không cập nhật các trường khác như roomNumber và roomType
 
         return roomRepository.save(room);
     }
+
 
 
     @Override

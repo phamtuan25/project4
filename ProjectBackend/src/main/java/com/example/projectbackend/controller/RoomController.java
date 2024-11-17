@@ -79,13 +79,12 @@ public class RoomController {
     @PutMapping("/{roomId}")
     public Room updateRoom(@PathVariable Long roomId,
                            @RequestPart("roomRequest") RoomRequest roomRequest,
-                           @RequestPart(value = "files", required = false) MultipartFile[] files)
-                            {
+                           @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
-            // Update thông tin room
+            // Cập nhật chỉ các trường cho phép: status, description, dayPrice, hourPrice
             Room updatedRoom = roomService.updateRoom(roomId, roomRequest);
 
-            // Xử lý các tệp được gửi lên
+            // Xử lý các tệp (hình ảnh) được gửi lên
             if (files != null && files.length > 0) {
                 for (MultipartFile file : files) {
                     ImageRequest imageRequest = new ImageRequest();
@@ -96,18 +95,19 @@ public class RoomController {
                 }
             }
 
-            // Xử lý các tệp cần xóa
+            // Xử lý xóa các tệp hình ảnh cũ nếu có yêu cầu
             if (roomRequest.getDeleteFiles() != null && roomRequest.getDeleteFiles().length > 0) {
-                    imageService.deleteImageByFileName(roomRequest.getDeleteFiles());
+                imageService.deleteImageByFileName(roomRequest.getDeleteFiles());
             }
 
             return updatedRoom;
         } catch (IOException e) {
-            throw new RuntimeException("Error while updating images: " + e.getMessage(), e);
+            throw new RuntimeException("Lỗi khi cập nhật hình ảnh: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("An unexpected error occurred: " + e.getMessage(), e);
+            throw new RuntimeException("Lỗi không mong đợi: " + e.getMessage(), e);
         }
     }
+
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'EMPLOYEE')")
     @DeleteMapping("/{roomId}")
     public void deleteRoom(@PathVariable Long roomId) {
