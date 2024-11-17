@@ -9,14 +9,12 @@ public class PaymentMapper {
 
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setPaymentId(payment.getPaymentId());
-        paymentResponse.setPaymentMethod(payment.getPaymentMethod());
         paymentResponse.setStatus(payment.getStatus());
         return paymentResponse;
     }
 
     public static Payment convertFromRequest(PaymentRequest paymentRequest){
         Payment payment = new Payment();
-        payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setStatus(paymentRequest.getStatus());
         return payment;
     }

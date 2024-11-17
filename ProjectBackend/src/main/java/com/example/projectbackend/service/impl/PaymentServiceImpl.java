@@ -76,7 +76,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public void setPayment(Payment paymentUpdate, Payment paymentInput){
-        paymentUpdate.setPaymentMethod(paymentInput.getPaymentMethod());
         paymentUpdate.setStatus(paymentInput.getStatus());
     }
 

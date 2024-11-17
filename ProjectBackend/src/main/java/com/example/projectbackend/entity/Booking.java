@@ -17,7 +17,9 @@ public class Booking {
     public enum BookingStatus {
         PENDING,
         COMPLETED,
-        FAILED
+        FAILED,
+        PAID,
+        DEPOSITED
     }
 
     @Id

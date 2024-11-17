@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class PaymentResponse {
     private Long paymentId;
     private Long bookingId;
-    private Payment.PaymentMethod paymentMethod;
     private Payment.PaymentStatus status;
 }

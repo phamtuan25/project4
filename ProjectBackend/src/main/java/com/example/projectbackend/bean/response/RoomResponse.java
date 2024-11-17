@@ -19,6 +19,7 @@ public class RoomResponse {
     private Long roomId;
     private String roomNumber;
     private Room.RoomType roomType;
+    private String description;
     private Room.RoomStatus status;
     private Double dayPrice;
     private Double hourPrice;

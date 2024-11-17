@@ -14,8 +14,6 @@ public class PaymentRequest {
     @NotNull(message = "Booking ID is required")
     private Long bookingId;
 
-    @NotNull(message = "Payment method is required")
-    private Payment.PaymentMethod paymentMethod;
 
     @NotNull(message = "Payment status is required")
     private Payment.PaymentStatus status;

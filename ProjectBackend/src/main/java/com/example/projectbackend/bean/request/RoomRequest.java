@@ -22,6 +22,8 @@ public class RoomRequest {
     @NotNull(message = "Room type is required")
     private Room.RoomType roomType;
 
+    private String description;
+
     @NotNull(message = "Room status is required")
     private Room.RoomStatus status;
 

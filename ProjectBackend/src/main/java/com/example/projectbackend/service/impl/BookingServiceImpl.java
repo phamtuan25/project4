@@ -180,14 +180,26 @@ import java.util.stream.Collectors;
             }
         }
 
+        // Kiểm tra nếu trạng thái booking được cập nhật thành PAID hoặc DEPOSITED
+        if (booking.getStatus() == Booking.BookingStatus.PAID || booking.getStatus() == Booking.BookingStatus.DEPOSITED) {
+            for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
+                // Cập nhật trạng thái bookingDetail thành CONFIRMED
+                if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CONFIRMED) {
+                    bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
+                    bookingDetail.setUpdatedAt(LocalDateTime.now());
+                    bookingDetailRepository.save(bookingDetail);  // Lưu trạng thái đã thay đổi
+                }
+            }
+        }
+
         // Kiểm tra nếu trạng thái booking được cập nhật thành COMPLETED
         if (booking.getStatus() == Booking.BookingStatus.COMPLETED) {
             for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
-                if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED &&
-                        bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CONFIRMED) {
-                    bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
+                // Cập nhật trạng thái bookingDetail thành COMPLETED
+                if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.COMPLETED) {
+                    bookingDetail.setStatus(BookingDetail.BookingDetailStatus.COMPLETED);
                     bookingDetail.setUpdatedAt(LocalDateTime.now());
-                    bookingDetailRepository.save(bookingDetail);
+                    bookingDetailRepository.save(bookingDetail);  // Lưu trạng thái đã thay đổi
                 }
 
                 Room room = bookingDetail.getRoom();
@@ -207,6 +219,7 @@ import java.util.stream.Collectors;
         // Lưu booking đã cập nhật vào cơ sở dữ liệu
         return bookingRepository.save(bookingUpdate);
     }
+
 
 
 

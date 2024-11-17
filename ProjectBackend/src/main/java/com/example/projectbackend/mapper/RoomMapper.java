@@ -11,6 +11,7 @@ public class RoomMapper {
         roomResponse.setRoomNumber(room.getRoomNumber());
         roomResponse.setRoomType(room.getRoomType());
         roomResponse.setStatus(room.getStatus());
+        roomResponse.setDescription(room.getDescription());
         roomResponse.setDayPrice(room.getDayPrice());
         roomResponse.setHourPrice(room.getHourPrice());
         return roomResponse;
@@ -20,6 +21,7 @@ public class RoomMapper {
         Room room = new Room();
         room.setRoomNumber(roomRequest.getRoomNumber());
         room.setRoomType(roomRequest.getRoomType());
+        room.setDescription(roomRequest.getDescription());
         room.setStatus(roomRequest.getStatus());
         room.setDayPrice(roomRequest.getDayPrice());
         room.setHourPrice(roomRequest.getHourPrice());

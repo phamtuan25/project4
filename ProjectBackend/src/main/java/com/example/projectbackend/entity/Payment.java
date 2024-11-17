@@ -11,17 +11,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "payments")
 public class Payment {
-    public enum PaymentMethod {
-        CREDIT_CARD,
-        PAYPAL,
-        CASH,
-        BANK_TRANSFER,
-        MOBILE_PAYMENT
-    }
-
     public enum PaymentStatus {
-        ACTIVE,
-        INACTIVE
+        PAID,
+        DEPOSITED
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +24,8 @@ public class Payment {
     @JoinColumn(name = "booking_id", unique = true)
     private Booking booking;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
-    private PaymentMethod paymentMethod;
+    @Column(name = "paid_amount")
+    private Double paid;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
