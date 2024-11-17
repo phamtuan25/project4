@@ -1,24 +1,27 @@
 .payment-container {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
 }
 
 .payment-title {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-size: 24px;
 }
 
 .booking-info {
-    background-color: #e9ecef;
+    background-color: #f8f9fa;
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    border: 1px solid #ddd;
 }
 
 .booking-info p {
@@ -30,7 +33,7 @@
 .payment-options,
 .payment-amount,
 .bank-info {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 label {
@@ -43,14 +46,21 @@ select,
 input[type="text"],
 textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
 input[type="text"][readonly] {
     background-color: #f1f1f1;
+}
+
+select:focus,
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #b95c47;
 }
 
 .payment-options label {
@@ -67,22 +77,23 @@ textarea {
 }
 
 .btn-submit {
-    background-color: #007bff;
+    background-color: #b95c47;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    transition: background-color 0.3s;
 }
 
 .btn-submit:hover {
-    background-color: #0056b3;
+    background-color: #a3543f;
 }
 
 @media (max-width: 600px) {
     .payment-container {
-        padding: 15px;
+        padding: 20px;
     }
 
     .btn-submit {
