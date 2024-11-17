@@ -2,6 +2,7 @@ package com.example.projectbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.lang.annotation.Annotation;
@@ -26,7 +27,8 @@ public class Provision  {
     @Column(name = "provision_name")
     private String provisionName;
 
-    @Column(name = "description")
+    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Column(name = "price")

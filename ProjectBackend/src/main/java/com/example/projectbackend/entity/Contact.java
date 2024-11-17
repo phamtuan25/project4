@@ -26,6 +26,7 @@ public class Contact {
     @JsonIgnore
     private User user;
 
+    @Column(name = "message", length = 1000)
     private String message;
 
     @Column(name = "status")

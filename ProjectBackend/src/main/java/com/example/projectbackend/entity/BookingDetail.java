@@ -53,7 +53,7 @@ public class BookingDetail {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @Column(name = "special_requests")
+    @Column(name = "special_requests", length = 1000)
     private String specialRequests;
 
     @Column(name = "price")
