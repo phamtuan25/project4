@@ -21,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,6 +88,9 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
 
         // Cập nhật chỉ trường status
         relProvisionBookingDetailUpdate.setStatus(relProvisionBookingDetail.getStatus());
+
+        // Set the updatedAt field to the current time when updating
+        relProvisionBookingDetailUpdate.setUpdatedAt(LocalDateTime.now());  // Manually update the timestamp
 
         // Nếu status là USED, cập nhật lại giá trị price và tổng amount của BookingDetail
         if (relProvisionBookingDetailUpdate.getStatus() == RelProvisionBookingDetail.RelProvisionBookingDetailStatus.USED) {
