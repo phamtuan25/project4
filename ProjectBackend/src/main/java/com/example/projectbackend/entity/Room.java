@@ -3,6 +3,7 @@ package com.example.projectbackend.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,7 +37,8 @@ public class Room {
     @Column(name = "room_type")
     private RoomType roomType;
 
-    @Column(name = "description")
+    @Size(max = 1000, message = "Description cannot exceed 1000 characters")
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -54,4 +56,3 @@ public class Room {
     private List<BookingDetail> bookingDetails;
 
 }
-

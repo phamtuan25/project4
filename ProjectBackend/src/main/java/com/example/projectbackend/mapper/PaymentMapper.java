@@ -6,7 +6,6 @@ import com.example.projectbackend.entity.Payment;
 
 public class PaymentMapper {
     public static PaymentResponse convertToResponse(Payment payment) {
-
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setPaymentId(payment.getPaymentId());
         paymentResponse.setStatus(payment.getStatus());
@@ -15,7 +14,6 @@ public class PaymentMapper {
 
     public static Payment convertFromRequest(PaymentRequest paymentRequest){
         Payment payment = new Payment();
-        payment.setStatus(paymentRequest.getStatus());
         return payment;
     }
 }

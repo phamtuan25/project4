@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,4 +14,7 @@ public class PaymentResponse {
     private Long paymentId;
     private Long bookingId;
     private Payment.PaymentStatus status;
+    private Double paid;
+    private LocalDate paymentDate;
+    private String paymentReference;
 }

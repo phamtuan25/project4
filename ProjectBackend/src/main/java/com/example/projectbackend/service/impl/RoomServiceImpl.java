@@ -87,6 +87,7 @@ public class RoomServiceImpl implements RoomService {
         room.setRoomNumber(roomRequest.getRoomNumber());
         room.setRoomType(roomRequest.getRoomType());
         room.setStatus(roomRequest.getStatus());
+        room.setDescription(roomRequest.getDescription());
         // Cập nhật các trường khác...
 
         // Kiểm tra và cập nhật trạng thái phòng nếu cần thiết
