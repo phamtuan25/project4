@@ -70,6 +70,7 @@ export interface Room {
   roomId: number;
   roomNumber: string;
   roomType: string;
+  description: string;
   status: string;
   dayPrice: number;
   hourPrice: number;

@@ -57,11 +57,12 @@ export class AdminService {
     return this.http.get<Room[]>(`${this.apiUrl}rooms?page=${page}&size=${size}&keyword=${keyword}`, { headers });
   }
 
-  addRoom(roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null): Observable<any> {
+  addRoom(roomNumber: string, roomType: string,description: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null): Observable<any> {
 
     const params = {
       roomNumber: roomNumber == '' ? null : roomNumber,
       roomType: roomType,
+      description: description,
       status: status,
       dayPrice: dayPrice,
       hourPrice: hourPrice
@@ -81,15 +82,17 @@ export class AdminService {
     return this.http.post(this.apiUrl + 'rooms', formData, { headers });
   }
 
-  eidtRoom(roomId: number, roomNumber: string, roomType: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null, deleteFiles: string[]): Observable<any> {
+  eidtRoom(roomId: number, roomNumber: string, roomType: string,description: string, status: string, dayPrice: number, hourPrice: number, files: File[] | null, deleteFiles: string[]): Observable<any> {
     const params = {
       roomNumber: roomNumber,
       roomType: roomType,
+      description: description,
       status: status,
       dayPrice: dayPrice,
       hourPrice: hourPrice,
       deleteFiles: deleteFiles
     };
+    console.log(params);
     const formData = new FormData();
     formData.append('roomRequest', new Blob([JSON.stringify(params)], { type: 'application/json' }));
 
@@ -211,6 +214,13 @@ export class AdminService {
   getPayment(page: number, size: number, keyword: string) {
     const headers = this.config.getHttpHeaders();
     return this.http.get<Payment[]>(`${this.apiUrl}payments?page=${page}&size=${size}&keyword=${keyword}`, { headers });
+  }
+  editPayment(paymentId: number, status: string): Observable<any> {
+    const body = {
+      status: status
+    };
+    const headers = this.config.getHttpHeaders();
+    return this.http.put(this.apiUrl + 'payments/' + paymentId, body, { headers });
   }
 
   //Call Api Provision Booking

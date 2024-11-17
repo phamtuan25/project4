@@ -249,3 +249,7 @@ h2 {
     color: #dd0f08; 
     font-weight: bold;
 }
+.paid-status {
+    color: green; 
+    font-weight: bold;
+  }

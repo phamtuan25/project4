@@ -8,6 +8,10 @@ public class PaymentMapper {
     public static PaymentResponse convertToResponse(Payment payment) {
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setPaymentId(payment.getPaymentId());
+        paymentResponse.setUser(payment.getBooking().getUser().getEmail());
+        paymentResponse.setPaymentDate(payment.getPaymentDate());
+        paymentResponse.setPaymentReference(payment.getPaymentReference());
+        paymentResponse.setPaid(payment.getPaid());
         paymentResponse.setStatus(payment.getStatus());
         return paymentResponse;
     }

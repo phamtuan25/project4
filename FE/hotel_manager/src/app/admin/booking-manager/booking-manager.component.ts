@@ -115,6 +115,7 @@ export interface Booking {
   totalAmount: number;
 }
 export interface UserBookingResponse {
+  fullName: string;
   email: string; 
 }
 

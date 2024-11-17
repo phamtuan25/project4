@@ -11,6 +11,7 @@ import { UserBookingComponent } from './user-booking/user-booking.component';
 import { IntroduceComponent } from './introduce/introduce.component';
 import { PaymentComponent } from './payment/payment.component';
 import { RoomAvailabilityComponent } from './room-availability/room-availability.component';
+import { PaymentInfoComponent } from './payment-info/payment-info.component';
 
 const routes: Routes = [
     {
@@ -30,6 +31,7 @@ const routes: Routes = [
               { path: 'payment', component: PaymentComponent },
               { path: 'room-availability', component: RoomAvailabilityComponent },
               { path: 'room-detail/:roomId', component: RoomDetailComponent},
+              { path: 'payment-info', component: PaymentInfoComponent},
               { path: '', redirectTo: '/room', pathMatch: 'full' },
         ]
     }

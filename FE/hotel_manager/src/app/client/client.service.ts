@@ -4,7 +4,7 @@ import { ConfigService } from '../../config/config.service';
 import { Room } from './room/room.component';
 import { Provision } from '../admin/provision-manager/provision-manager.component';
 import { Observable } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
+import { Booking } from '../admin/booking-manager/booking-manager.component';
 @Injectable({
     providedIn: 'root'
 })
@@ -81,13 +81,23 @@ export class ClientService {
         };
 
         const headers = this.config.getHttpHeaders();
-        console.log('body', body)
-        return this.http.post('http://localhost:8080/api/bookings', body, { headers });
+        return this.http.post(this.apiUrl + 'bookings', body, { headers });
     }
 
     getBookingByUser(userId: number | undefined): Observable<any> {
         const headers = this.config.getHttpHeaders();
-        return this.http.get(this.apiUrl + 'bookings/' + userId, { headers });
+        return this.http.get<Booking>(this.apiUrl + 'bookings/' + userId, { headers });
+    }
+
+    getBookingByBookingId(bookingId: number): Observable<any> {
+        const headers = this.config.getHttpHeaders();  
+        return this.http.get(this.apiUrl + 'bookings/bookingDetail/' + bookingId, { headers });
+    }
+    //Call api add payment
+    addPayment(paymentRequest: any): Observable<any> {
+
+        const headers = this.config.getHttpHeaders();
+        return this.http.post(this.apiUrl + 'payments', paymentRequest, { headers });
     }
 
     //Call api user

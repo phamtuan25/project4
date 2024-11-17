@@ -13,7 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IntroduceComponent } from './introduce/introduce.component';
 import { PaymentComponent } from './payment/payment.component';
-import { RoomAvailabilityComponent } from './room-availability/room-availability.component';  
+import { RoomAvailabilityComponent } from './room-availability/room-availability.component';
+import { PaymentInfoComponent } from './payment-info/payment-info.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { RoomAvailabilityComponent } from './room-availability/room-availability
     ContactComponent,
     IntroduceComponent,
     PaymentComponent,
-    RoomAvailabilityComponent
+    RoomAvailabilityComponent,
+    PaymentInfoComponent,
   ],
   imports: [
     CommonModule,

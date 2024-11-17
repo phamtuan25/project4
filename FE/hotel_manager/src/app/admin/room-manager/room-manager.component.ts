@@ -20,6 +20,7 @@ export class RoomManagerComponent implements OnInit {
   roomNumber: string = "";
   roomType: string = "SINGLE";
   status: string = "AVAILABLE";
+  description: string = "";
   dayPrice: number = 0;
   hourPrice: number = 0;
   files: File[] | null = [];
@@ -123,7 +124,7 @@ export class RoomManagerComponent implements OnInit {
 
 
   onSubmitAdd() {
-    this.adminService.addRoom(this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice, this.files).subscribe(
+    this.adminService.addRoom(this.roomNumber, this.roomType,this.description, this.status, this.dayPrice, this.hourPrice, this.files).subscribe(
       response => {
         alert("Add Success!");
         this.files = [];
@@ -158,6 +159,7 @@ export class RoomManagerComponent implements OnInit {
     this.selectedRoom = room
     this.roomId = room.roomId
     this.roomNumber = room.roomNumber
+    this.description = room.description
     this.roomType = room.roomType
     this.status = room.status
     this.dayPrice = room.dayPrice
@@ -179,7 +181,7 @@ export class RoomManagerComponent implements OnInit {
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
     if (form.valid) {
-      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType, this.status, this.dayPrice, this.hourPrice, this.files, this.deleteFiles).subscribe(
+      this.adminService.eidtRoom(this.roomId, this.roomNumber, this.roomType,this.description, this.status, this.dayPrice, this.hourPrice, this.files, this.deleteFiles).subscribe(
         response => {
           alert("Edit Success!");
           this.getRooms(this.currentPage, this.pageSize, this.keyword);
@@ -193,6 +195,7 @@ export class RoomManagerComponent implements OnInit {
     this.roomNumber = "";
     this.roomType = "SINGLE";
     this.status = "AVAILABLE";
+    this.description = "";
     this.dayPrice = 0;
     this.hourPrice = 0;
     this.files = null;
@@ -229,6 +232,7 @@ export interface Room {
   roomNumber: string;
   roomType: string;
   status: string;
+  description: string;
   dayPrice: number;
   hourPrice: number;
   images: string[];

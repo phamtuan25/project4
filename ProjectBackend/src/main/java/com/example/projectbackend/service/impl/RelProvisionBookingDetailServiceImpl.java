@@ -52,6 +52,8 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
             }
             String likePattern = "%" + keyword + "%";
             return criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("bookingDetail").get("room").get("roomNumber").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("provision").get("provisionName")), likePattern),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("status")), likePattern),
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("price").as(String.class)), likePattern)
             );

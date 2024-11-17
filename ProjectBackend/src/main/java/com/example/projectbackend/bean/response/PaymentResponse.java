@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PaymentResponse {
     private Long paymentId;
-    private Long bookingId;
+    private String user;
     private Payment.PaymentStatus status;
     private Double paid;
     private LocalDate paymentDate;

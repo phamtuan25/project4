@@ -167,7 +167,9 @@ public class PaymentServiceImpl implements PaymentService {
             String likePattern = "%" + keyword + "%";
             return criteriaBuilder.or(
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("status").as(String.class)), likePattern),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("paymentMethod").as(String.class)), likePattern)
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("booking").get("user").get("email").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("paymentReference").as(String.class)), likePattern),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("paid").as(String.class)), likePattern)
             );
         };
     }

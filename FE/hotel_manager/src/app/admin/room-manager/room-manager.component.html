@@ -17,6 +17,7 @@
             <tr>
                 <th>Room Number</th>
                 <th>Room Type</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Day Price</th>
                 <th>Hour Price</th>
@@ -29,6 +30,7 @@
                 <tr *ngFor="let room of rooms">
                     <td>{{room.roomNumber}}</td>
                     <td>{{room.roomType}}</td>
+                    <td>{{room.description}}</td>
                     <td>{{room.status}}</td>
                     <td>{{room.dayPrice}}</td>
                     <td>{{room.hourPrice}}</td>
@@ -75,6 +77,11 @@
                                 <option value="DELUXE">DELUXE</option>
                                 <option value="FAMILY">FAMILY</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea type="text" class="form-control" id="description" [(ngModel)]="description"
+                                name="description"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="status">Status</label>
@@ -145,6 +152,11 @@
                             <option value="FAMILY">FAMILY</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="description" required></textarea>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="form-control" id="status" name="status" [(ngModel)]="status" required>

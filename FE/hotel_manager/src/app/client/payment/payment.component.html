@@ -1,48 +1,36 @@
 <div class="payment-container">
-    <h2 class="payment-title">Thanh Toán Dịch Vụ</h2>
+    <h2 class="payment-title">Booking Payment</h2>
 
-    <!-- Thông tin Booking -->
     <div class="booking-info">
-        <p><strong>Booking ID:</strong> #12345</p>
-        <p><strong>Khách Hàng:</strong> Nguyễn Văn A</p>
-        <p><strong>Tổng Tiền:</strong> <span class="total-amount">3.000.000 VND</span></p>
-        <p><strong>Số Tiền Cọc:</strong> <span class="deposit-amount">1.000.000 VND</span></p>
+        <p><strong>Booking Person:</strong> {{bookingDetail?.userBookingResponse?.fullName}}</p>
+        <p><strong>Booking Date:</strong> {{bookingDetail?.createdAt}}</p>
+        <p><strong>Amount To Deposit:</strong> <span class="total-amount"> {{bookingDetail?.deposit}}</span></p>
+        <p><strong>Total Amount Of Booking:</strong> <span class="deposit-amount"> {{bookingDetail?.totalAmount}}</span></p>
     </div>
 
-    <!-- Các lựa chọn thanh toán -->
-    <form action="" method="POST" class="payment-form">
+    <form (ngSubmit)="submitPayment()" method="POST" class="payment-form" [formGroup]="bookingForm">
+        <input type="hidden" formControlName="bookingId" [value]="bookingId">
 
-        <!-- Chọn hình thức thanh toán -->
         <div class="payment-method">
-            <label for="payment-type"><strong>Hình Thức Thanh Toán</strong></label>
-            <select name="payment-type" id="payment-type">
-                <option value="deposit">Thanh Toán Tiền Cọc</option>
-                <option value="full-payment">Thanh Toán Toàn Bộ</option>
+            <label for="status"><strong>Payment Status:</strong></label>
+            <select name="paymentMethod" id="paymentMethod" (change)="onPricingOptionChange($event)" [value]="pricingOption" formControlName="pricingOption">
+              <option value="DEPOSITED">Payment of Deposit</option>
+              <option value="PAID">Payment of Total Amount</option>
             </select>
-        </div>
+          </div>
+          
+          <div class="payment-amount">
+            <label for="paid"><strong>Amount Needed to Pay:</strong></label>
+            <input type="text" id="paid" name="paid" [value]="bookingForm.get('price')?.value | currency: 'USD':true" readonly>
+          </div>
 
-        <!-- Các lựa chọn hình thức thanh toán -->
-<div class="payment-options">
-            <label><input type="radio" name="payment-method" value="bank-transfer"> Chuyển Khoản Ngân Hàng</label>
-            <label><input type="radio" name="payment-method" value="cash"> Tiền Mặt</label>
-            <label><input type="radio" name="payment-method" value="credit-card"> Thẻ Tín Dụng</label>
-        </div>
+        <div class="payment-reference">
+            <label for="paymentReference"><strong>Payment content:</strong></label>
+            <input type="text" id="paymentReference" name="paymentReference" [value]="bookingForm.get('paymentReference')?.value" readonly>
+          </div>
 
-        <!-- Hiển thị số tiền cần thanh toán -->
-        <div class="payment-amount">
-            <label for="amount"><strong>Số Tiền Cần Thanh Toán:</strong></label>
-            <input type="text" id="amount" name="amount" value="1.000.000 VND" readonly>
-        </div>
-
-        <!-- Thông tin chuyển khoản nếu cần -->
-        <div class="bank-info">
-            <label for="bank-details"><strong>Thông Tin Chuyển Khoản Ngân Hàng</strong></label>
-            <textarea id="bank-details" name="bank-details" rows="4" placeholder="Vui lòng nhập thông tin ngân hàng tại đây..." required></textarea>
-        </div>
-
-        <!-- Nút thanh toán -->
         <div class="payment-btn">
-            <button type="submit" class="btn-submit">Thanh Toán</button>
+            <button type="submit" class="btn-submit">Pay</button>
         </div>
     </form>
 </div>

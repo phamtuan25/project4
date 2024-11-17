@@ -18,9 +18,18 @@
                         <p class="status {{ booking.status.toLowerCase() }}">
                             <strong>Status:</strong> {{ booking.status }}
                         </p>
-                        <p class="price-highlight"><strong>Amount To Deposit:</strong> {{ booking.deposit | currency }}</p>
-                        <p class="price-highlight"><strong>Total Amount:</strong> {{ booking.totalAmount | currency }}</p>
-                        <button class="button" (click)="goToPayment()">Payment for Booking</button>
+                        <p class="price-highlight">
+                            <strong>Amount To Deposit:</strong> 
+                            {{ booking.deposit | currency }} 
+                            <span *ngIf="booking.status === 'DEPOSITED'" class="paid-status">(Completed)</span>
+                          </p>
+                          
+                          <p class="price-highlight">
+                            <strong>Total Amount:</strong> 
+                            {{ booking.totalAmount | currency }} 
+                            <span *ngIf="booking.status === 'PAID'" class="paid-status">(Completed)</span>
+                          </p>
+                        <button class="button" (click)="goToPayment(booking.bookingId)">Payment for Booking</button>
                     </div>
                     <div *ngIf="selectedBookingDetail && selectedBookingDetail.bookingId === booking.bookingId" class="booking-details-container">
                         <h3>Booking Details</h3>

@@ -67,7 +67,7 @@ export class UserBookingComponent {
     }
   }
 
-  goToPayment(){
-    this.router.navigate(['/payment'])
+  goToPayment(bookingId: number){
+    this.router.navigate(['/payment'],{ state: { bookingId: bookingId } })
   }
 }
