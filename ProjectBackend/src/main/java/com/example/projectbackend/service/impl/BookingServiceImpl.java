@@ -160,10 +160,12 @@ import java.util.stream.Collectors;
         if (booking.getStatus() == Booking.BookingStatus.FAILED) {
             for (BookingDetail bookingDetail : bookingUpdate.getBookingDetails()) {
                 bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CANCELED);
+                bookingDetail.setUpdatedAt(LocalDateTime.now());
 
                 if (bookingDetail.getRelProvisionBookingDetails() != null) {
                     for (RelProvisionBookingDetail relProvisionBookingDetail : bookingDetail.getRelProvisionBookingDetails()) {
                         relProvisionBookingDetail.setStatus(RelProvisionBookingDetail.RelProvisionBookingDetailStatus.UNUSED);
+                        relProvisionBookingDetail.setUpdatedAt(LocalDateTime.now());
                     }
 
                     // Lưu lại các thay đổi của RelProvisionBookingDetail
@@ -184,6 +186,7 @@ import java.util.stream.Collectors;
                 if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED &&
                         bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CONFIRMED) {
                     bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
+                    bookingDetail.setUpdatedAt(LocalDateTime.now());
                     bookingDetailRepository.save(bookingDetail);
                 }
 
@@ -224,7 +227,7 @@ import java.util.stream.Collectors;
         bookingUpdate.setStatus(booking.getStatus());
         bookingUpdate.setDeposit(booking.getDeposit());
         bookingUpdate.setTotalAmount(booking.getTotalAmount());
-         bookingUpdate.setUpdatedAt(LocalDateTime.now());
+        bookingUpdate.setUpdatedAt(LocalDateTime.now());
     }
     public static Specification<Booking> searchByKeyword(String keyword) {
         return (root, query, criteriaBuilder) -> {

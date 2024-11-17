@@ -38,7 +38,7 @@ public class RelProvisionBookingDetailController {
     }
 
     @PutMapping("/{relId}")
-    public RelProvisionBookingDetail updateRel(@PathVariable Long relId, RelProvisionBookingDetail relProvisionBookingDetail){
+    public RelProvisionBookingDetail updateRel(@PathVariable Long relId, @RequestBody RelProvisionBookingDetail relProvisionBookingDetail){
         return relProvisionBookingDetailService.updateRel(relId, relProvisionBookingDetail);
     }
 

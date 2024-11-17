@@ -28,7 +28,6 @@ public class BookingDetailRequest {
     @NotNull(message = "Check-out time is required")
     private LocalDateTime checkOut;
 
-    @NotEmpty(message = "Special requests cannot be empty")
     private String specialRequests;
 
     private Double price;
