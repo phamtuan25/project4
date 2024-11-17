@@ -237,17 +237,18 @@ select:focus {
     align-items: stretch;
 }
 
-.submit-container input[type="submit"] {
+.submit-container .btn-primary {
     background-color: #b95c47;
     color: #fff;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 15px;
+    border-radius: 0;
 }
 
-.submit-container input[type="submit"]:hover {
+.submit-container .btn-primary {
     background-color: #a3543f;
 }
 

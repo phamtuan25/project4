@@ -69,6 +69,10 @@ nav {
     color: rgba(255, 255, 255, 0.7);
 }
 
+.navbar-nav{
+    align-items: center;
+}
+
 .navbar-nav .nav-item {
     margin-right: 20px;
 }
