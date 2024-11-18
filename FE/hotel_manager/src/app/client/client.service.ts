@@ -95,7 +95,6 @@ export class ClientService {
     }
     //Call api add payment
     addPayment(paymentRequest: any): Observable<any> {
-
         const headers = this.config.getHttpHeaders();
         return this.http.post(this.apiUrl + 'payments', paymentRequest, { headers });
     }

@@ -27,7 +27,7 @@
             <tr *ngFor="let booking of bookings">
                 <td>{{booking.userBookingResponse.email}}</td>
                 <td>{{booking.createdAt}}</td>
-                <td>{{booking.updatedAt}}</td>
+                <td>{{booking.updatedAt || 'N/A'}}</td>
                 <td>{{booking.status}}</td>
                 <td>{{booking.deposit}}</td>
                 <td>{{booking.totalAmount}}</td>
@@ -44,7 +44,7 @@
         </tbody>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="bookings.length == 0">Data not found</div>
-    <!-- Modal Sửa Đặt Phòng -->
+
     <div class="modal fade" id="editModal">
         <div class="modal-dialog" role="document">
             <form id="editBookingForm" #editBookingForm="ngForm" (ngSubmit)="onSubmitEdit(editBookingForm)"
@@ -102,7 +102,7 @@
             </form>
         </div>
     </div>
-    <!-- Phân Trang -->
+
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item" [class.disabled]="currentPage === 1">

@@ -1,7 +1,6 @@
 <div class="container mt-5 available">
     <div class="available-group">
         <form (ngSubmit)="checkRoomAvailability()" class="availability-form">
-            <!-- Check-in date -->
             <div class="form-group">
                 <label for="checkin">Check in:</label>
                 <input 
@@ -16,7 +15,6 @@
                 >
               </div>
             
-              <!-- Check-out date -->
               <div class="form-group">
                 <label for="checkout">Check out:</label>
                 <input 
@@ -29,7 +27,6 @@
                   [min]="minCheckOutDate"
                 >
               </div>
-            <!-- Room type -->
             <div class="form-group">
               <label for="room-type">Room type:</label>
               <select 
@@ -43,20 +40,10 @@
                 <option *ngFor="let type of roomTypes" [value]="type">{{ type }}</option>
               </select>
             </div>
-          
-            <!-- Error Messages -->
-            <div *ngIf="errors.length > 0" class="alert alert-danger">
-              <ul>
-                <li *ngFor="let error of errors">{{ error }}</li>
-              </ul>
-            </div>
             <div class="submit-container">
                 <button type="submit" class="btn btn-primary">Check Availability</button>
             </div>
           </form>
-          
-        <!-- Submit button -->
-        
     </div>
 </div>
 

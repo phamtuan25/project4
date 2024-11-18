@@ -48,7 +48,6 @@
 
 .navbar-custom {
     background-color: rgba(185, 92, 71, 0.91) !important;
-    /* Màu navbar khi cuộn lên */
 }
 
 nav {
@@ -101,7 +100,6 @@ nav {
 /* header */
 
 
-/* Footer Styles */
 .site-footer {
     background-color: #2c3e50;
     color: #ffffff;
@@ -119,7 +117,6 @@ nav {
 
 .footer-column {
     flex: 1;
-    /* Chiếm cùng một không gian */
     margin-right: 20px;
 }
 
@@ -133,7 +130,6 @@ nav {
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    /* Khoảng cách giữa các chữ cái */
 }
 
 .site-footer p {
@@ -194,7 +190,6 @@ nav {
 }
 
 
-/* Social networks styles */
 .site-footer .nuss-social-networks {
     display: flex;
     justify-content: flex-end;
@@ -223,48 +218,36 @@ nav {
 
 .footer-divider {
     border-top: 1px solid #b95c47;
-    /* Đường viền ngăn cách */
     margin: 20px 0;
-    /* Khoảng cách trên và dưới cho đường viền */
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
     .site-footer {
         padding: 20px 10px;
-        /* Giảm padding trên thiết bị nhỏ */
     }
 
     .site-footer h3 {
         font-size: 20px;
-        /* Giảm kích thước tiêu đề trên thiết bị nhỏ */
     }
 
     .footer-top {
         flex-direction: column;
-        /* Xếp dọc trên thiết bị nhỏ */
         align-items: flex-start;
-        /* Căn trái */
     }
 
     .site-footer .nuss-social-networks .list {
         flex-direction: column;
-        /* Xếp dọc biểu tượng trên thiết bị nhỏ */
         align-items: center;
-        /* Căn giữa */
     }
 
     .site-footer .nuss-social-networks .item {
         margin: 10px 0;
-        /* Khoảng cách giữa các biểu tượng khi xếp dọc */
     }
 }
 
-/* Footer */
 
 
 
-/* hien thi user */
 .dropdown-toggle::after {
     display: none;
 }
@@ -335,7 +318,6 @@ nav {
     color: #2980b9;
 }
 
-/* scroll top */
 
 .scroll-to-top {
     position: fixed;

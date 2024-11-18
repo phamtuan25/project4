@@ -40,7 +40,7 @@
         </tbody>
     </table>
     <div class="text-center w-100 pb-3" *ngIf="users.length == 0">Data not found</div>
-    <!-- Modal Thêm Người Dùng -->
+
     <div class="modal fade" id="createModal">
         <div class="modal-dialog" role="document">
             <form id="addUserForm" method="POST" (ngSubmit)="onSubmitAdd()">
@@ -100,8 +100,8 @@
             </form>
         </div>
     </div>
-    <!-- Modal Sửa Người Dùng -->
-    <div class="modal fade" id="editModal">
+    
+     <div class="modal fade" id="editModal">
     <div class="modal-dialog" role="document">
         <form id="editUserForm" #editUserForm="ngForm" (ngSubmit)="onSubmitEdit(editUserForm)"
             method="PUT">

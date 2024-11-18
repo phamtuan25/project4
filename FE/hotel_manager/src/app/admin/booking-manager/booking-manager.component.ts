@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
-import $ from 'jquery';
 import 'bootstrap';
 import { AdminService } from '../admin.service';
 import { NgForm } from '@angular/forms';
@@ -81,7 +80,6 @@ export class BookingManagerComponent implements OnInit {
     this.totalAmount = booking.totalAmount
     this.editModal.show();
   }
-  // submit booking đã edit
   onSubmitEdit(form: NgForm) {
     if(form.valid) {
       this.adminService.editBooking(this.bookingId, this.status, this.deposit, this.totalAmount).subscribe(

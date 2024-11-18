@@ -49,7 +49,6 @@ export class UserManagerComponent implements OnInit {
     });
   }
 
-  //Get User list
   getUsers(page: number, size: number, keyword: string){
     this.adminService.getUser(page - 1, size, keyword).subscribe(
       (response: any) => {
@@ -69,7 +68,6 @@ export class UserManagerComponent implements OnInit {
     this.currentPage = page;
     this.getUsers(this.currentPage, this.pageSize, this.keyword);
   }
-  //Tìm kiếm User 
   searchUsers(): void {
     const input: string = (document.getElementById('searchUserInput') as HTMLInputElement).value.trim();
     this.keyword = input;
@@ -85,7 +83,6 @@ export class UserManagerComponent implements OnInit {
     this.resetFormData();
     this.createModal.show();
   }
-  // gán giá trị user edit
   openEditUser(user: User) {
     this.userId = user.userId
     this.email = user.email
@@ -95,7 +92,6 @@ export class UserManagerComponent implements OnInit {
     this.role = user.role
     this.editModal.show();
   }
-  // submit user đã edit
   onSubmitEdit(form: NgForm) {
     if(form.valid) {
       this.adminService.editUser(this.userId, this.address, this.email, this.phoneNumber,this.role).subscribe(
@@ -109,7 +105,6 @@ export class UserManagerComponent implements OnInit {
     
   }
 
-  // submit user đã add
   errors:any=[];
   onSubmitAdd() {
     this.adminService.addUser(this.firstName, this.lastName, this.address, this.email, this.phoneNumber, this.password, this.role).subscribe(
@@ -133,7 +128,6 @@ export class UserManagerComponent implements OnInit {
   findErrors(key:string){
     return this.errors.find((error:any)=>error.key==key)?.message;
   }
-  // reset lại biến
   resetFormData() {
     this.firstName = "";
     this.lastName = "";

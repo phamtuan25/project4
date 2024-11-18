@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminComponent } from '../admin.component';
-import $ from 'jquery';
 import 'bootstrap';
 import { AdminService, Images } from '../admin.service';
 import { NgForm } from '@angular/forms';
@@ -51,7 +50,6 @@ export class ProvisionManagerComponent implements OnInit {
     });
   }
 
-  //get list Provision   
   getProvisions(page: number, size: number, keyword: string) {
     this.adminService.getProvisions(page - 1, size, keyword).subscribe(
       (response: any) => {
@@ -74,7 +72,6 @@ export class ProvisionManagerComponent implements OnInit {
   }
 
 
-  // tìm kiếm Provision
   searchProvisions(): void {
     const input: string = (document.getElementById('searchProvisionInput') as HTMLInputElement).value.trim();
     this.keyword = input;
@@ -108,7 +105,6 @@ export class ProvisionManagerComponent implements OnInit {
           reader.readAsDataURL(file);
         });
         console.log("this.imagePaths",this.imagePaths)
-        // Kiểm tra định dạng tệp
         const validFormats = ['image/jpeg', 'image/png', 'image/gif'];
         if (!this.files.some(file => validFormats.includes(file.type))) {
             this.errors.push({ key: 'images', message: 'Only JPEG, PNG or GIF format images are accepted.' });
@@ -119,7 +115,6 @@ export class ProvisionManagerComponent implements OnInit {
     }
 }
 
-  //submit provision đã add
 
   onSubmitAdd() {
     this.adminService.addProvision(this.provisionName, this.description, this.price, this.status, this.files).subscribe(
@@ -150,7 +145,6 @@ export class ProvisionManagerComponent implements OnInit {
     this.resetFormData();
     this.createModal.show();
   }
-  // gán giá trị Room edit
   openEditProvision(provision: Provision) {
     this.selectedProvision = provision;
     this.provisionId = provision.provisionId
@@ -171,7 +165,6 @@ export class ProvisionManagerComponent implements OnInit {
   })
     this.editModal.show();
   }
-  // submit room đã edit
   onSubmitEdit(form: NgForm) {
     console.log(form.valid)
     if (form.valid) {
@@ -184,7 +177,6 @@ export class ProvisionManagerComponent implements OnInit {
       );
     }
   }
-  // reset lại biến
   resetFormData() {
     this.provisionName = "";
     this.description = "";

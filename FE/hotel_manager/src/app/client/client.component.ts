@@ -4,7 +4,6 @@ import { ConfigService } from '../../config/config.service';
 import { ClientService } from './client.service';
 import { User } from '../admin/user-manager/user-manager.component';
 import { GlobalStateService } from '../../config/global.stage.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-client',
@@ -30,15 +29,12 @@ export class ClientComponent {
     const email = this.config.getEmail();
     if (email) this.getUserLogin(email);
 
-     // Gắn sự kiện cuộn trang
      window.addEventListener('scroll', this.handleScroll.bind(this));
 
-     // Kiểm tra trạng thái cuộn khi component khởi tạo
      this.checkScroll();
   }
 
   ngOnDestroy(): void {
-    // Hủy sự kiện khi component bị hủy
     window.removeEventListener('scroll', this.handleScroll.bind(this));
   }
 
@@ -68,7 +64,6 @@ export class ClientComponent {
     const navbar = document.getElementById("navbar");
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");
 
-    // Ẩn/Hiện navbar khi cuộn
     if (navbar) {
       if (scrollTop > this.lastScrollTop) {
         this.renderer.setStyle(navbar, 'top', '-90px');
@@ -77,14 +72,12 @@ export class ClientComponent {
         navbar.classList.add("navbar-custom");
       }
 
-      // Quản lý navbar khi cuộn về đầu trang
       if (scrollTop === 0) {
         navbar.classList.remove("navbar-custom");
         this.renderer.setStyle(navbar, 'top', '0');
       }
     }
 
-    // Hiển thị/ẩn nút cuộn lên trên cùng
     if (scrollToTopBtn) {
       if (scrollTop > 100) {
         this.renderer.setStyle(scrollToTopBtn, 'display', 'flex');
@@ -93,11 +86,9 @@ export class ClientComponent {
       }
     }
 
-    // Cập nhật giá trị scrollTop
     this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }
 
-  // Kiểm tra trạng thái cuộn để quản lý hiển thị nút scroll
   checkScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");

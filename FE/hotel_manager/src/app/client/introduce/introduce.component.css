@@ -1,4 +1,3 @@
-/* Body styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -6,14 +5,12 @@ body {
     padding: 0;
 }
 
-/* Header styles */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
-/* Title styles */
 h1 {
     text-align: center;
     font-size: 42px;
@@ -34,7 +31,6 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
-/* About Us section */
 .about-us {
     display: flex;
     justify-content: space-between;
@@ -77,7 +73,6 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive styles for About Us section */
 @media (max-width: 767px) {
     .about-us {
         flex-direction: column;
@@ -97,7 +92,6 @@ h1 {
     }
 }
 
-/* Location section */
 .location {
     display: flex;
     justify-content: space-between;
@@ -140,7 +134,6 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive styles for Location section */
 @media (max-width: 767px) {
     .location {
         flex-direction: column;
@@ -160,7 +153,6 @@ h1 {
     }
 }
 
-/* Food & Beverage section */
 .food-beverage {
     background-color: #004d40;
     padding: 40px 20px;
@@ -191,7 +183,6 @@ h1 {
     margin-top: 20px;
 }
 
-/* Responsive styles for Food & Beverage section */
 @media (max-width: 767px) {
     .food-beverage {
         padding: 20px;

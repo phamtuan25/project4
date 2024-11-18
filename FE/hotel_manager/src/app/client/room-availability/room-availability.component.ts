@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientService } from '../client.service';
 
-// Định nghĩa interface cho state, cụ thể là các phòng
 @Component({
   selector: 'app-room-availability',
   templateUrl: './room-availability.component.html',

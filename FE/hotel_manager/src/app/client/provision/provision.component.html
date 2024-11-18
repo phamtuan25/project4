@@ -1,5 +1,4 @@
 <div class="container mt-5">
-    <!-- Giới thiệu trang dịch vụ -->
     <div class="intro">
       <p>
         <strong>
@@ -9,13 +8,11 @@
       </p>
     </div>
   
-    <!-- Hiển thị các dịch vụ -->
     <div *ngIf="provisions.length > 0; else noServices" class="services-list">
       <div *ngFor="let provision of provisions; let i = index" 
            class="row align-items-center service" 
            [ngClass]="{'odd': i % 2 === 0, 'even': i % 2 !== 0}">
           
-          <!-- Cột hình ảnh -->
           <div [id]="'roomCarousel' + i" class="carousel slide" data-bs-ride="carousel">
               <ol class="carousel-indicators">
                   <li *ngFor="let image of provision.images; let j = index" 
@@ -40,7 +37,6 @@
               </button>
           </div>
       
-          <!-- Cột mô tả dịch vụ -->
           <div class="col-md-6" [ngClass]="{'order-md-1': i % 2 === 0, 'order-md-2': i % 2 !== 0}">
               <h1>{{ provision.provisionName }}</h1>
               <p>{{ provision.description }}</p>
@@ -54,7 +50,6 @@
          There are no services to display.
       </div>
   </ng-template>
-    <!-- Phân trang -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item" [class.disabled]="currentPage === 1">

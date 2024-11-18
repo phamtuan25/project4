@@ -78,14 +78,12 @@ export class BookingDetailManagerComponent implements OnInit {
     );
   }
 
-  // Chuyển trang
   goToPage(page: number): void {
     if (page < 1 || page > Math.ceil(this.totalPages / this.pageSize)) return;
     this.currentPage = page;
     this.getBookingDetails(this.currentPage, this.pageSize, this.keyword);
   }
 
-  // Tìm kiếm booking
   searchBookings(): void {
     const input: string = (document.getElementById('searchBookingsInput') as HTMLInputElement).value.trim();
     this.keyword = input;

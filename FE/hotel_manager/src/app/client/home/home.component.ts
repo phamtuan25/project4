@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit {
     this.errors = [];
   
     if (!this.checkin || !this.checkout || !this.roomType) {
-      this.errors.push('Please fill in all fields.');
+      alert('Please fill in all check in, check out, and status information.');
       return;
     }
   

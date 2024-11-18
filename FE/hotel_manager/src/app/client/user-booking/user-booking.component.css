@@ -180,7 +180,6 @@ h2 {
     color: #757575;
 }
 
-/* No Service Message */
 .no-service {
     font-size: 18px;
     color: #ff5722;
@@ -188,14 +187,12 @@ h2 {
     margin: 20px 0;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     color: #777;
     margin-top: 20px;
 }
 
-/* Responsive Design */
 @media (max-width: 600px) {
     .provision-item {
         flex-direction: column;

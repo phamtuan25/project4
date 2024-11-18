@@ -4,8 +4,8 @@
     <div class="booking-info">
         <p><strong>Booking Person:</strong> {{bookingDetail?.userBookingResponse?.fullName}}</p>
         <p><strong>Booking Date:</strong> {{bookingDetail?.createdAt}}</p>
-        <p><strong>Amount To Deposit:</strong> <span class="total-amount"> {{bookingDetail?.deposit}}</span></p>
-        <p><strong>Total Amount Of Booking:</strong> <span class="deposit-amount"> {{bookingDetail?.totalAmount}}</span></p>
+        <p><strong>Amount To Deposit:</strong> <span class="total-amount"> ${{bookingDetail?.deposit}}</span></p>
+        <p><strong>Total Amount Of Booking:</strong> <span class="deposit-amount"> ${{bookingDetail?.totalAmount}}</span></p>
     </div>
 
     <form (ngSubmit)="submitPayment()" method="POST" class="payment-form" [formGroup]="bookingForm">

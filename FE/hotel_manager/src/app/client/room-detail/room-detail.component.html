@@ -26,7 +26,6 @@
               </button>
           </div>
 
-          <!-- Room Details -->
           <div class="details mt-4">
               <h3>Room Number: <span>{{ roomDetail.roomNumber }}</span></h3>
               <p><strong>Room Type:</strong> {{ roomDetail.roomType }}</p>
@@ -34,7 +33,6 @@
               <h5>Daily Price: <span class="price-red">{{ roomDetail.dayPrice | currency: '$' }}</span></h5>
               <h5>Hourly Price: <span class="price-red">{{ roomDetail.hourPrice | currency: '$' }}</span></h5>
           </div>
-          <!-- Back to Room List Button -->
           <button class="btn btn-primary" (click)="goBack()">
             <i class="bi bi-arrow-left"></i> Back to Room List
         </button>
@@ -45,7 +43,6 @@
           <form [formGroup]="bookingForm" (ngSubmit)="addToBooking()">
               <input type="hidden" name="roomId" [value]="roomDetail.roomId">
 
-              <!-- Pricing Option Selector -->
               <div class="form-group">
                   <label for="pricingOption">Pricing Option (Hourly/Daily)</label>
                   <select class="form-control" id="pricingOption" formControlName="pricingOption"

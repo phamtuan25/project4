@@ -181,7 +181,6 @@ p {
     padding: 30px 0;
 }
 
-/* check available */
 .available {
     justify-content: center;
     align-items: center;
@@ -253,9 +252,31 @@ select:focus {
     background-color: #a3543f;
 }
 
-/* check available */
 
 .page-link{
     background-color: #fff;
     color: #b95c47;
 }
+.alert {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px; 
+    font-family: Arial, sans-serif; 
+    font-size: 16px;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
+  }
+  
+  .alert ul {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0; 
+  }
+  
+  .alert li {
+    margin: 5px 0; 
+  }

@@ -41,8 +41,8 @@ export class UserProfileComponent implements OnInit {
       phoneNumber: [
         '', 
         [
-          Validators.required, // Trường bắt buộc
-          Validators.pattern(/^(\+84|0)[0-9]{9,10}$/) // Regex kiểm tra định dạng số điện thoại
+          Validators.required,
+          Validators.pattern(/^(\+84|0)[0-9]{9,10}$/) 
         ]
       ],
       address: [
@@ -76,7 +76,6 @@ export class UserProfileComponent implements OnInit {
       console.error("User data is null");
     }
   }
-  // submit user đã edit
   onSubmitEdit() {
     if (this.editUserForm.valid) {
       this.role = "CUSTOMER";  
@@ -95,7 +94,6 @@ export class UserProfileComponent implements OnInit {
     }
   }
   
-  // reset lại biến
   resetFormData() {
     this.email = "";
     this.address = "";

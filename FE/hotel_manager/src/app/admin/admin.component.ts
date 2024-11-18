@@ -45,7 +45,7 @@ export class AdminComponent implements OnInit{
     if(email) this.getUserLogin(email);
     const token = this.config.getToken();
     if(!token) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
     }
   }
   goToHomePage(){

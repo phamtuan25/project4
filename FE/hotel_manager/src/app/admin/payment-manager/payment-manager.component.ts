@@ -34,7 +34,6 @@ export class PaymentManagerComponent implements OnInit{
       backdrop: 'static'
     });
   }
-  //Get Payment list
   getPayments(page: number, size: number, keyword: string) {
     this.adminService.getPayment(page - 1, size, keyword).subscribe(
       (response: any) => {
@@ -53,7 +52,6 @@ export class PaymentManagerComponent implements OnInit{
     this.currentPage = page;
     this.getPayments(this.currentPage, this.pageSize, this.keyword);
   }
-  //Tìm kiếm Payment 
   searchPayments(): void {
     const input: string = (document.getElementById('searchPaymentsInput') as HTMLInputElement).value.trim();
     this.keyword = input;

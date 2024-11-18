@@ -30,7 +30,7 @@
                 <td>{{provisionBooking.price}}</td>
                 <td>{{provisionBooking.status}}</td>
                 <td>{{provisionBooking.createdAt}}</td>
-                <td>{{provisionBooking.updatedAt}}</td>
+                <td>{{provisionBooking.updatedAt || 'N/A'}}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" data-toggle="modal"
                         [attr.data-target]="'#editProvisionBookingModal'+provisionBooking.relId"
@@ -85,7 +85,6 @@
             </form>
         </div>
     </div>
-    <!-- Phân Trang -->
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item" [class.disabled]="currentPage === 1">

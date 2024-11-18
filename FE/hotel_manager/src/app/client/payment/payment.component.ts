@@ -75,7 +75,7 @@ export class PaymentComponent implements OnInit {
     const paymentRequest = {
       bookingId: this.bookingId,
       paymentMethod: this.pricingOption,
-      price:   this.bookingForm.get('price')?.value
+      price: this.bookingForm.get('price')?.value
     };
 
     this.clientService.addPayment(paymentRequest).subscribe(

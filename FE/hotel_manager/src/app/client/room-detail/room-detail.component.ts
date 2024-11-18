@@ -142,7 +142,6 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
     }
   }
 
-  // Helper functions for provision management
   get provisions(): FormArray {
     return this.bookingForm.get('provisions') as FormArray;
   }
@@ -192,6 +191,10 @@ export class RoomDetailComponent implements OnInit, AfterContentInit, OnDestroy 
   }
 
   addToBooking(): void {
+    if (!this.bookingForm.get('checkIn')?.value || !this.bookingForm.get('checkOut')?.value) {
+      alert('Please fill in both check-in and check-out times.');
+      return;
+    }
     if (this.bookingForm.valid) {
       if (!this.userLogin) {
         alert('You need to log in to your account to book');
