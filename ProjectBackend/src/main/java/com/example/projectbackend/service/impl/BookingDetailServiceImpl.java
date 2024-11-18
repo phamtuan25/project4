@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +25,7 @@ public class BookingDetailServiceImpl implements BookingDetailService {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
     private final ProvisionRepository provisionRepository;
-    private final RelProvisionBookingDetailRepository relProvisionBookingDetailRepository;  // Thêm phụ thuộc vào RelProvisionBookingDetailRepository
+    private final RelProvisionBookingDetailRepository relProvisionBookingDetailRepository;
 
     @Override
     public Page<BookingDetailResponse> getAllBookingDetails(Pageable pageable, String keyword, Long bookingId) {
@@ -51,77 +48,60 @@ public class BookingDetailServiceImpl implements BookingDetailService {
 
     @Override
     public BookingDetail createBookingDetail(BookingDetailRequest bookingDetailRequest, Long bookingId) {
-        // Chuyển đổi từ request thành entity
         BookingDetail bookingDetail = BookingDetailMapper.convertFromRequest(bookingDetailRequest, provisionRepository);
 
-        // Tìm booking
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking không tìm thấy với ID: " + bookingId));
+                .orElseThrow(() -> new NotFoundException("BookingNotFound", "Booking not found with ID: " + bookingId));
         bookingDetail.setBooking(booking);
 
-        // Tìm phòng
         Room room = roomRepository.findById(bookingDetailRequest.getRoomId())
-                .orElseThrow(() -> new NotFoundException("RoomNotFound", "Phòng không tìm thấy với ID: " + bookingDetailRequest.getRoomId()));
+                .orElseThrow(() -> new NotFoundException("RoomNotFound", "Room not found with ID: " + bookingDetailRequest.getRoomId()));
         bookingDetail.setRoom(room);
 
-        // Kiểm tra phòng có sẵn không
         boolean isRoomAvailable = checkRoomAvailability(room, bookingDetailRequest.getCheckIn(), bookingDetailRequest.getCheckOut());
         if (!isRoomAvailable) {
-            throw new IllegalArgumentException("Phòng đã được đặt trong khoảng thời gian bạn yêu cầu");
+            throw new IllegalArgumentException("The room is already booked for the dates you requested.");
         }
 
-        // Đánh dấu phòng là đã được đặt
         room.setStatus(Room.RoomStatus.BOOKED);
         roomRepository.save(room);
 
-        // Set trạng thái bookingDetail là PENDING
         bookingDetail.setStatus(BookingDetail.BookingDetailStatus.PENDING);
 
-        // Lưu BookingDetail và lấy ID
         bookingDetail = bookingDetailRepository.save(bookingDetail);
 
-        // Lưu RelProvisionBookingDetail vào cơ sở dữ liệu
         relProvisionBookingDetailRepository.saveAll(bookingDetail.getRelProvisionBookingDetails());
 
         return bookingDetail;
     }
 
     private boolean checkRoomAvailability(Room room, LocalDateTime checkIn, LocalDateTime checkOut) {
-        // Kiểm tra nếu phòng đã có booking trong khoảng thời gian này
         List<BookingDetail> overlappingBookings = bookingDetailRepository.findOverlappingBookings(room.getRoomId(), checkIn, checkOut);
         return overlappingBookings.isEmpty();
     }
 
     @Override
     public BookingDetail updateBookingDetail(Long bookingDetailId, BookingDetail bookingDetail) {
-        // Tìm kiếm BookingDetail theo ID
         BookingDetail bookingDetailUpdate = bookingDetailRepository.findById(bookingDetailId)
                 .orElseThrow(() -> new NotFoundException("BookingDetailNotFound", "Booking Detail not found with ID: " + bookingDetailId));
 
-        // Set các giá trị được cập nhật vào BookingDetail hiện tại
         setBookingDetail(bookingDetailUpdate, bookingDetail);
 
-        // Kiểm tra nếu trạng thái được cập nhật thành CONFIRMED
         if (bookingDetailUpdate.getStatus() == BookingDetail.BookingDetailStatus.CONFIRMED) {
-            // Nếu trạng thái là CONFIRMED, cập nhật trạng thái phòng thành AVAILABLE
             Room room = bookingDetailUpdate.getRoom();
 
-            // Kiểm tra nếu phòng không phải là trạng thái AVAILABLE (đảm bảo không thay đổi trạng thái của phòng đã có sẵn)
             if (room.getStatus() != Room.RoomStatus.AVAILABLE) {
-                room.setStatus(Room.RoomStatus.AVAILABLE); // Đặt trạng thái phòng thành AVAILABLE
-                roomRepository.save(room);  // Lưu trạng thái phòng mới
+                room.setStatus(Room.RoomStatus.AVAILABLE);
+                roomRepository.save(room);
             }
         }
 
-        // Kiểm tra nếu trạng thái được cập nhật thành CANCELED
         if (bookingDetailUpdate.getStatus() == BookingDetail.BookingDetailStatus.CANCELED) {
-            // Nếu trạng thái là CANCELED, cập nhật trạng thái của phòng thành AVAILABLE
             Room room = bookingDetailUpdate.getRoom();
             room.setStatus(Room.RoomStatus.AVAILABLE);
-            roomRepository.save(room);  // Persist the room status change
+            roomRepository.save(room);
         }
 
-        // Lưu BookingDetail đã được cập nhật
         return bookingDetailRepository.save(bookingDetailUpdate);
     }
 

@@ -82,10 +82,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room updateRoom(Long roomId, RoomRequest roomRequest) {
-        // Tìm phòng cũ theo ID và chỉ cập nhật các trường cho phép
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Phòng không tồn tại"));
+        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("The room does not exist."));
 
-        // Cập nhật chỉ các trường cho phép: status, description, dayPrice, hourPrice
         if (roomRequest.getStatus() != null) {
             room.setStatus(roomRequest.getStatus());
         }
@@ -99,7 +97,6 @@ public class RoomServiceImpl implements RoomService {
             room.setHourPrice(roomRequest.getHourPrice());
         }
 
-        // Không cập nhật các trường khác như roomNumber và roomType
 
         return roomRepository.save(room);
     }
@@ -153,22 +150,18 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomResponse> findAvailableRooms(LocalDateTime checkIn, LocalDateTime checkOut, Room.RoomType roomType) {
-        // Lấy danh sách phòng theo loại phòng (RoomType)
         List<Room> rooms = roomRepository.findByRoomType(roomType);
 
-        // Danh sách phòng khả dụng
         List<RoomResponse> availableRooms = new ArrayList<>();
         for (Room room : rooms) {
-            // Nếu phòng có trạng thái MAINTENANCE, không hiển thị
             if (room.getStatus() == Room.RoomStatus.MAINTENANCE) {
-                continue; // Bỏ qua phòng này
+                continue;
             }
 
-            // Kiểm tra trạng thái phòng
             if (room.getStatus() == Room.RoomStatus.AVAILABLE) {
                 RoomResponse roomResponse = RoomMapper.convertToResponse(room);
-                availableRooms.add(roomResponse); // Thêm vào danh sách
-                continue; // Tiếp tục vòng lặp
+                availableRooms.add(roomResponse);
+                continue;
             }
 
             if (room.getStatus() == Room.RoomStatus.BOOKED) {
@@ -182,18 +175,17 @@ public class RoomServiceImpl implements RoomService {
                             roomRepository.save(room);
 
                             RoomResponse roomResponse = RoomMapper.convertToResponse(room);
-                            availableRooms.add(roomResponse); // Thêm vào danh sách
+                            availableRooms.add(roomResponse);
                         } else if (checkIn.isAfter(bookingDetail.getCheckOut()) && bookingDetail.getCheckOut().isAfter(LocalDateTime.now())) {
                             RoomResponse roomResponse = RoomMapper.convertToResponse(room);
-                            availableRooms.add(roomResponse); // Thêm vào danh sách dù trạng thái là BOOKED
+                            availableRooms.add(roomResponse);
                         }
-                        break; // Chỉ kiểm tra booking đầu tiên
+                        break;
                     }
                 }
             }
         }
 
-        // Lấy hình ảnh cho từng phòng
         for (RoomResponse roomResponse : availableRooms) {
             List<String> images = imageRepository.findAllByNameAndReferenceId("ROOM", roomResponse.getRoomId())
                     .stream()
@@ -201,17 +193,11 @@ public class RoomServiceImpl implements RoomService {
                     .map(ImageResponse::getImageFileName)
                     .collect(Collectors.toList());
 
-            roomResponse.setImages(images); // Gán hình ảnh vào RoomResponse
+            roomResponse.setImages(images);
         }
 
-        return availableRooms; // Trả về danh sách phòng khả dụng
+        return availableRooms;
     }
-
-
-
-
-
-
 
     public boolean isRoomAvailable(Room room, LocalDateTime checkIn, LocalDateTime checkOut) {
         List<BookingDetail> bookingDetails = bookingDetailRepository.findByRoom(room);
@@ -231,15 +217,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public void updateRoomStatusIfNecessary(Room room, LocalDateTime checkIn) {
-        // Kiểm tra booking detail xem phòng có booking nào với thời gian checkOut sớm hơn checkIn không
         List<BookingDetail> bookingDetails = bookingDetailRepository.findByRoom(room);
         for (BookingDetail bookingDetail : bookingDetails) {
             if (bookingDetail.getStatus() != BookingDetail.BookingDetailStatus.CANCELED) {
-                // Nếu thời gian checkOut của booking trước thời gian checkIn yêu cầu, chúng ta có thể cập nhật trạng thái phòng thành AVAILABLE
                 if (bookingDetail.getCheckOut().isBefore(checkIn)) {
-                    room.setStatus(Room.RoomStatus.AVAILABLE); // Cập nhật trạng thái bằng RoomStatus enum
+                    room.setStatus(Room.RoomStatus.AVAILABLE);
                     roomRepository.save(room);
-                    break; // Không cần kiểm tra booking tiếp theo nữa
+                    break;
                 }
             }
         }

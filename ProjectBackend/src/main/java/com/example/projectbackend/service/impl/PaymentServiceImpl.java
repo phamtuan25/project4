@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final BookingRepository bookingRepository; // Thêm repository để truy vấn thông tin Booking
+    private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
-    private final BookingDetailRepository bookingDetailRepository; // Thêm repository để truy vấn thông tin BookingDetail
+    private final BookingDetailRepository bookingDetailRepository;
 
     @Override
     public Page<PaymentResponse> getAllPayments(@PageableDefault(size = 10, page = 0) Pageable pageable,
@@ -65,80 +65,63 @@ public class PaymentServiceImpl implements PaymentService {
         Booking booking = bookingRepository.findById(paymentRequest.getBookingId())
                 .orElseThrow(() -> new NotFoundException("BookingNotFound", "Not found Booking with ID " + paymentRequest.getBookingId()));
 
-        // Xác định số tiền đã thanh toán dựa vào phương thức thanh toán
         Double paidAmount = null;
 
         if ("PAID".equalsIgnoreCase(paymentRequest.getPaymentMethod())) {
-            // Thanh toán toàn bộ số tiền
             paidAmount = booking.getTotalAmount();
         } else if ("DEPOSITED".equalsIgnoreCase(paymentRequest.getPaymentMethod())) {
-            // Thanh toán tiền cọc
             paidAmount = booking.getDeposit();
         } else {
             throw new IllegalArgumentException("Invalid payment method. Expected 'PAID' or 'DEPOSITED'.");
         }
 
-        // Tạo Payment mới với status mặc định là PENDING
         Payment payment = new Payment();
         payment.setBooking(booking);
-        payment.setStatus(Payment.PaymentStatus.PENDING); // Mặc định status là PENDING
+        payment.setStatus(Payment.PaymentStatus.PENDING);
         payment.setPaid(paidAmount);
 
-        // Tạo paymentReference (giả sử có một phương thức getFullName() để lấy tên người dùng)
-        User user = booking.getUser();  // Lấy người dùng từ Booking
-        String paymentReference = user.getFullName() + "PAID"; // Tạo paymentReference với full name + số tiền thanh toán
+        User user = booking.getUser();
+        String paymentReference = user.getFullName() + (paymentRequest.getPaymentMethod().equalsIgnoreCase("PAID") ? "PAID" : "DEPOSITED");
         payment.setPaymentReference(paymentReference);
 
-        // Thiết lập ngày thanh toán
         payment.setPaymentDate(LocalDate.now());
 
-        // Lưu Payment vào cơ sở dữ liệu
         return paymentRepository.save(payment);
     }
 
+
     @Override
     public Payment updatePayment(Long paymentId, Payment paymentInput) {
-        // Tìm Payment cần cập nhật
         Payment paymentUpdate = paymentRepository.findById(paymentId).orElse(null);
         if (paymentUpdate == null) {
             throw new NotFoundException("PaymentNotFound", "Payment with ID " + paymentId + " not found.");
         }
 
-        // Cập nhật thông tin Payment từ input
         setPayment(paymentUpdate, paymentInput);
 
-        // Cập nhật trạng thái của Booking và các BookingDetail
         Booking booking = paymentUpdate.getBooking();
 
-        // Nếu Payment có status là PAID, cập nhật status của Booking là PAID
         if (paymentUpdate.getStatus() == Payment.PaymentStatus.PAID) {
             booking.setStatus(Booking.BookingStatus.PAID);
 
-            // Cập nhật tất cả các BookingDetail tương ứng với Booking này thành CONFIRMED
             booking.getBookingDetails().forEach(bookingDetail -> {
                 bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
             });
         }
-        // Nếu Payment có status là DEPOSITED, cập nhật status của Booking là DEPOSITED
         else if (paymentUpdate.getStatus() == Payment.PaymentStatus.DEPOSITED) {
             booking.setStatus(Booking.BookingStatus.DEPOSITED);
 
-            // Cập nhật tất cả các BookingDetail tương ứng với Booking này thành CONFIRMED
             booking.getBookingDetails().forEach(bookingDetail -> {
                 bookingDetail.setStatus(BookingDetail.BookingDetailStatus.CONFIRMED);
             });
         }
 
-        // Lưu tất cả các BookingDetail đã cập nhật
-        // (giả sử BookingDetail có repository để lưu)
         booking.getBookingDetails().forEach(bookingDetail -> {
-            bookingDetailRepository.save(bookingDetail);  // Lưu từng BookingDetail
+            bookingDetailRepository.save(bookingDetail);
         });
 
-        // Lưu Booking với trạng thái đã được cập nhật
         bookingRepository.save(booking);
 
-        // Lưu Payment đã cập nhật
         return paymentRepository.save(paymentUpdate);
     }
 

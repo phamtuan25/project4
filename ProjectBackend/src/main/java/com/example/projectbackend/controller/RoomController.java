@@ -49,19 +49,15 @@ public class RoomController {
     public Room createRoom(@Valid @RequestPart("roomRequest") RoomRequest roomRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
-            // Tạo mới một Room
             Room room = roomService.createRoom(roomRequest);
 
-            // Lưu hình ảnh
             ImageRequest imageRequest = new ImageRequest();
             if (files != null && files.length > 0) {
                 for (MultipartFile file : files) {
-                    // Thiết lập thông tin hình ảnh
-                    imageRequest.setReferenceId(room.getRoomId()); // Đặt ID tham chiếu
-                    imageRequest.setName("ROOM"); // Đặt Type ảnh
-                    imageRequest.setImageFileName(file.getOriginalFilename()); // Lấy tên tệp từ MultipartFile
+                    imageRequest.setReferenceId(room.getRoomId());
+                    imageRequest.setName("ROOM");
+                    imageRequest.setImageFileName(file.getOriginalFilename());
 
-                    // Lưu hình ảnh với tên tương ứng
                     imageService.saveImages(file, imageRequest);
                 }
             }
@@ -81,10 +77,8 @@ public class RoomController {
                            @RequestPart("roomRequest") RoomRequest roomRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
-            // Cập nhật chỉ các trường cho phép: status, description, dayPrice, hourPrice
             Room updatedRoom = roomService.updateRoom(roomId, roomRequest);
 
-            // Xử lý các tệp (hình ảnh) được gửi lên
             if (files != null && files.length > 0) {
                 for (MultipartFile file : files) {
                     ImageRequest imageRequest = new ImageRequest();
@@ -95,7 +89,6 @@ public class RoomController {
                 }
             }
 
-            // Xử lý xóa các tệp hình ảnh cũ nếu có yêu cầu
             if (roomRequest.getDeleteFiles() != null && roomRequest.getDeleteFiles().length > 0) {
                 imageService.deleteImageByFileName(roomRequest.getDeleteFiles());
             }
@@ -119,16 +112,15 @@ public class RoomController {
     public ResponseEntity<List<RoomResponse>> findAvailableRooms(@RequestBody RoomAvailabilityRequest request) {
         LocalDateTime checkIn = request.getCheckIn();
         LocalDateTime checkOut = request.getCheckOut();
-        Room.RoomType roomType = request.getRoomType();  // Lấy roomType kiểu Room.RoomType từ request
+        Room.RoomType roomType = request.getRoomType();
 
-        // Gọi service để lấy các phòng có sẵn
-        List<RoomResponse> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, roomType); // Truyền roomType vào
+        List<RoomResponse> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, roomType);
 
         if (availableRooms.isEmpty()) {
-            return ResponseEntity.noContent().build();  // Nếu không có phòng trống, trả về mã 204
+            return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(availableRooms);  // Nếu có phòng trống, trả về danh sách phòng
+        return ResponseEntity.ok(availableRooms);
     }
 
 

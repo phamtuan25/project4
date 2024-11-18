@@ -60,7 +60,6 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtil.generateJwtToken(authentication);
         return ResponseEntity.ok(new LoginResponse(token, loginRequest.getEmail()));
-        //return userService.Login(loginRequest);
     }
     @PutMapping("/changePassword/{userId}")
     public UserResponse changePassword(@PathVariable Long userId,@Valid @RequestBody PasswordRequest passwordRequest){

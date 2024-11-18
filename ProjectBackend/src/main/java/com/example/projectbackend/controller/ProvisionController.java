@@ -48,19 +48,14 @@ public class ProvisionController {
     public Provision createProvision(@Valid @RequestPart("provisionRequest") ProvisionRequest provisionRequest,
                            @RequestPart(value = "files", required = false) MultipartFile[] files) {
         try {
-            // Tạo mới một Provision
             Provision provision = provisionService.createProvision(provisionRequest);
-
-            // Lưu hình ảnh
             ImageRequest imageRequest = new ImageRequest();
             if (files != null && files.length > 0) {
                 for (MultipartFile file : files) {
-                    // Thiết lập thông tin hình ảnh
-                    imageRequest.setReferenceId(provision.getProvisionId()); // Đặt ID tham chiếu
-                    imageRequest.setName("PROVISION"); // Đặt Type ảnh
-                    imageRequest.setImageFileName(file.getOriginalFilename()); // Lấy tên tệp từ MultipartFile
+                    imageRequest.setReferenceId(provision.getProvisionId());
+                    imageRequest.setName("PROVISION");
+                    imageRequest.setImageFileName(file.getOriginalFilename());
 
-                    // Lưu hình ảnh với tên tương ứng
                     imageService.saveImages(file, imageRequest);
                 }
             }
@@ -79,10 +74,8 @@ public class ProvisionController {
                                      @RequestPart("provisionRequest") ProvisionRequest provisionRequest,
                                      @RequestPart(value = "files", required = false) MultipartFile[] files){
         try {
-        // Update thông tin Provision
         Provision updateProvision = provisionService.updateProvision(provisionId, provisionRequest);
 
-        // Xử lý các tệp được gửi lên
         if (files != null && files.length > 0) {
             for (MultipartFile file : files) {
                 ImageRequest imageRequest = new ImageRequest();
@@ -93,7 +86,6 @@ public class ProvisionController {
             }
         }
 
-        // Xử lý các tệp cần xóa
         if (provisionRequest.getDeleteFiles() != null && provisionRequest.getDeleteFiles().length > 0) {
             imageService.deleteImageByFileName(provisionRequest.getDeleteFiles());
         }

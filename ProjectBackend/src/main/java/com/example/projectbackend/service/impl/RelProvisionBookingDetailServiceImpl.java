@@ -1,12 +1,9 @@
 package com.example.projectbackend.service.impl;
 
 import com.example.projectbackend.bean.request.RelProvisionBookingDetailRequest;
-import com.example.projectbackend.bean.response.BookingResponse;
 import com.example.projectbackend.bean.response.RelProvisionBookingDetailResponse;
 import com.example.projectbackend.entity.*;
-import com.example.projectbackend.exception.EmptyListException;
 import com.example.projectbackend.exception.NotFoundException;
-import com.example.projectbackend.mapper.BookingMapper;
 import com.example.projectbackend.mapper.RelProvisionBookingDetailMapper;
 import com.example.projectbackend.repository.BookingDetailRepository;
 import com.example.projectbackend.repository.BookingRepository;
@@ -22,10 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,49 +75,34 @@ public class RelProvisionBookingDetailServiceImpl implements RelProvisionBooking
 
     @Override
     public RelProvisionBookingDetail updateRel(Long relId, RelProvisionBookingDetail relProvisionBookingDetail) {
-        // Tìm đối tượng RelProvisionBookingDetail hiện tại từ database
         RelProvisionBookingDetail relProvisionBookingDetailUpdate = relProvisionBookingDetailRepository.findById(relId).orElse(null);
 
-        // Kiểm tra nếu không tìm thấy đối tượng
         if (relProvisionBookingDetailUpdate == null) {
-            throw new NotFoundException("RelProvisionBookingDetailNotFound", "Không tìm thấy RelProvisionBookingDetail với id " + relId);
+            throw new NotFoundException("RelProvisionBookingDetailNotFound", "Not Found RelProvisionBookingDetail with id " + relId);
         }
 
-        // Cập nhật chỉ trường status
         relProvisionBookingDetailUpdate.setStatus(relProvisionBookingDetail.getStatus());
+        relProvisionBookingDetailUpdate.setUpdatedAt(LocalDateTime.now());
 
-        // Set the updatedAt field to the current time when updating
-        relProvisionBookingDetailUpdate.setUpdatedAt(LocalDateTime.now());  // Manually update the timestamp
-
-        // Nếu status là USED, cập nhật lại giá trị price và tổng amount của BookingDetail
         if (relProvisionBookingDetailUpdate.getStatus() == RelProvisionBookingDetail.RelProvisionBookingDetailStatus.USED) {
-            // Lấy giá trị price của RelProvisionBookingDetail (nếu có)
-            Double provisionPrice = relProvisionBookingDetailUpdate.getPrice(); // Giá trị đã được gán từ trước
+            Double provisionPrice = relProvisionBookingDetailUpdate.getPrice();
 
-            // Lấy BookingDetail liên quan
             BookingDetail bookingDetail = relProvisionBookingDetailUpdate.getBookingDetail();
             if (bookingDetail != null) {
-                // Lấy giá hiện tại của BookingDetail
                 Double currentPrice = bookingDetail.getPrice();
-
-                // Cộng giá trị price của RelProvisionBookingDetail vào giá trị price của BookingDetail
                 Double newPrice = currentPrice + provisionPrice;
                 bookingDetail.setPrice(newPrice);
 
-                // Tính lại totalAmount của Booking liên quan
                 Booking booking = bookingDetail.getBooking();
                 if (booking != null) {
-                    // Tính lại totalAmount và deposit cho Booking
                     booking.calculateTotalAmount();
 
-                    // Lưu lại BookingDetail và Booking sau khi cập nhật
                     bookingDetailRepository.save(bookingDetail);
                     bookingRepository.save(booking);
                 }
             }
         }
 
-        // Lưu lại đối tượng RelProvisionBookingDetail đã được cập nhật
         return relProvisionBookingDetailRepository.save(relProvisionBookingDetailUpdate);
     }
 

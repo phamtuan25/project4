@@ -19,6 +19,6 @@ public class ImageRequest {
     private String name;
 
     @NotNull(message = "Reference ID is required.")
-    private Long referenceId; // Could be a Room ID or Provision ID
+    private Long referenceId;
 
 }

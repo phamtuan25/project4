@@ -18,7 +18,6 @@ public class ImageMapper {
         Image image = new Image();
         image.setName(imageRequest.getName());
         image.setReferenceId(imageRequest.getReferenceId());
-        // Thiết lập imageFileName từ ImageRequest nếu cần
         image.setImageFileName(imageRequest.getImageFileName());
         return image;
     }

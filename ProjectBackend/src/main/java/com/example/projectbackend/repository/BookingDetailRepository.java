@@ -1,7 +1,5 @@
 package com.example.projectbackend.repository;
 
-import com.example.projectbackend.bean.response.BookingDetailResponse;
-import com.example.projectbackend.entity.Booking;
 import com.example.projectbackend.entity.BookingDetail;
 import com.example.projectbackend.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +19,6 @@ public interface BookingDetailRepository extends JpaRepository<BookingDetail, Lo
     List<BookingDetail> findOverlappingBookings(@Param("roomId") Long roomId,
                                                 @Param("checkIn") LocalDateTime checkIn,
                                                 @Param("checkOut") LocalDateTime checkOut);
-    // Find BookingDetails by Room (new method)
     List<BookingDetail> findByRoom(Room room);
 }
 

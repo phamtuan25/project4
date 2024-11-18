@@ -24,7 +24,6 @@ public class RelProvisionBookingDetailMapper {
     public static RelProvisionBookingDetail convertFromRequest(RelProvisionBookingDetailRequest relProvisionBookingDetailRequest){
         RelProvisionBookingDetail relProvisionBookingDetail = new RelProvisionBookingDetail();
         relProvisionBookingDetail.setStatus(relProvisionBookingDetailRequest.getStatus());
-        //relProvisionBookingDetail.setPrice(relProvisionBookingDetailRequest.getPrice());
         return relProvisionBookingDetail;
     }
 }

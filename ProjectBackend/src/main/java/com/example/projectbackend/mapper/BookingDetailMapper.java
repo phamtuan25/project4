@@ -48,7 +48,6 @@ public class BookingDetailMapper {
         bookingDetail.setSpecialRequests(bookingDetailRequest.getSpecialRequests());
         bookingDetail.setPrice(bookingDetailRequest.getPrice());
 
-        // Thêm logic để liên kết các Provision vào BookingDetail
         if (bookingDetailRequest.getProvisionIds() != null && !bookingDetailRequest.getProvisionIds().isEmpty()) {
             List<Provision> provisions = provisionRepository.findAllByProvisionIdIn(bookingDetailRequest.getProvisionIds());
             List<RelProvisionBookingDetail> relProvisionBookingDetails = bookingDetail.getRelProvisionBookingDetails();
@@ -56,9 +55,8 @@ public class BookingDetailMapper {
                 RelProvisionBookingDetail relProvisionBookingDetail = new RelProvisionBookingDetail();
                 relProvisionBookingDetail.setProvision(provision);
                 relProvisionBookingDetail.setBookingDetail(bookingDetail);
-                relProvisionBookingDetail.setPrice(provision.getPrice().doubleValue()); // Lưu giá của proviiosn
+                relProvisionBookingDetail.setPrice(provision.getPrice().doubleValue());
 
-                // Gắn các RelProvisionBookingDetail vào bookingDetail
                 relProvisionBookingDetails.add(relProvisionBookingDetail);
             }
             bookingDetail.setRelProvisionBookingDetails(relProvisionBookingDetails);
